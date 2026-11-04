@@ -16,7 +16,10 @@ export type QuestFlag =
   | 'WAND_LIT'
   | 'CREEK_CHEST'
   | 'SHORE_SEEN'
-  | 'GROTTO_SEEN';
+  | 'GROTTO_SEEN'
+  | 'BUTTERFLY_FOUND'
+  | 'SHORE_CHEST'
+  | 'GROTTO_CHEST';
 
 export type PuzzleType = 'count' | 'sound-picture' | 'pattern' | 'matching' | 'sequence';
 
@@ -34,6 +37,8 @@ export interface PuzzleDef {
   realm: 'sunlit' | 'wilds' | 'seas';
   narrationKey: string;
   promptVisual: string;
+  /** Letter puzzles: the big target letter card shown to the child (e.g. 'B'). */
+  letter?: string;
   difficultyTier: 1 | 2 | 3;
   mandatory: boolean;
   choices: PuzzleChoice[];
@@ -70,6 +75,8 @@ export interface GameState {
     musicVolume: number;
     voiceVolume: number;
     sfxVolume: number;
+    /** Spoken narration is optional. Off by default: the child flow is picture-first and never needs sound. */
+    narration: boolean;
     captions: boolean;
     reducedEffects: boolean;
     dpad: boolean;

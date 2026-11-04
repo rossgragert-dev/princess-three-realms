@@ -9,6 +9,8 @@ import { burst, makeButton, pic, roundedPanel, type Btn } from '../ui/touchTarge
 import { DialoguePanel } from '../ui/dialoguePanel';
 import { PuzzlePanel, type PuzzleResult } from '../ui/puzzlePanel';
 import type { Line } from '../content/dialogue';
+import { DecorPicker, DecorReveal } from '../ui/decorUi';
+import { slotById, unplacedCount } from '../content/decorCatalog';
 import type { UiName } from '../content/frameIndex';
 
 export interface UIHandlers {
@@ -32,6 +34,9 @@ export class UIScene extends Phaser.Scene {
   private modalDepth = 0;
   private dialogue!: DialoguePanel;
   private puzzle!: PuzzlePanel;
+  private picker!: DecorPicker;
+  private reveal!: DecorReveal;
+  private homeBtn!: Btn;
   private hud: Btn[] = [];
   private wandBtn!: Btn;
   private formBtns = new Map<Form, Btn>();
@@ -48,7 +53,7 @@ export class UIScene extends Phaser.Scene {
   constructor() { super('UI'); }
 
   get modal() { return this.modalDepth > 0; }
-  get panel(): 'dialogue' | 'puzzle' | null { return this.dialogue?.isOpen ? 'dialogue' : this.puzzle?.isOpen ? 'puzzle' : null; }
+  get panel(): 'dialogue' | 'puzzle' | 'decor' | 'reveal' | null { return this.dialogue?.isOpen ? 'dialogue' : this.puzzle?.isOpen ? 'puzzle' : this.picker?.isOpen ? 'decor' : this.reveal?.isOpen ? 'reveal' : null; }
 
   create() {
     const setModal = (on: boolean) => {
@@ -57,12 +62,15 @@ export class UIScene extends Phaser.Scene {
     };
     this.dialogue = new DialoguePanel(this, setModal);
     this.puzzle = new PuzzlePanel(this, setModal);
+    this.picker = new DecorPicker(this, setModal);
+    this.reveal = new DecorReveal(this, setModal);
 
     const tap = (fn?: () => void) => () => { if (!this.modal) fn?.(); };
 
     // top-left: sticker book, home
     const book = makeButton(this, 36, 36, 'icon_book', 1.1, tap(() => this.handlers.book?.()));
     const home = makeButton(this, 100, 36, 'icon_home', 1.1, tap(() => this.handlers.home?.()));
+    this.homeBtn = home;
     // top-right: hint (replays the next-goal narration) with the goal picture beside it
     this.hintBtn = makeButton(this, 476, 36, 'icon_hint', 1.1, tap(() => this.handlers.hint?.()));
     this.objBubble = this.add.container(412, 36);
@@ -114,6 +122,8 @@ export class UIScene extends Phaser.Scene {
       b.setEnabled(forms.includes(f));
       b.container.setAlpha(f === st.form ? 1 : 0.85);
     });
+    // something new to place? the Home button glows until the child has put it in the room (not while already there)
+    this.homeBtn.pulse(unplacedCount(st.unlockedDecor, st.bedroom) > 0 && st.scene !== 'bedroom');
     this.objBubble.removeAll(true);
     const step = chapterComplete(st) ? null : nextObjective(st);
     if (step) {
@@ -122,6 +132,9 @@ export class UIScene extends Phaser.Scene {
     }
     this.objBubble.setVisible(!!step);
   }
+
+  get pickerCards() { return this.picker.cards; }
+  get puzzleCards() { return this.puzzle.cardPos; }
 
   pulseHint(on: boolean) { this.hintBtn.pulse(on); }
 
@@ -171,6 +184,16 @@ export class UIScene extends Phaser.Scene {
     services.save.save();
     return r;
   }
+
+  // ------------------------------------------------------------------ bedroom decorating
+  /** Open the picker for one hotspot. Resolves with item id / null (empty it) / undefined (closed). */
+  pickDecor(slotId: string, current: string | undefined) {
+    const slot = slotById(slotId);
+    return slot ? this.picker.pick(slot, services.save.state.unlockedDecor, current) : Promise.resolve(undefined);
+  }
+
+  /** The "new thing earned!" moment. */
+  revealDecor(id: string) { return this.reveal.show(id); }
 
   // ------------------------------------------------------------------ counting tray (carrots, starfish)
   showCount(done: number, total: number) {

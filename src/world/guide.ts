@@ -19,7 +19,7 @@ export const OBJECTIVE_TARGET: Record<string, { scene: SceneId; obj: string }> =
   MARINA_HELPED: { scene: 'grotto', obj: 'marina' },
   PEARL_PLACED: { scene: 'grotto', obj: 'pearl' },
   STAR_1_FOUND: { scene: 'grotto', obj: 'star_pedestal' },
-  LAMP_PLACED: { scene: 'bedroom', obj: 'slot_table' }
+  LAMP_PLACED: { scene: 'bedroom', obj: 'slot_lamp' }
 };
 
 export const OBJECTIVE_NARRATION: Record<string, string> = {

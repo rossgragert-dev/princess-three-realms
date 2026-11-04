@@ -17,7 +17,7 @@ export const PUZZLES: PuzzleDef[] = [
     hintKeys: ['hint_carrots_1', 'hint_carrots_2', 'hint_together'],
     successEvent: 'PIP_CARROTS_DONE',
     replayAllowed: true,
-    reward: { sticker: 'sticker_pip' }
+    reward: { sticker: 'sticker_pip', decor: 'bunny_pillow' }
   },
   {
     id: 'tree_sound',
@@ -25,6 +25,7 @@ export const PUZZLES: PuzzleDef[] = [
     realm: 'wilds',
     narrationKey: 'tree_sound_b',
     promptVisual: 'icon_tree',
+    letter: 'B',
     difficultyTier: 1,
     mandatory: true,
     // Answer is the id, never the position. The engine shuffles display order.
@@ -49,7 +50,7 @@ export const PUZZLES: PuzzleDef[] = [
     hintKeys: ['hint_pattern_1', 'hint_pattern_2', 'hint_together'],
     successEvent: 'RAINBOW_BRIDGE_OPEN',
     replayAllowed: true,
-    reward: { sticker: 'sticker_rainbow' }
+    reward: { sticker: 'sticker_rainbow', decor: 'unicorn_plush' }
   },
   {
     id: 'starfish',
@@ -64,7 +65,7 @@ export const PUZZLES: PuzzleDef[] = [
     hintKeys: ['hint_starfish_1', 'hint_starfish_2', 'hint_together'],
     successEvent: 'MARINA_HELPED',
     replayAllowed: true,
-    reward: { sticker: 'sticker_marina', decor: 'shell_mobile' }
+    reward: { sticker: 'sticker_marina', decor: 'shell_mirror' }
   },
   {
     id: 'shell_rhyme',
@@ -79,7 +80,7 @@ export const PUZZLES: PuzzleDef[] = [
     hintKeys: ['hint_rhyme_1', 'hint_rhyme_2', 'hint_together'],
     successEvent: 'SHELLS_MATCHED',
     replayAllowed: true,
-    reward: { decor: 'rug' }
+    reward: { decor: 'rainbow_rug' }
   },
   {
     id: 'garden_grow',
@@ -94,7 +95,7 @@ export const PUZZLES: PuzzleDef[] = [
     hintKeys: ['hint_sequence_1', 'hint_sequence_2', 'hint_together'],
     successEvent: 'GARDEN_SEQUENCED',
     replayAllowed: true,
-    reward: { decor: 'vase' }
+    reward: { decor: 'flower_pot' }
   }
 ];
 

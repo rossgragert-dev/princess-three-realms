@@ -108,7 +108,10 @@ previews['ui'] = (im, 4, (255, 245, 220, 255))
 # ---- props
 for nm, px in (('tree_a', AP.tree('a')), ('tree_b', AP.tree('b')), ('bush', AP.bush()), ('castle_gate', AP.castle_gate()),
                ('door_small', AP.door_small()), ('bed', AP.bed()), ('rug', AP.rug()), ('mobile', AP.mobile()), ('vase', AP.vase()),
-               ('window_night', AP.window_night()), ('crown_hud', AP.crown_hud()), ('sign_arch', AP.sign_arch()), ('hand', AP.hand())):
+               ('window_night', AP.window_night()), ('bunny_pillow', AP.bunny_pillow()), ('unicorn_plush', AP.unicorn_plush()),
+               ('shell_mirror', AP.shell_mirror()), ('mermaid_art', AP.mermaid_art()), ('butterfly_painting', AP.butterfly_painting()),
+               ('canopy_bed', AP.canopy_bed()), ('moon_curtain', AP.moon_curtain()), ('crystal_nightstand', AP.crystal_nightstand()),
+               ('decor_chest', AP.decor_chest()), ('shelf', AP.shelf()), ('crown_hud', AP.crown_hud()), ('sign_arch', AP.sign_arch()), ('hand', AP.hand())):
     save_image(nm, px)
 save_sheet('props/fountain.png', [AP.fountain(i) for i in range(2)], 2, 'fountain'); anim('fountain_flow', 'fountain', [0, 1], 4)
 save_sheet('props/lamp.png', [AP.lamp(False), AP.lamp(True)], 2, 'lamp')

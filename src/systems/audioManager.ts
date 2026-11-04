@@ -4,6 +4,8 @@ export interface AudioSettings {
   musicVolume: number;
   voiceVolume: number;
   sfxVolume: number;
+  /** Spoken narration on/off (grown-up setting). Off by default: gameplay never needs voice. */
+  voiceEnabled: boolean;
 }
 
 /**
@@ -15,7 +17,7 @@ export interface AudioSettings {
 export class AudioManager {
   unlocked = false;
   devTts = false;
-  settings: AudioSettings = { musicVolume: 0.5, voiceVolume: 1, sfxVolume: 0.7 };
+  settings: AudioSettings = { musicVolume: 0.5, voiceVolume: 1, sfxVolume: 0.7, voiceEnabled: false };
   private ctx?: AudioContext;
   private voice?: HTMLAudioElement;
   private missing = new Set<string>();
@@ -40,9 +42,10 @@ export class AudioManager {
   }
 
   /** Cancels any current voice line so lines never overlap. Resolves when the line ends or is cancelled. */
-  async speak(key: string): Promise<'played' | 'missing' | 'cancelled'> {
+  async speak(key: string): Promise<'played' | 'missing' | 'cancelled' | 'off'> {
     this.stopVoice();
     const token = ++this.queueToken;
+    if (!this.settings.voiceEnabled) return 'off';
     if (!this.unlocked) return 'missing';
     const urls = clipUrls(key);
     for (const url of urls) {

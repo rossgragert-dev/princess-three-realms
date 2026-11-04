@@ -12,3 +12,13 @@ Device: iPad (Safari, landscape and portrait), installed to Home Screen. Build: 
 8. **Save:** quit mid-chapter, relaunch, Play resumes scene, form and flags. Parent gate (hold 3 s) -> Reset works.
 9. **Narration (after recording):** every line plays, replay button works, no overlapping voices, music ducks.
 10. **Performance:** steady frame rate in the woods (largest map) and underwater.
+
+
+## v0.2 additions (please test on the iPad)
+1. Fresh install, narration off: play the intro and the first carrots. Can the child follow each picture bubble? Is ~4 s per line too fast or slow?
+2. Letter puzzle (talking tree): is the big "B" card clear; are the three picture cards easy to hit; does the hand hint appear after a miss?
+3. Earn the bunny pillow (3 carrots): does the "new item" card appear, dismiss with the green tick, and does the Home button glow afterwards?
+4. In the bedroom: tap every sparkle. Does each picker card respond on the FIRST tap? (one unexplained missed tap was seen once in desktop Chrome automation)
+5. Place all 12 items, close the app from the Home Screen, reopen: is the room unchanged?
+6. Parent settings -> Spoken narration On: do voices play after the first tap (Safari audio unlock)? Does the speaker button appear in puzzles and dialogue?
+7. Silent switch / volume: sound effects only when narration is off.

@@ -28,5 +28,6 @@ export function applySettingsToAudio() {
   services.audio.settings.musicVolume = s.musicVolume;
   services.audio.settings.voiceVolume = s.voiceVolume;
   services.audio.settings.sfxVolume = s.sfxVolume;
+  services.audio.settings.voiceEnabled = s.narration;
   services.audio.applyMusicVolume();
 }

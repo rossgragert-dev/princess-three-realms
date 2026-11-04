@@ -49,11 +49,12 @@ export class ParentSettingsScene extends Phaser.Scene {
       const b = this.add.text(380, y, value(), { fontFamily: FONT, fontSize: '15px', color: '#fff', backgroundColor: '#6a3fc8', padding: { x: 10, y: 6 } }).setInteractive({ useHandCursor: true });
       b.on('pointerdown', () => { onTap(); b.setText(value()); applySettingsToAudio(); services.save.save(); });
       c.add(b);
-      y += 36;
+      y += 32;
     };
     const vol = (k: 'musicVolume' | 'voiceVolume' | 'sfxVolume') => () => { s[k] = s[k] >= 1 ? 0 : Math.round((s[k] + 0.25) * 100) / 100; };
+    row('Spoken narration (optional)', () => (s.narration ? 'On' : 'Off'), () => { s.narration = !s.narration; });
     row('Music volume', () => `${Math.round(s.musicVolume * 100)}%`, vol('musicVolume'));
-    row('Voice volume', () => `${Math.round(s.voiceVolume * 100)}%`, vol('voiceVolume'));
+    row('Narration volume', () => `${Math.round(s.voiceVolume * 100)}%`, vol('voiceVolume'));
     row('Sound effects', () => `${Math.round(s.sfxVolume * 100)}%`, vol('sfxVolume'));
     row('Captions (for grown-ups)', () => (s.captions ? 'On' : 'Off'), () => { s.captions = !s.captions; });
     row('On-screen arrows', () => (s.dpad ? 'On' : 'Off'), () => { s.dpad = !s.dpad; });

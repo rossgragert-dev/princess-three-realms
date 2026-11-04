@@ -1,4 +1,9 @@
 # Changelog
+## 0.2.0 "Picture-first + Bedroom Rewards"
+- Narration optional (default off): picture-bubble dialogue, letter-card puzzle, visual hint hand, lightbulb hint button; speaker/replay only when narration is on.
+- Bedroom: 12 hotspots, 12 earnable items (quest, puzzle, NPC gift, hidden find, chests), picture picker with locked silhouettes, "new item" reveal, glowing Home button, saved decor, v0.1 save migration.
+- New: butterfly hidden spot (courtyard), chest rewards (creek/shore/grotto), Nana's canopy-bed gift, 10 new pixel-art items + wall shelf.
+- Tests 73 -> 94. Standalone site rebuilt.
 ## 0.1.0b "Standalone Edition"
 - `site/`: deployable static website (no npm/Vite/Actions). `tools/build-standalone.sh` rebuilds it. `.nojekyll` included; `gh-pages` branch prepared.
 - Verified from a GitHub-Pages-style sub-path in Chrome: full Chapter 1, offline PWA, viewports, save/resume, narration behaviour.

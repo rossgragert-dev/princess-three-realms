@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import type { PuzzleDef, PuzzleProgress } from '../types/game';
 import { ASSIST_AFTER, answerChoice, answerSequence, displayOrder, visibleChoices } from '../systems/puzzleEngine';
 import { services } from '../systems/services';
+import { narrationOn } from '../systems/accessibility';
 import { burst, makeButton, pic, roundedPanel, sleep, type Btn } from './touchTargets';
 
 export interface PuzzleResult { solved: boolean; assisted: boolean; cancelled: boolean }
@@ -18,6 +19,8 @@ export class PuzzlePanel {
   private timers: Phaser.Time.TimerEvent[] = [];
   private btns: Btn[] = [];
   isOpen = false;
+  /** Card positions on the canvas (browser test drivers use these). */
+  cardPos: { id: string; x: number; y: number }[] = [];
 
   constructor(private scene: Phaser.Scene, private setModal: (on: boolean) => void) {
     this.root = scene.add.container(0, 0).setDepth(60).setVisible(false);
@@ -27,21 +30,45 @@ export class PuzzlePanel {
 
   private add<T extends GO>(o: T): T { this.root.add(o); this.objs.push(o); return o; }
 
-  private open(def: PuzzleDef, onReplay: () => void, onBack: () => void, promptY = 96) {
+  /**
+   * Shared frame: dim backdrop, panel, back button, the prompt picture (or the big LETTER CARD for letter puzzles),
+   * a lightbulb hint button, and - only when grown-ups turned narration on - the speaker (replay) button.
+   */
+  private open(def: PuzzleDef, onReplay: () => void, onHint: () => void, onBack: () => void, promptY = 96) {
     this.isOpen = true;
     this.setModal(true);
     this.root.setVisible(true);
     const s = this.scene;
     this.add(s.add.rectangle(256, 192, 512, 384, 0x1a1033, 0.55).setInteractive());
     this.add(roundedPanel(s, 28, 30, 456, 322));
-    const pv = this.add(pic(s, def.promptVisual, 214, promptY, def.promptVisual.startsWith('icon_') ? 2 : 4));
-    s.tweens.add({ targets: pv, y: pv.y - 3, duration: 700, yoyo: true, repeat: -1 });
-    const replay = makeButton(s, 304, promptY, 'icon_speaker', 1.5, onReplay);
+    if (def.letter) {
+      // [who is asking]  [ B ]  [sound waves]  - pictures only, no sentence
+      this.add(pic(s, def.promptVisual, 160, promptY, 2));
+      const g = s.add.graphics();
+      g.fillStyle(0x40255a, 0.25).fillRoundedRect(256 - 40, promptY - 40 + 4, 80, 84, 14);
+      g.fillStyle(0xffffff, 1).fillRoundedRect(256 - 40, promptY - 42, 80, 84, 14);
+      g.lineStyle(5, 0xffc800, 1).strokeRoundedRect(256 - 40, promptY - 42, 80, 84, 14);
+      this.add(g);
+      const t = this.add(s.add.text(256, promptY - 2, def.letter, { fontFamily: 'Trebuchet MS, Arial, sans-serif', fontSize: '66px', fontStyle: 'bold', color: '#6a3fc8' }).setOrigin(0.5));
+      s.tweens.add({ targets: t, scale: 1.08, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+      const ear = this.add(pic(s, 'icon_sound', 352, promptY, 1.6));
+      s.tweens.add({ targets: ear, x: ear.x + 4, duration: 500, yoyo: true, repeat: -1 });
+    } else {
+      const pv = this.add(pic(s, def.promptVisual, 256, promptY, def.promptVisual.startsWith('icon_') ? 2 : 4));
+      s.tweens.add({ targets: pv, y: pv.y - 3, duration: 700, yoyo: true, repeat: -1 });
+    }
+    const hint = makeButton(s, 446, 66, 'icon_hint', 1.2, onHint);
     const back = makeButton(s, 62, 62, 'icon_back', 1, onBack);
-    this.btns = [replay, back];
-    this.root.add([replay.container, back.container]);
-    this.objs.push(replay.container, back.container);
-    return { replay, back };
+    this.btns = [hint, back];
+    this.root.add([hint.container, back.container]);
+    this.objs.push(hint.container, back.container);
+    let replay: Btn | undefined;
+    if (narrationOn()) {
+      replay = makeButton(s, 446, 124, 'icon_speaker', 1.2, onReplay);
+      this.btns.push(replay);
+      this.root.add(replay.container); this.objs.push(replay.container);
+    }
+    return { replay, hint, back };
   }
 
   private close() {
@@ -50,6 +77,7 @@ export class PuzzlePanel {
     this.objs.forEach((o) => o.destroy());
     this.objs = [];
     this.btns = [];
+    this.cardPos = [];
     services.audio.stopVoice();
     this.root.setVisible(false);
     this.isOpen = false;
@@ -70,23 +98,24 @@ export class PuzzlePanel {
       let locked = false;
       let idleN = 0;
       const cards = new Map<string, { c: Phaser.GameObjects.Container; bg: Phaser.GameObjects.Graphics }>();
-      const { replay } = this.open(def, speakPrompt, () => { this.close(); resolve({ solved: false, assisted: false, cancelled: true }); });
-      const tick = makeButton(s, 256, 316, 'icon_check', 1.5, () => selected && confirm());
+      const showHand = () => { const k = cards.get(def.correctAnswer as string); if (k) this.hand(k.c.x, k.c.y); };
+      const { replay, hint } = this.open(def, speakPrompt, () => { restartIdle(); showHand(); }, () => { this.close(); resolve({ solved: false, assisted: false, cancelled: true }); });
+      const tick = makeButton(s, 256, 324, 'icon_check', 1.4, () => selected && confirm());
       tick.setEnabled(false);
       this.root.add(tick.container); this.objs.push(tick.container); this.btns.push(tick);
 
       const order = displayOrder(def, (Date.now() >>> 4) & 0xffff);
-      const n = order.length, gap = 124, x0 = 256 - ((n - 1) * gap) / 2, cy = 214;
+      const n = order.length, gap = 128, x0 = 256 - ((n - 1) * gap) / 2, cy = 232;
       const draw = (bg: Phaser.GameObjects.Graphics, on: boolean) => {
         bg.clear();
-        bg.fillStyle(0xffffff, 1).fillRoundedRect(-52, -52, 104, 104, 14);
-        bg.lineStyle(on ? 6 : 4, on ? 0xffc800 : 0xc9b8ff, 1).strokeRoundedRect(-52, -52, 104, 104, 14);
+        bg.fillStyle(0xffffff, 1).fillRoundedRect(-54, -54, 108, 108, 16);
+        bg.lineStyle(on ? 7 : 4, on ? 0xffc800 : 0xc9b8ff, 1).strokeRoundedRect(-54, -54, 108, 108, 16);
       };
       order.forEach((id, i) => {
         const ch = def.choices.find((c) => c.id === id)!;
         const bg = s.add.graphics(); draw(bg, false);
-        const img = pic(s, ch.picture, 0, 0, 4);
-        const c = s.add.container(x0 + i * gap, cy, [bg, img]).setSize(112, 112).setInteractive({ useHandCursor: true });
+        const img = pic(s, ch.picture, 0, 0, 5);
+        const c = s.add.container(x0 + i * gap, cy, [bg, img]).setSize(116, 116).setInteractive({ useHandCursor: true });
         c.on('pointerdown', () => {
           if (locked) return;
           restartIdle();
@@ -94,10 +123,11 @@ export class PuzzlePanel {
           selected = id;
           cards.forEach((v, k) => draw(v.bg, k === id));
           tick.setEnabled(true); tick.pulse(true);
-          s.tweens.add({ targets: img, scale: 4.5, duration: 120, yoyo: true });
+          s.tweens.add({ targets: img, scale: 5.6, duration: 120, yoyo: true });
           void services.audio.speak(ch.narrationKey); // each picture says its word
         });
         this.add(c);
+        this.cardPos.push({ id, x: c.x, y: c.y });
         cards.set(id, { c, bg });
       });
 
@@ -107,8 +137,9 @@ export class PuzzlePanel {
           delay: 10000, loop: true, callback: () => {
             if (locked) return;
             idleN++;
-            if (idleN % 2 === 1) { replay.pulse(true); s.time.delayedCall(1800, () => replay.pulse(false)); speakPrompt(); }
-            else { const k = cards.get(def.correctAnswer as string)!; this.hand(k.c.x, k.c.y); }
+            const nudge = replay ?? hint;
+            if (idleN % 2 === 1) { nudge.pulse(true); s.time.delayedCall(1800, () => nudge.pulse(false)); speakPrompt(); }
+            else showHand();
           }
         })];
       };
@@ -151,6 +182,7 @@ export class PuzzlePanel {
         cards.forEach((v) => draw(v.bg, false));
         tick.pulse(false); tick.setEnabled(false);
         void services.audio.speak(r.hintKey);
+        if (r.hintLevel >= 1) s.time.delayedCall(500, showHand); // picture hint: the hand points at the answer
         const keep = new Set(r.remainingChoices);
         cards.forEach((v, id) => { if (!keep.has(id)) { v.c.disableInteractive(); s.tweens.add({ targets: v.c, alpha: 0, duration: 400 }); } });
         if (prog.attempts >= ASSIST_AFTER) void assistedHelp();
@@ -173,7 +205,8 @@ export class PuzzlePanel {
       const used = new Set<string>();
       let locked = false;
       let idleN = 0;
-      const { replay } = this.open(def, speakPrompt, () => { this.close(); resolve({ solved: false, assisted: false, cancelled: true }); }, 84);
+      const showHand = () => { const next = target[placed.length]; const c = next && cards.get(next); if (c) this.hand(c.x, c.y); };
+      const { replay, hint } = this.open(def, speakPrompt, () => { restartIdle(); showHand(); }, () => { this.close(); resolve({ solved: false, assisted: false, cancelled: true }); }, 84);
 
       const total = prefix.length + target.length, sw = 52, x0 = 256 - ((total - 1) * sw) / 2, sy = 156;
       const slotImgs: (Phaser.GameObjects.Image | undefined)[] = [];
@@ -201,6 +234,7 @@ export class PuzzlePanel {
         const c = s.add.container(cx0 + i * gap, cy, [bg, img]).setSize(92, 92).setInteractive({ useHandCursor: true });
         c.on('pointerdown', () => { if (!locked && !(!reuse && used.has(id))) place(id, c); });
         this.add(c);
+        this.cardPos.push({ id, x: c.x, y: c.y });
         cards.set(id, c);
       });
       const undo = (k: number) => {
@@ -246,6 +280,7 @@ export class PuzzlePanel {
         void services.audio.speak(r.hintKey);
         await sleep(s, 1100);
         while (placed.length) { locked = false; undo(placed.length - 1); }
+        if (r.hintLevel >= 1) showHand(); // picture hint: the hand points at the next card
         if (prog.attempts >= ASSIST_AFTER) { await togetherDemo(); return; }
         locked = false;
       };
@@ -271,8 +306,9 @@ export class PuzzlePanel {
           delay: 10000, loop: true, callback: () => {
             if (locked) return;
             idleN++;
-            if (idleN % 2 === 1) { replay.pulse(true); s.time.delayedCall(1800, () => replay.pulse(false)); speakPrompt(); }
-            else { const next = target[placed.length]; const c = next && cards.get(next); if (c) this.hand(c.x, c.y); }
+            const nudge = replay ?? hint;
+            if (idleN % 2 === 1) { nudge.pulse(true); s.time.delayedCall(1800, () => nudge.pulse(false)); speakPrompt(); }
+            else showHand();
           }
         })];
       };

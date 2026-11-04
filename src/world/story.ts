@@ -4,7 +4,7 @@ import type { ObjDef, Tile } from './types';
 import type { Line } from '../content/dialogue';
 import { SCRIPT } from '../content/dialogue';
 import { puzzleById } from '../content/puzzleBank';
-import { decorForSlot } from '../content/decorCatalog';
+import { placeDecor } from '../content/decorCatalog';
 import { newProgress, countTap } from '../systems/puzzleEngine';
 import { nextObjective } from '../systems/questEngine';
 import { services } from '../systems/services';
@@ -33,7 +33,9 @@ export interface StoryCtx {
   moveObject(id: string, to: Tile): Promise<void>;
   requestForm(f: Form): Promise<void>;
   addSticker(id: string): boolean;
-  renderDecor(): void;
+  renderDecor(newSlot?: string): void;
+  /** Opens the bedroom picker for one hotspot: item id, null (empty it) or undefined (closed). */
+  pickDecor(slot: string, current: string | undefined): Promise<string | null | undefined>;
   sparkle(tile: Tile): void;
 }
 
@@ -95,8 +97,9 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
   // ---------------------------------------------------------------- slots in the bedroom
   if (obj.kind === 'slot') return decorate(ctx, id);
 
-  // ---------------------------------------------------------------- chests
+  // ---------------------------------------------------------------- chests and hidden finds
   if (obj.kind === 'chest') return chest(ctx, obj);
+  if (obj.kind === 'find') return findSpot(ctx, obj);
 
   switch (id) {
     case 'pip':
@@ -266,13 +269,18 @@ async function bloom(ctx: StoryCtx, obj: ObjDef) {
   if (session.bloomed.size === 1) await ctx.say(SCRIPT.bloomCheer);
 }
 
+/** Which flag each world chest / hidden spot sets (each flag unlocks one room item, see decorCatalog). */
+export const CHEST_FLAG: Record<string, QuestFlag> = { chest_creek: 'CREEK_CHEST', chest_shore: 'SHORE_CHEST', chest_grotto: 'GROTTO_CHEST' };
+export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND' };
+
 async function chest(ctx: StoryCtx, obj: ObjDef) {
   const reward = obj.reward!;
   const opened = ctx.state.stickers.includes(reward);
+  const flag = CHEST_FLAG[obj.id];
   ctx.setFrame(obj.id, 6);
-  if (opened) { ctx.sparkle({ x: obj.x, y: obj.y }); return; }
+  if (opened) { if (flag) ctx.complete(flag); ctx.sparkle({ x: obj.x, y: obj.y }); return; } // (older saves: grant the room item late)
   services.audio.sfx('chime');
-  if (obj.id === 'chest_creek') ctx.complete('CREEK_CHEST');
+  if (flag) ctx.complete(flag);
   ctx.addSticker(reward);
   ctx.celebrate('chest_open');
   await ctx.say(SCRIPT.chestFound);
@@ -294,23 +302,26 @@ async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
   await ctx.say(SCRIPT.pearlPushed);
 }
 
-/** Tap a bedroom spot to cycle through what could go there: each unlocked item, then empty. */
+/** Tap a bedroom hotspot: a picture picker opens; tapping an item puts it in the room (tap it again to take it away). */
 async function decorate(ctx: StoryCtx, slot: string) {
   const s = ctx.state;
-  const options = decorForSlot(slot, s.unlockedDecor).map((d) => d.id);
-  if (!options.length) { await remind(ctx); return; }
-  const cur = s.bedroom[slot];
-  const i = cur ? options.indexOf(cur) : -1;
-  const next = i + 1 < options.length ? options[i + 1] : undefined;
-  if (next) {
-    for (const k of Object.keys(s.bedroom)) if (s.bedroom[k] === next) delete s.bedroom[k]; // one lamp, one place
-    s.bedroom[slot] = next;
-  } else delete s.bedroom[slot];
+  const choice = await ctx.pickDecor(slot, s.bedroom[slot]);
+  if (choice === undefined || !placeDecor(s, slot, choice)) return;
   services.save.save();
-  ctx.renderDecor();
+  ctx.renderDecor(choice === null ? undefined : slot);
   services.audio.sfx('pop');
-  if (next === 'lamp' && ctx.complete('LAMP_PLACED')) {
+  if (choice === 'star_lamp' && ctx.complete('LAMP_PLACED')) {
     ctx.celebrate('icon_lamp');
-    await ctx.say(SCRIPT.lampPlaced);
+    await ctx.say(SCRIPT.lampPlaced); // Nana's gift (the canopy bed) is revealed right after this
   }
+}
+
+/** A sparkling hidden spot: found once, gives a room item. */
+async function findSpot(ctx: StoryCtx, obj: ObjDef) {
+  const flag = FIND_FLAG[obj.id];
+  if (!flag || ctx.state.flags[flag]) return;
+  services.audio.sfx('chime');
+  ctx.complete(flag);
+  ctx.sparkle({ x: obj.x, y: obj.y });
+  await ctx.say(SCRIPT.chestFound);
 }

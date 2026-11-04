@@ -1,5 +1,5 @@
 import { launch, sleep, tapL, ptr } from './lib.mjs';
-import { boot, talkOut, waitIdle, waitScene, talkUntilPuzzle, solveChoice } from './flow.mjs';
+import { boot, talkOut, waitIdle, waitScene, talkUntilPuzzle, solveChoice, solveSequence, placeItem } from './flow.mjs';
 import fs from 'node:fs';
 const OUT = process.env.OUT || new URL('../../docs/screenshots/browser', import.meta.url).pathname;
 fs.mkdirSync(OUT, { recursive: true });
@@ -20,11 +20,11 @@ await jump('courtyard', 'from_bedroom', 'princess', F1); await ptr(page, 'tapObj
 const F2 = { INTRO_DONE: true, PIP_CARROTS_DONE: true };
 await jump('woods', 'from_courtyard', 'princess', F2);
 await ptr(page, 'tapObject', 'tree'); await sleep(9000); await talkUntilPuzzle(page); await snap('05_forest_tree_sound_puzzle');
-await solveChoice(page, 3); await sleep(1500); await talkOut(page); await waitIdle(page);
+await solveChoice(page, 'ball'); await sleep(1500); await talkOut(page); await waitIdle(page);
 await ptr(page, 'tapTile', 17, 15); await sleep(2500); await snap('06_forest_gate_open_princess'); await crop('form_princess');
 await tapL(page, 36, 348); await sleep(700); await snap('07_form_tray'); await tapL(page, 164, 348); await sleep(2200); await waitIdle(page); await crop('form_unicorn');
 await ptr(page, 'tapObject', 'bridge_mark'); await sleep(7000); await talkUntilPuzzle(page); await snap('08_forest_bridge_pattern_puzzle');
-await tapL(page, 206, 252); await sleep(500); await tapL(page, 306, 252); await sleep(3500); await talkOut(page); await waitIdle(page); await sleep(500); await snap('09_forest_rainbow_bridge_repaired');
+await solveSequence(page, ['tile_red','tile_blue']); await sleep(1000); await talkOut(page); await waitIdle(page); await sleep(500); await snap('09_forest_rainbow_bridge_repaired');
 const F3 = { ...F2, TREE_GATE_OPEN: true, WILLA_MET: true, RAINBOW_BRIDGE_OPEN: true };
 await jump('shore', 'from_woods', 'unicorn', F3); await snap('10_lake_shore_unicorn');
 await ptr(page, 'tapObject', 'shimmer'); await sleep(7000); await waitIdle(page); await snap('11_lake_mermaid_transformation'); await crop('form_mermaid');
@@ -37,7 +37,7 @@ await jump('grotto', 'from_shore', 'mermaid', F5); await ptr(page, 'tapObject', 
 await jump('grotto', 'from_shore', 'mermaid', { ...F5, PEARL_PLACED: true }); await ptr(page, 'tapObject', 'star_pedestal'); await sleep(7000); await snap('16_grotto_wishing_star');
 await talkOut(page); await waitIdle(page);
 await jump('bedroom', 'from_courtyard', 'princess', { ...F5, PEARL_PLACED: true, STAR_1_FOUND: true }); await page.evaluate(() => { const s = window.__ptr.state(); s.stars = 1; s.unlockedDecor = ['lamp', 'shell_mobile']; }); await snap('17_bedroom_decorating_ready');
-await ptr(page, 'tapObject', 'slot_table'); await sleep(7000); await talkOut(page); await waitIdle(page); await snap('18_bedroom_lamp_placed_chapter_complete');
+await placeItem(page, 'slot_lamp', 'star_lamp'); await waitIdle(page); await sleep(500); await snap('18_bedroom_lamp_placed_chapter_complete');
 // portrait iPad view
 await page.setViewport({ width: 768, height: 1024, deviceScaleFactor: 1, hasTouch: true }); await sleep(1200); await snap('19_ipad_portrait');
 console.log((await page.evaluate(() => window.__errs)).join('|') || 'no page errors', '\n', logs.filter(l => !/narration|404/.test(l)).join('\n') || 'no console errors');

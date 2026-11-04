@@ -11,9 +11,9 @@ import { interact, onArrive, session, type StoryCtx } from '../world/story';
 import { Player, tilePos } from '../actors/player';
 import { narrationForPlan, planFormChange } from '../actors/transformations';
 import { completeFlag, nextObjective } from '../systems/questEngine';
-import { services } from '../systems/services';
+import { services, applySettingsToAudio } from '../systems/services';
 import { reducedEffects, sparkleCount, dur } from '../systems/accessibility';
-import { DECOR } from '../content/decorCatalog';
+import { DECOR, SLOTS, slotById, slotHasNewOption } from '../content/decorCatalog';
 import { ITEM, TILE } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
 
@@ -55,7 +55,7 @@ export class WorldScene extends Phaser.Scene {
     this.leaving = false;
     this.busy = false;
     this.idleMs = 0;
-    this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.slotMarks = []; this.waterCells = [];
+    this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.slotMarks = []; this.revealQueue = []; this.waterCells = [];
     this.treeSprite = undefined;
     this.waterTick = 0;
 
@@ -218,36 +218,46 @@ export class WorldScene extends Phaser.Scene {
   }
 
   // ------------------------------------------------------------------ bedroom decorating
-  private renderDecor() {
+  /** Draw every placed item at its hotspot. `popSlot` (the item just placed) gets a little bounce-in. */
+  private renderDecor(popSlot?: string) {
     this.decorSprites.forEach((d) => d.destroy());
     this.decorSprites = [];
     if (this.map.id !== 'bedroom') return;
-    for (const [slot, decorId] of Object.entries(this.state.bedroom)) {
+    for (const [slotId, decorId] of Object.entries(this.state.bedroom)) {
       const d = DECOR[decorId];
-      const o = this.map.objects.find((x) => x.id === slot);
-      if (!d || !o) continue;
-      const bottom = (o.y + 1) * T;
-      const s = this.makeSprite(d.sprite.key, o.x * T + T / 2, bottom, d.sprite.frame);
-      s.setDepth(d.layer === 'floor' ? 1 : d.layer === 'hang' ? 9000 : bottom);
-      if (d.layer === 'hang') s.y = (o.y + 2) * T;
+      const sl = slotById(slotId);
+      if (!d || !sl) continue;
+      const x = sl.x * T + T / 2 + (d.ox ?? 0);
+      const bottom = (sl.y + 1) * T + (d.dy ?? 0);
+      const s = this.makeSprite(d.sprite.key, x, bottom, d.sprite.frame);
+      s.setDepth(d.layer === 'floor' ? 1 : d.layer === 'wall' ? 50 : bottom + (decorId === 'canopy_bed' ? 1 : 0));
       this.decorSprites.push(s);
-      this.tweens.add({ targets: s, scale: { from: 0.4, to: 1 }, duration: dur(250), ease: 'Back.Out' });
+      if (slotId === popSlot) {
+        this.tweens.add({ targets: s, scale: { from: 0.4, to: 1 }, duration: dur(300), ease: 'Back.Out' });
+        this.sparkleAt(sl.x, sl.y, 8);
+      }
     }
     this.renderSlotMarks();
   }
 
-  /** Gentle sparkles on spots where something unlocked can still be placed. */
+  /** Gentle sparkles on hotspots where something unlocked can still be placed. */
   private renderSlotMarks() {
     this.slotMarks.forEach((s) => s.destroy());
     this.slotMarks = [];
-    if (this.map.id !== 'bedroom' || this.state.unlockedDecor.length === 0) return;
-    for (const o of this.map.objects.filter((x) => x.kind === 'slot')) {
-      const usable = this.state.unlockedDecor.some((id) => DECOR[id]?.slots.includes(o.id));
-      if (!usable || this.state.bedroom[o.id]) continue;
-      const m = this.makeSprite('items', o.x * T + T / 2, (o.y + 1) * T - 4, undefined, 'sparkle').setDepth(9500);
+    if (this.map.id !== 'bedroom') return;
+    for (const sl of SLOTS) {
+      if (!slotHasNewOption(sl.id, this.state.unlockedDecor, this.state.bedroom)) continue;
+      const m = this.makeSprite('items', sl.x * T + T / 2, (sl.y + 1) * T - 4, undefined, 'sparkle').setDepth(9500).setScale(1.3);
       this.tweens.add({ targets: m, y: m.y - 4, yoyo: true, repeat: -1, duration: 700 });
       this.slotMarks.push(m);
     }
+  }
+
+  // ------------------------------------------------------------------ "new item" reveals
+  private revealQueue: string[] = [];
+  private async flushReveals() {
+    while (this.revealQueue.length) await this.ui.revealDecor(this.revealQueue.shift()!);
+    this.ui.refresh();
   }
 
   // ------------------------------------------------------------------ story bridge
@@ -267,8 +277,12 @@ export class WorldScene extends Phaser.Scene {
       hideCount: () => self.ui.hideCount(),
       celebrate: (p: string, s?: number) => self.ui.celebrate(p, s),
       complete: (flag: QuestFlag) => {
+        const had = new Set(self.state.unlockedDecor);
         const fresh = completeFlag(self.state, flag);
-        if (fresh) { services.save.save(); self.ui.refresh(); self.applyFlags(true); }
+        if (fresh) {
+          for (const id of self.state.unlockedDecor) if (!had.has(id)) self.revealQueue.push(id);
+          services.save.save(); self.ui.refresh(); self.applyFlags(true);
+        }
         return fresh;
       },
       cast: () => self.player.cast(),
@@ -286,7 +300,8 @@ export class WorldScene extends Phaser.Scene {
         self.ui.refresh();
         return true;
       },
-      renderDecor: () => self.renderDecor(),
+      renderDecor: (slot?: string) => self.renderDecor(slot),
+      pickDecor: (slot: string, cur: string | undefined) => self.ui.pickDecor(slot, cur),
       sparkle: (t: Tile) => self.sparkleAt(t.x, t.y, 8)
     };
   }
@@ -405,7 +420,7 @@ export class WorldScene extends Phaser.Scene {
   private async runInteract(o: ObjDef) {
     if (this.busy) return;
     this.busy = true;
-    try { await interact(this.ctx, this.live(o)); }
+    try { await interact(this.ctx, this.live(o)); await this.flushReveals(); }
     finally { this.busy = false; this.afterAction(); }
   }
 
@@ -590,6 +605,9 @@ export class WorldScene extends Phaser.Scene {
       home: () => this.goHome(),
       busy: () => this.busy,
       modal: () => !!this.ui?.modal,
+      setNarration: (on: boolean) => { this.state.settings.narration = on; applySettingsToAudio(); },
+      pickerCards: () => this.ui.pickerCards.map((c) => ({ ...c })),
+      puzzleCards: () => this.ui.puzzleCards.map((c) => ({ ...c })),
       moving: () => this.player.moving,
       panel: () => this.ui?.panel ?? null,
       playerXY: () => { const c = this.cameras.main; return { x: this.player.sprite.x - c.scrollX, y: this.player.sprite.y - c.scrollY }; },

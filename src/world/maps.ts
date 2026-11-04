@@ -1,4 +1,5 @@
 import type { SceneId } from '../types/game';
+import { SLOTS } from '../content/decorCatalog';
 import { ITEM, TILE, type TileName } from '../content/frameIndex';
 import type { Gate, MapDef, ObjDef, PropDef, Tile } from './types';
 
@@ -126,6 +127,7 @@ function courtyard(): MapDef {
     { id: 'carrot_2', kind: 'puzzle', hideWhen: 'PIP_CARROTS_DONE', x: 30, y: 26, sprite: item('carrot_top'), radius: 1.6 },
     { id: 'carrot_3', kind: 'puzzle', hideWhen: 'PIP_CARROTS_DONE', x: 32, y: 25, sprite: item('carrot_top'), radius: 1.6 },
     { id: 'garden_plot', kind: 'puzzle', x: 10, y: 24, radius: 2 },
+    { id: 'butterfly_spot', kind: 'find', hideWhen: 'BUTTERFLY_FOUND', x: 3, y: 27, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.6 },
     { id: 'wand_pedestal', kind: 'ability', x: 6, y: 12, sprite: { key: 'pedestal', frame: 0 }, blocks: true, radius: 1.8 },
     { id: 'door_bedroom', kind: 'warp', x: 8, y: 5, tiles: [tile(8, 5)], to: { scene: 'bedroom', spawn: 'from_courtyard' }, radius: 1.5 },
     { id: 'warp_woods', kind: 'warp', x: 39, y: 15, tiles: col(39, 14, 16), to: { scene: 'woods', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
@@ -289,14 +291,12 @@ function bedroom(): MapDef {
     { key: 'bed', x: 4, y: 7, blocks: [[-1, -1], [0, -1], [1, -1], [-1, 0], [0, 0], [1, 0]] },
     { key: 'door_small', x: 11, y: 17, ox: 8, depthBias: -2 },
     { key: 'crown_hud', x: 11, y: 2, ox: 8, depthBias: -2 },
+    { key: 'shelf', x: 20, y: 2, ox: 8, depthBias: -1 },
     { key: 'items', frame: ITEM.star, x: 11, y: 1, ox: 8, showWhen: 'STAR_1_FOUND', depthBias: -2 },
   ];
   const objects: ObjDef[] = [
     { id: 'nana', kind: 'npc', x: 10, y: 9, sprite: npc('nana'), blocks: true, radius: 1.8 },
-    { id: 'slot_table', kind: 'slot', x: 17, y: 8, radius: 3.5 },
-    { id: 'slot_shelf', kind: 'slot', x: 20, y: 11, radius: 3.5 },
-    { id: 'slot_floor', kind: 'slot', x: 12, y: 13, radius: 3.5 },
-    { id: 'slot_ceiling', kind: 'slot', x: 14, y: 5, radius: 3.5 },
+    ...SLOTS.map((sl): ObjDef => ({ id: sl.id, kind: 'slot', x: sl.x, y: sl.y, radius: 3.2 })),
     { id: 'door_exit', kind: 'warp', x: 11, y: 17, tiles: [tile(11, 17), tile(12, 17)], to: { scene: 'courtyard', spawn: 'from_bedroom' }, radius: 1.5 },
   ];
   return {

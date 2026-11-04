@@ -731,6 +731,66 @@
    "width": 32
   },
   {
+   "file": "assets/props/bunny_pillow.png",
+   "height": 24,
+   "key": "bunny_pillow",
+   "width": 22
+  },
+  {
+   "file": "assets/props/unicorn_plush.png",
+   "height": 26,
+   "key": "unicorn_plush",
+   "width": 24
+  },
+  {
+   "file": "assets/props/shell_mirror.png",
+   "height": 26,
+   "key": "shell_mirror",
+   "width": 22
+  },
+  {
+   "file": "assets/props/mermaid_art.png",
+   "height": 24,
+   "key": "mermaid_art",
+   "width": 26
+  },
+  {
+   "file": "assets/props/butterfly_painting.png",
+   "height": 24,
+   "key": "butterfly_painting",
+   "width": 26
+  },
+  {
+   "file": "assets/props/canopy_bed.png",
+   "height": 50,
+   "key": "canopy_bed",
+   "width": 50
+  },
+  {
+   "file": "assets/props/moon_curtain.png",
+   "height": 36,
+   "key": "moon_curtain",
+   "width": 44
+  },
+  {
+   "file": "assets/props/crystal_nightstand.png",
+   "height": 28,
+   "key": "crystal_nightstand",
+   "width": 22
+  },
+  {
+   "file": "assets/props/decor_chest.png",
+   "height": 18,
+   "key": "decor_chest",
+   "width": 22
+  },
+  {
+   "file": "assets/props/shelf.png",
+   "height": 12,
+   "key": "shelf",
+   "width": 34
+  },
+  {
    "file": "assets/props/crown_hud.png",
    "height": 20,
    "key": "crown_hud",

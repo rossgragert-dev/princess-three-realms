@@ -343,6 +343,143 @@ def vase():
     p.outline(); return p
 
 
+# ------------------------------------------------------------------ bedroom decor rewards (v0.2)
+def bunny_pillow():
+    p = Px(22, 24)
+    p.ell(6.5, 6, 2.6, 6, C['white']); p.ell(15.5, 6, 2.6, 6, C['white'])
+    p.ell(6.5, 6.5, 1.2, 4, C['pink_hi']); p.ell(15.5, 6.5, 1.2, 4, C['pink_hi'])
+    p.rect(2, 11, 18, 11, C['pink']); p.rect(2, 11, 18, 2, C['pink_hi']); p.rect(2, 20, 18, 2, C['pink_sh'])
+    p.ell(11, 15, 8, 6.5, C['white']); p.ell(11, 18, 7, 3, C['cream_sh']); p.ell(11, 14.5, 7, 5, C['white'])
+    p.rect(7, 13, 2, 2, C['ol']); p.rect(13, 13, 2, 2, C['ol']); p.set(7, 13, C['white']); p.set(13, 13, C['white'])
+    p.rect(10, 16, 2, 1, C['blush']); p.set(10, 17, C['mouth']); p.set(11, 17, C['mouth'])
+    p.ell(5, 16, 1.6, 1.2, C['blush']); p.ell(17, 16, 1.6, 1.2, C['blush'])
+    p.outline(); return p
+
+
+def unicorn_plush():
+    p = Px(24, 26)
+    p.rect(3, 15, 18, 9, C['white']); p.ell(12, 19, 9, 6, C['white']); p.ell(12, 21, 8, 3, C['cream_sh'])
+    p.ell(12, 12, 8, 7, C['white']); p.ell(7.5, 8, 2.4, 2.2, C['pink_hi']); p.ell(16.5, 8, 2.4, 2.2, C['white'])
+    p.poly([(11, 2), (13, 2), (12, -1 + 1)], C['gold']); p.poly([(10, 6), (14, 6), (12, 0)], C['gold']); p.set(12, 1, C['gold_hi'])
+    p.ell(6, 10, 3, 5, C['pink']); p.ell(5.5, 12, 2, 4, C['purple_hi']); p.ell(7, 8, 2, 3, C['pink_hi'])
+    p.rect(9, 11, 2, 2, C['ol']); p.rect(14, 11, 2, 2, C['ol']); p.set(9, 11, C['white']); p.set(14, 11, C['white'])
+    p.ell(12, 15, 2.6, 1.6, C['pink_hi']); p.set(11, 15, C['pink_sh']); p.set(13, 15, C['pink_sh'])
+    p.ell(7, 14, 1.6, 1.2, C['blush']); p.ell(17, 14, 1.6, 1.2, C['blush'])
+    p.rect(5, 22, 4, 2, C['pink_sh']); p.rect(15, 22, 4, 2, C['pink_sh'])
+    p.outline(); return p
+
+
+def shell_mirror():
+    p = Px(22, 26)
+    for i, col in enumerate(['pink_sh', 'pink', 'pink_hi']):
+        p.ell(11, 13, 10 - i * 1.4, 12 - i * 1.6, C[col])
+    for x in (3, 6, 9, 13, 16, 19):
+        p.line(11, 24, x, 2, C['pink_sh'])
+    p.ell(11, 12.5, 6.5, 8, C['gold'])
+    p.ell(11, 12.5, 5, 6.6, rgb('#bfeaff')); p.ell(11, 11, 3.5, 4.5, rgb('#e6f8ff'))
+    p.line(7, 8, 9, 6, C['white']); p.line(7, 10, 8, 9, C['white'])
+    p.rect(8, 22, 6, 3, C['gold']); p.rect(8, 22, 6, 1, C['gold_hi'])
+    p.outline(); return p
+
+
+def _frame(p, w, h):
+    p.rect(0, 0, w, h, C['gold_sh']); p.rect(1, 1, w - 2, h - 2, C['gold']); p.rect(1, 1, w - 2, 1, C['gold_hi'])
+    p.rect(3, 3, w - 6, h - 6, C['gold_sh'])
+
+
+def mermaid_art():
+    p = Px(26, 24)
+    _frame(p, 26, 24)
+    p.rect(4, 4, 18, 16, rgb('#3ea6ff')); p.rect(4, 4, 18, 6, rgb('#8fd8ff')); p.rect(4, 10, 18, 2, rgb('#2169dc'))
+    for x, y in ((6, 6), (18, 8)):
+        p.set(x, y, C['white'])
+    p.ell(12, 11, 2.2, 2.4, C['skin']); p.ell(10.5, 10.5, 2, 2.6, C['hair']); p.ell(14, 10, 1.6, 2.4, C['hair'])
+    p.rect(11, 13, 3, 3, C['skin_sh']); p.rect(11, 13, 3, 1, C['teal'])
+    p.poly([(11, 15), (14, 15), (13, 19), (12, 19)], C['teal']); p.poly([(12, 18), (8, 20), (10, 17)], C['teal_hi']); p.poly([(13, 18), (17, 20), (15, 17)], C['teal_hi'])
+    p.set(5, 18, C['sand']); p.set(6, 19, C['sand']); p.set(19, 19, C['pink_hi']); p.set(20, 18, C['pink'])
+    p.outline(); return p
+
+
+def butterfly_painting():
+    p = Px(26, 24)
+    _frame(p, 26, 24)
+    p.rect(4, 4, 18, 16, C['cream']); p.rect(4, 4, 18, 3, C['pink_hi']); p.rect(4, 17, 18, 3, C['green_hi'])
+    p.ell(9.5, 10.5, 4, 3.6, C['purple']); p.ell(16.5, 10.5, 4, 3.6, C['purple']); p.ell(10, 15, 3, 2.6, C['pink']); p.ell(16, 15, 3, 2.6, C['pink'])
+    p.ell(9, 10, 1.6, 1.4, C['purple_hi']); p.ell(17, 10, 1.6, 1.4, C['purple_hi']); p.set(8, 13, C['white']); p.set(18, 13, C['white'])
+    p.rect(12, 8, 2, 10, C['ol']); p.line(12, 8, 10, 5, C['ol']); p.line(13, 8, 15, 5, C['ol'])
+    p.outline(); return p
+
+
+def canopy_bed():
+    p = Px(50, 50)
+    o = 18  # the bed sits in the lower 32 rows, same footprint as the plain bed
+    p.rect(2, o + 4, 44, 5, C['purple_sh']); p.rect(2, o + 4, 44, 2, C['purple'])
+    p.rect(3, o + 9, 42, 18, C['cream']); p.rect(3, o + 9, 42, 2, C['white'])
+    p.rect(3, o + 15, 42, 12, C['blue_hi']); p.rect(3, o + 15, 42, 2, C['blue']); p.rect(3, o + 26, 42, 2, C['blue_sh'])
+    for x in range(6, 44, 8):
+        _star_poly(p, x, o + 21, 2.4, 1.2, C['gold_hi'])
+    p.ell(11, o + 12, 7, 3.5, C['white']); p.ell(11, o + 12, 5, 2, C['pink_hi']); p.ell(35, o + 12, 7, 3.5, C['white']); p.ell(35, o + 12, 5, 2, C['pink_hi'])
+    p.rect(4, o + 26, 3, 5, C['brown']); p.rect(41, o + 26, 3, 5, C['brown'])
+    # posts, top rail and soft pink drapes
+    p.rect(1, 2, 3, o + 28, C['gold_sh']); p.rect(1, 2, 1, o + 28, C['gold']); p.rect(45, 2, 3, o + 28, C['gold_sh']); p.rect(45, 2, 1, o + 28, C['gold'])
+    p.ell(2.5, 2, 2.4, 2.4, C['gold_hi']); p.ell(46.5, 2, 2.4, 2.4, C['gold_hi'])
+    p.rect(1, 3, 47, 3, C['pink']); p.rect(1, 3, 47, 1, C['pink_hi'])
+    for x in range(1, 48, 4):
+        p.ell(x + 2, 7, 2.4, 2.2, C['pink_hi'])
+    p.poly([(4, 6), (13, 6), (10, 24), (4, 28)], C['pink_hi']); p.poly([(4, 6), (8, 6), (6, 26), (4, 28)], C['pink'])
+    p.poly([(36, 6), (45, 6), (45, 28), (39, 24)], C['pink_hi']); p.poly([(41, 6), (45, 6), (45, 28), (43, 26)], C['pink'])
+    for x, y in ((26, 3), (16, 4), (34, 4)):
+        _star_poly(p, x, y + 1, 2.2, 1.1, C['gold_hi'])
+    p.outline(); return p
+
+
+def moon_curtain():
+    p = Px(44, 36)
+    p.rect(0, 0, 44, 3, C['gold_sh']); p.rect(0, 0, 44, 1, C['gold']); p.ell(2, 1.5, 2.2, 2.2, C['gold_hi']); p.ell(42, 1.5, 2.2, 2.2, C['gold_hi'])
+    navy, navy_hi, navy_sh = rgb('#3a3aa0'), rgb('#5a52c8'), rgb('#2a2a7a')
+    for x0, flip in ((1, 1), (43, -1)):
+        pts = [(x0, 3), (x0 + flip * 12, 3), (x0 + flip * 9, 22), (x0 + flip * 14, 35), (x0, 35)]
+        p.poly(pts, navy)
+        for k in range(1, 5):
+            xx = x0 + flip * (k * 2.4)
+            p.line(int(xx), 4, int(xx - flip * 1), 34, navy_hi if k % 2 else navy_sh)
+        p.rect(min(x0, x0 + flip * 10), 21, 11, 2, C['gold'])  # tie-back
+    for cx, cy in ((6, 12), (38, 12)):
+        p.ell(cx, cy, 3.2, 3.2, C['gold_hi']); p.ell(cx + 1.6, cy - 0.8, 2.6, 2.8, navy)
+    p.set(12, 28, C['gold_hi']); p.set(32, 28, C['gold_hi']); p.set(9, 7, C['white']); p.set(35, 8, C['white'])
+    p.outline(); return p
+
+
+def crystal_nightstand():
+    p = Px(22, 28)
+    p.poly([(11, 0), (16, 5), (11, 13), (6, 5)], rgb('#8fd8ff')); p.poly([(11, 0), (16, 5), (11, 5)], rgb('#e6f8ff')); p.poly([(11, 5), (16, 5), (11, 13)], C['blue'])
+    p.poly([(6, 5), (11, 5), (11, 13)], C['teal_hi']); p.set(9, 4, C['white']); p.set(10, 3, C['white'])
+    p.poly([(3, 9), (6, 9), (4, 14), (2, 14)], C['purple_hi']); p.poly([(17, 10), (20, 10), (19, 14), (16, 14)], C['pink_hi'])
+    p.rect(1, 14, 20, 3, C['purple_hi']); p.rect(1, 14, 20, 1, C['white'])
+    p.rect(2, 17, 18, 9, C['purple']); p.rect(2, 17, 18, 1, C['purple_sh'])
+    p.rect(4, 19, 14, 3, C['purple_hi']); p.rect(9, 20, 4, 1, C['gold'])
+    p.rect(4, 23, 14, 2, C['purple_sh'])
+    p.rect(2, 26, 3, 2, C['gold_sh']); p.rect(17, 26, 3, 2, C['gold_sh'])
+    p.outline(); return p
+
+
+def decor_chest():
+    p = Px(22, 18)
+    p.ell(11, 4, 10, 4.2, C['brown']); p.rect(1, 4, 20, 4, C['brown']); p.rect(2, 3, 18, 1, C['brown_hi'])
+    p.rect(1, 8, 20, 9, C['brown_hi']); p.rect(1, 14, 20, 3, C['brown'])
+    p.rect(1, 7, 20, 2, C['gold']); p.rect(5, 1, 2, 16, C['gold_sh']); p.rect(15, 1, 2, 16, C['gold_sh'])
+    p.rect(9, 7, 4, 5, C['gold_hi']); p.rect(10, 9, 2, 2, C['ol']); p.set(8, 10, C['gold'])
+    p.set(3, 12, C['gold']); p.set(18, 12, C['gold'])
+    p.outline(); return p
+
+
+def shelf():
+    p = Px(34, 12)
+    p.rect(0, 0, 34, 4, C['wood']); p.rect(0, 0, 34, 1, C['brown_hi']); p.rect(0, 3, 34, 1, C['wood_sh'])
+    p.rect(4, 4, 3, 5, C['wood_sh']); p.rect(27, 4, 3, 5, C['wood_sh']); p.poly([(4, 9), (7, 9), (7, 5)], C['wood_sh']); p.poly([(27, 9), (30, 9), (27, 5)], C['wood_sh'])
+    p.outline(); return p
+
+
 def window_night():
     p = Px(32, 32)
     p.rect(0, 0, 32, 32, C['gold_sh']); p.rect(2, 2, 28, 28, rgb('#2a2a7a')); p.rect(2, 2, 28, 10, rgb('#3a3aa0'))

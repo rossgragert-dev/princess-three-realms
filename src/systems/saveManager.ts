@@ -1,4 +1,5 @@
 import type { GameState, SceneId } from '../types/game';
+import { sanitizeDecor } from '../content/decorCatalog';
 
 export const SAVE_KEY = 'ptr_save_v1';
 
@@ -26,7 +27,8 @@ export function defaultState(): GameState {
       musicVolume: 0.5,
       voiceVolume: 1,
       sfxVolume: 0.7,
-      captions: true,
+      narration: false,
+      captions: false,
       reducedEffects: false,
       dpad: false
     }
@@ -44,6 +46,7 @@ export function sanitize(raw: unknown): GameState {
   const form = r.form === 'unicorn' || r.form === 'mermaid' || r.form === 'princess' ? r.form : d.form;
   // Form must be valid for the scene: water-only scene needs mermaid, land scenes can't be mermaid.
   const safeForm = scene === 'grotto' ? 'mermaid' : form === 'mermaid' && scene !== 'shore' ? 'princess' : form;
+  const decor = sanitizeDecor(r.unlockedDecor, r.bedroom);
   return {
     version: 1,
     scene,
@@ -53,8 +56,8 @@ export function sanitize(raw: unknown): GameState {
     flags: { ...(typeof r.flags === 'object' && r.flags ? r.flags : {}) },
     stars: Number.isFinite(r.stars) ? Math.max(0, Math.min(6, r.stars as number)) : 0,
     stickers: Array.isArray(r.stickers) ? r.stickers.filter((s) => typeof s === 'string') : [],
-    unlockedDecor: Array.isArray(r.unlockedDecor) ? r.unlockedDecor.filter((s) => typeof s === 'string') : [],
-    bedroom: typeof r.bedroom === 'object' && r.bedroom ? { ...r.bedroom } : {},
+    unlockedDecor: decor.unlockedDecor,
+    bedroom: decor.bedroom,
     puzzles: typeof r.puzzles === 'object' && r.puzzles ? { ...r.puzzles } : {},
     settings: { ...d.settings, ...(typeof r.settings === 'object' && r.settings ? r.settings : {}) }
   };

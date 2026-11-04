@@ -116,14 +116,14 @@ describe('quest engine', () => {
     assert.equal(completeFlag(s, 'STAR_1_FOUND'), false);
     assert.equal(s.stars, 1);
     assert.deepEqual(s.stickers.filter((x) => x === 'sticker_star').length, 1);
-    assert.ok(s.unlockedDecor.includes('lamp'));
+    assert.ok(s.unlockedDecor.includes('star_lamp'));
     assert.equal(nextObjective(s), null);
     assert.ok(chapterComplete(s));
   });
   it('optional puzzles are never gated and unlock decor (T11)', () => {
     const s = defaultState();
     assert.equal(completeFlag(s, 'SHELLS_MATCHED'), true);
-    assert.ok(s.unlockedDecor.includes('rug'));
+    assert.ok(s.unlockedDecor.includes('rainbow_rug'));
   });
   it('next objective follows the path', () => {
     const s = defaultState();
@@ -136,11 +136,11 @@ describe('quest engine', () => {
 describe('save / resume (T13)', () => {
   it('round-trips state', () => {
     const st = memStore(); const a = new SaveManager(st);
-    completeFlag(a.state, 'INTRO_DONE'); a.state.bedroom = { slot_lamp: 'lamp' }; a.state.scene = 'woods'; a.state.form = 'unicorn';
+    completeFlag(a.state, 'INTRO_DONE'); a.state.unlockedDecor = ['star_lamp']; a.state.bedroom = { slot_lamp: 'star_lamp' }; a.state.scene = 'woods'; a.state.form = 'unicorn';
     a.save();
     const b = new SaveManager(st);
     assert.equal(b.state.flags.INTRO_DONE, true);
-    assert.equal(b.state.bedroom.slot_lamp, 'lamp');
+    assert.equal(b.state.bedroom.slot_lamp, 'star_lamp');
     assert.equal(b.state.form, 'unicorn');
   });
   it('corrupt or hostile data falls back safely', () => {

@@ -1,4 +1,5 @@
 import type { GameState, QuestFlag } from '../types/game';
+import { decorForFlag } from '../content/decorCatalog';
 
 /** The ordered main path. Each step lists the flag that completes it and the flags that must come first. */
 export const MAIN_PATH: { flag: QuestFlag; requires: QuestFlag[]; hintIcon: string; where: string }[] = [
@@ -26,18 +27,16 @@ export function completeFlag(state: GameState, flag: QuestFlag): boolean {
   if (flag === 'STAR_1_FOUND') {
     state.stars = Math.max(state.stars, 1);
     addUnique(state.stickers, 'sticker_star');
-    addUnique(state.unlockedDecor, 'lamp');
   }
   if (flag === 'PIP_CARROTS_DONE') addUnique(state.stickers, 'sticker_pip');
   if (flag === 'RAINBOW_BRIDGE_OPEN') addUnique(state.stickers, 'sticker_rainbow');
   if (flag === 'MARINA_HELPED') {
     addUnique(state.stickers, 'sticker_marina');
-    addUnique(state.unlockedDecor, 'shell_mobile');
   }
-  if (flag === 'SHELLS_MATCHED') addUnique(state.unlockedDecor, 'rug');
-  if (flag === 'GARDEN_SEQUENCED') addUnique(state.unlockedDecor, 'vase');
   if (flag === 'WAND_LIT') addUnique(state.stickers, 'sticker_wand');
   if (flag === 'CREEK_CHEST') addUnique(state.stickers, 'sticker_chest');
+  const item = decorForFlag(flag);
+  if (item) addUnique(state.unlockedDecor, item); // every decor reward comes from exactly one flag
   return true;
 }
 

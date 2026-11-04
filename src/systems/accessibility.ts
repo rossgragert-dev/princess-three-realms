@@ -6,3 +6,5 @@ export const captionsOn = () => services.save.state.settings.captions;
 export const sparkleCount = (n: number) => (reducedEffects() ? Math.ceil(n / 3) : n);
 /** Tween duration helper: reduced effects shortens flourishes. */
 export const dur = (ms: number) => (reducedEffects() ? Math.min(ms, 200) : ms);
+/** Spoken narration is an optional extra; the child flow must work with this false. */
+export const narrationOn = () => services.save.state.settings.narration;

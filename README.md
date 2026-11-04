@@ -31,3 +31,6 @@ npm run audio:script   # regenerate docs/AUDIO_SCRIPT.md from the narration mani
 
 ## Standalone site (v0.1b)
 `site/` is the complete deployable game (plain static files). See `docs/DEPLOY_GITHUB_PAGES.md`. Rebuild with `tools/build-standalone.sh`.
+
+## v0.2
+- `docs/PICTURE_FIRST.md` (narration optional) and `docs/DECORATING.md` (bedroom rewards).
