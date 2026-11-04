@@ -1,0 +1,488 @@
+{
+  "bloom_cheer": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "bramble_pattern": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "bramble"
+  },
+  "bridge_bloom_prompt": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "willa"
+  },
+  "chapter_done": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "chest_found": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "controls_tap": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "decor_tutorial": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "form_wrong_terrain": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "willa"
+  },
+  "garden_sequence": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "nana"
+  },
+  "hint_carrots_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "pip"
+  },
+  "hint_carrots_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "pip"
+  },
+  "hint_pattern_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "bramble"
+  },
+  "hint_pattern_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "bramble"
+  },
+  "hint_rhyme_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "shell"
+  },
+  "hint_rhyme_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "shell"
+  },
+  "hint_sequence_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "nana"
+  },
+  "hint_sequence_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "nana"
+  },
+  "hint_starfish_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "marina"
+  },
+  "hint_starfish_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "marina"
+  },
+  "hint_together": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "hint_tree_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "tree"
+  },
+  "hint_tree_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "tree"
+  },
+  "intro_welcome": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "lamp_placed": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "nana"
+  },
+  "marina_find_starfish": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "marina"
+  },
+  "marina_intro": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "marina"
+  },
+  "nana_return": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "nana"
+  },
+  "need_unicorn": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "willa"
+  },
+  "obj_bridge": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "obj_home": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "obj_lake": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "obj_marina": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "obj_pip": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "obj_star": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "obj_tree": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "pearl_prompt": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "coralie"
+  },
+  "pearl_pushed": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "coralie"
+  },
+  "pip_count_carrots": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "pip"
+  },
+  "pip_intro": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "pip"
+  },
+  "quest_replay": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "retry_gentle": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "shell_rhyme_cat": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "shell"
+  },
+  "shore_intro": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "willa"
+  },
+  "star_found": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_chest": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_marina": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_pearl": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_pip": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_rainbow": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_shell": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_star": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "sticker_wand": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "success_bridge_pattern": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "bramble"
+  },
+  "success_carrots": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "pip"
+  },
+  "success_garden_grow": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "nana"
+  },
+  "success_shell_rhyme": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "shell"
+  },
+  "success_starfish": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "marina"
+  },
+  "success_tree_sound": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "tree"
+  },
+  "transform_mermaid": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "transform_princess": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "transform_unicorn": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "tree_sound_b": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "tree"
+  },
+  "ui_book": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "wand_lit": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "willa_intro": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "willa"
+  },
+  "word_ball": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_carrot_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_carrot_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_carrot_3": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_cat": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_fish": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_flower": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_hat": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_seed": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_starfish_1": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_starfish_2": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_starfish_3": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_sun": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_tile_blue": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_tile_red": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  },
+  "word_water": {
+    "date": "2026-11-04",
+    "engine": "flite",
+    "source": "tts",
+    "speaker": "narrator"
+  }
+}

@@ -9,7 +9,7 @@ const files = [];
   for (const n of readdirSync(d)) {
     const p = join(d, n);
     if (statSync(p).isDirectory()) walk(p);
-    else if (!/(^|\/)(sw\.js|precache\.json)$/.test(p)) files.push(p);
+    else if (!/(^|\/)(sw\.js|precache\.json|README\.md)$/.test(p)) files.push(p);
   }
 })(dist);
 const urls = ['./', ...files.map((f) => './' + relative(dist, f))].sort();

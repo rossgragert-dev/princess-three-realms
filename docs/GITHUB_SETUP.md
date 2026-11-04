@@ -1,3 +1,5 @@
+> **v0.1b: use `docs/DEPLOY_GITHUB_PAGES.md`** (no Actions needed; publish the `gh-pages` branch or upload `site/`). The steps below describe the older Vite/Actions route.
+
 # Publishing to GitHub (exact commands)
 
 The authoring session could not create repositories (GitHub GraphQL and `POST /user/repos` are blocked; the session is bound to

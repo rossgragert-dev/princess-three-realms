@@ -28,3 +28,6 @@ npm run audio:script   # regenerate docs/AUDIO_SCRIPT.md from the narration mani
 - `tools/local-verify/` - run the real game in real Chrome without npm
 - `tools/make_tts_clips.py` - temporary narration clips + replaceable recordings
 - `docs/screenshots/browser/` - actual browser screenshots
+
+## Standalone site (v0.1b)
+`site/` is the complete deployable game (plain static files). See `docs/DEPLOY_GITHUB_PAGES.md`. Rebuild with `tools/build-standalone.sh`.

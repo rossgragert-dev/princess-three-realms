@@ -6,6 +6,7 @@ replace the temporary clips by simply dropping <key>.m4a into the output folder;
 treated as "custom" and are never overwritten.
 
   python3 tools/make_tts_clips.py --status
+  python3 tools/make_tts_clips.py --engine flite                # ffmpeg built with libflite (CMU Flite, offline, open source)
   python3 tools/make_tts_clips.py --engine espeak-ng            # needs espeak-ng + ffmpeg
   python3 tools/make_tts_clips.py --engine piper                # needs piper + PIPER_MODEL=/path/voice.onnx (per speaker: PIPER_MODEL_PIP, ...)
   python3 tools/make_tts_clips.py --engine say                  # macOS
@@ -31,6 +32,12 @@ PROFILE = {
     'coralie':  dict(espeak='en-us+f5', speed=155, pitch=78, say='Allison', piper_len=1.0),
 }
 
+# Flite voices (kal, awb, rms, slt) + pitch factor so every character sounds different. Synthetic, never a real person.
+FLITE = {
+    'narrator': ('slt', 1.00), 'pip': ('slt', 1.28), 'willa': ('slt', 1.10), 'tree': ('awb', 0.80), 'bramble': ('kal', 1.12),
+    'marina': ('slt', 0.94), 'nana': ('slt', 0.86), 'shell': ('slt', 1.22), 'coralie': ('slt', 1.16),
+}
+
 def run(cmd, **kw):
     return subprocess.run(cmd, check=True, capture_output=True, **kw)
 
@@ -39,6 +46,13 @@ def synth(engine, row, wav, cmd_tpl):
     p = PROFILE.get(sp, PROFILE['narrator'])
     if engine == 'espeak-ng':
         run(['espeak-ng', '-v', p['espeak'], '-s', str(p['speed']), '-p', str(p['pitch']), '-w', wav, text])
+    elif engine == 'flite':
+        voice, f = FLITE.get(sp, FLITE['narrator'])
+        with tempfile.NamedTemporaryFile('w', suffix='.txt', delete=False) as t: t.write(text)
+        try:
+            run(['ffmpeg', '-loglevel', 'error', '-y', '-f', 'lavfi', '-i', f'flite=textfile={t.name}:voice={voice}',
+                 '-af', f'asetrate=16000*{f},aresample=22050,atempo={1/f:.4f}', '-ar', '22050', wav])
+        finally: os.unlink(t.name)
     elif engine == 'piper':
         model = os.environ.get('PIPER_MODEL_' + sp.upper()) or os.environ.get('PIPER_MODEL')
         if not model: raise SystemExit('set PIPER_MODEL (or PIPER_MODEL_<SPEAKER>) to a .onnx voice')
@@ -85,7 +99,10 @@ def main():
             s = state(r, a.out, prov); counts[s] = counts.get(s, 0) + 1
             if a.status and s == 'missing' and r['required']: print('missing', r['key'])
         print(json.dumps(counts)); return
-    if a.engine != 'tone' and not a.dry_run and a.engine not in ('command',) and not shutil.which({'espeak-ng': 'espeak-ng', 'piper': 'piper', 'say': 'say'}[a.engine]):
+    if a.engine == 'flite':
+        if not shutil.which('ffmpeg') or 'flite' not in subprocess.run(['ffmpeg', '-hide_banner', '-filters'], capture_output=True, text=True).stdout:
+            sys.exit('this ffmpeg has no libflite filter; nothing generated.')
+    elif a.engine not in ('tone', 'command') and not a.dry_run and not shutil.which({'espeak-ng': 'espeak-ng', 'piper': 'piper', 'say': 'say'}[a.engine]):
         sys.exit(f'engine "{a.engine}" is not installed here; nothing generated.')
     if not shutil.which('ffmpeg'): sys.exit('ffmpeg is required')
     os.makedirs(a.out, exist_ok=True)

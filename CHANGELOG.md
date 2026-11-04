@@ -1,4 +1,8 @@
 # Changelog
+## 0.1.0b "Standalone Edition"
+- `site/`: deployable static website (no npm/Vite/Actions). `tools/build-standalone.sh` rebuilds it. `.nojekyll` included; `gh-pages` branch prepared.
+- Verified from a GitHub-Pages-style sub-path in Chrome: full Chapter 1, offline PWA, viewports, save/resume, narration behaviour.
+- 81 temporary offline-TTS (CMU Flite) narration clips with provenance; new `flite` engine in `tools/make_tts_clips.py`. Replaceable without a rebuild.
 ## 0.1.0a "First Light"
 - First real-browser run (Chrome + Phaser 3.90.0): Chapter 1 completes end to end; real screenshots in docs/screenshots/browser.
 - Fixed: story form-change blocked by busy flag; stale tree sprite crashing later scenes; duplicate spoken prompt; settings layout; underwater look; stale count tray.
