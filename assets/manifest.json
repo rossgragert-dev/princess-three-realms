@@ -1,0 +1,1030 @@
+{
+ "anims": [
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "princess_idle_down",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "key": "princess_walk_down",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    6,
+    7,
+    7,
+    6
+   ],
+   "key": "princess_cast_down",
+   "repeat": 0,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    8,
+    9
+   ],
+   "key": "princess_idle_up",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    10,
+    11,
+    12,
+    13
+   ],
+   "key": "princess_walk_up",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    14,
+    15,
+    15,
+    14
+   ],
+   "key": "princess_cast_up",
+   "repeat": 0,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    16,
+    17
+   ],
+   "key": "princess_idle_left",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    18,
+    19,
+    20,
+    21
+   ],
+   "key": "princess_walk_left",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    22,
+    23,
+    23,
+    22
+   ],
+   "key": "princess_cast_left",
+   "repeat": 0,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    24,
+    25
+   ],
+   "key": "princess_idle_right",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    26,
+    27,
+    28,
+    29
+   ],
+   "key": "princess_walk_right",
+   "repeat": -1,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    30,
+    31,
+    31,
+    30
+   ],
+   "key": "princess_cast_right",
+   "repeat": 0,
+   "sheet": "princess"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "unicorn_idle_down",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "key": "unicorn_walk_down",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    6,
+    7,
+    8,
+    9
+   ],
+   "key": "unicorn_gallop_down",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    10,
+    11,
+    11,
+    10
+   ],
+   "key": "unicorn_bloom_down",
+   "repeat": 0,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    12,
+    13
+   ],
+   "key": "unicorn_idle_up",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    14,
+    15,
+    16,
+    17
+   ],
+   "key": "unicorn_walk_up",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    18,
+    19,
+    20,
+    21
+   ],
+   "key": "unicorn_gallop_up",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    22,
+    23,
+    23,
+    22
+   ],
+   "key": "unicorn_bloom_up",
+   "repeat": 0,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    24,
+    25
+   ],
+   "key": "unicorn_idle_left",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    26,
+    27,
+    28,
+    29
+   ],
+   "key": "unicorn_walk_left",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    30,
+    31,
+    32,
+    33
+   ],
+   "key": "unicorn_gallop_left",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    34,
+    35,
+    35,
+    34
+   ],
+   "key": "unicorn_bloom_left",
+   "repeat": 0,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    36,
+    37
+   ],
+   "key": "unicorn_idle_right",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    38,
+    39,
+    40,
+    41
+   ],
+   "key": "unicorn_walk_right",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    42,
+    43,
+    44,
+    45
+   ],
+   "key": "unicorn_gallop_right",
+   "repeat": -1,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    46,
+    47,
+    47,
+    46
+   ],
+   "key": "unicorn_bloom_right",
+   "repeat": 0,
+   "sheet": "unicorn"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "mermaid_idle_down",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "key": "mermaid_swim_down",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    6,
+    7,
+    7,
+    6
+   ],
+   "key": "mermaid_bubble_down",
+   "repeat": 0,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    8,
+    9
+   ],
+   "key": "mermaid_idle_up",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    10,
+    11,
+    12,
+    13
+   ],
+   "key": "mermaid_swim_up",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    14,
+    15,
+    15,
+    14
+   ],
+   "key": "mermaid_bubble_up",
+   "repeat": 0,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    16,
+    17
+   ],
+   "key": "mermaid_idle_left",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    18,
+    19,
+    20,
+    21
+   ],
+   "key": "mermaid_swim_left",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    22,
+    23,
+    23,
+    22
+   ],
+   "key": "mermaid_bubble_left",
+   "repeat": 0,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    24,
+    25
+   ],
+   "key": "mermaid_idle_right",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    26,
+    27,
+    28,
+    29
+   ],
+   "key": "mermaid_swim_right",
+   "repeat": -1,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    30,
+    31,
+    31,
+    30
+   ],
+   "key": "mermaid_bubble_right",
+   "repeat": 0,
+   "sheet": "mermaid"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "pip_idle",
+   "repeat": -1,
+   "sheet": "npc_pip"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "pip_react",
+   "repeat": 0,
+   "sheet": "npc_pip"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "willa_idle",
+   "repeat": -1,
+   "sheet": "npc_willa"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "willa_react",
+   "repeat": 0,
+   "sheet": "npc_willa"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "bramble_idle",
+   "repeat": -1,
+   "sheet": "npc_bramble"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "bramble_react",
+   "repeat": 0,
+   "sheet": "npc_bramble"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "marina_idle",
+   "repeat": -1,
+   "sheet": "npc_marina"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "marina_react",
+   "repeat": 0,
+   "sheet": "npc_marina"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "nana_idle",
+   "repeat": -1,
+   "sheet": "npc_nana"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "nana_react",
+   "repeat": 0,
+   "sheet": "npc_nana"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "coralie_idle",
+   "repeat": -1,
+   "sheet": "npc_coralie"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "coralie_react",
+   "repeat": 0,
+   "sheet": "npc_coralie"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "tree_idle",
+   "repeat": -1,
+   "sheet": "npc_tree"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "tree_react",
+   "repeat": 0,
+   "sheet": "npc_tree"
+  },
+  {
+   "frameRate": 8,
+   "frames": [
+    19,
+    20,
+    21,
+    22
+   ],
+   "key": "sparkle",
+   "repeat": -1,
+   "sheet": "items"
+  },
+  {
+   "frameRate": 4,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "fountain_flow",
+   "repeat": -1,
+   "sheet": "fountain"
+  },
+  {
+   "frameRate": 3,
+   "frames": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "key": "seaweed_sway",
+   "repeat": -1,
+   "sheet": "seaweed"
+  },
+  {
+   "frameRate": 4,
+   "frames": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "key": "shimmer_glow",
+   "repeat": -1,
+   "sheet": "shimmer"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "key": "whirlpool_spin",
+   "repeat": -1,
+   "sheet": "whirlpool"
+  }
+ ],
+ "images": [
+  {
+   "file": "assets/props/tree_a.png",
+   "height": 48,
+   "key": "tree_a",
+   "width": 32
+  },
+  {
+   "file": "assets/props/tree_b.png",
+   "height": 48,
+   "key": "tree_b",
+   "width": 32
+  },
+  {
+   "file": "assets/props/bush.png",
+   "height": 16,
+   "key": "bush",
+   "width": 16
+  },
+  {
+   "file": "assets/props/castle_gate.png",
+   "height": 48,
+   "key": "castle_gate",
+   "width": 48
+  },
+  {
+   "file": "assets/props/door_small.png",
+   "height": 32,
+   "key": "door_small",
+   "width": 16
+  },
+  {
+   "file": "assets/props/bed.png",
+   "height": 32,
+   "key": "bed",
+   "width": 48
+  },
+  {
+   "file": "assets/props/rug.png",
+   "height": 24,
+   "key": "rug",
+   "width": 48
+  },
+  {
+   "file": "assets/props/mobile.png",
+   "height": 32,
+   "key": "mobile",
+   "width": 32
+  },
+  {
+   "file": "assets/props/vase.png",
+   "height": 24,
+   "key": "vase",
+   "width": 16
+  },
+  {
+   "file": "assets/props/window_night.png",
+   "height": 32,
+   "key": "window_night",
+   "width": 32
+  },
+  {
+   "file": "assets/props/crown_hud.png",
+   "height": 20,
+   "key": "crown_hud",
+   "width": 32
+  },
+  {
+   "file": "assets/props/sign_arch.png",
+   "height": 32,
+   "key": "sign_arch",
+   "width": 32
+  },
+  {
+   "file": "assets/props/hand.png",
+   "height": 32,
+   "key": "hand",
+   "width": 32
+  }
+ ],
+ "index": {
+  "items": {
+   "ball": 8,
+   "bloom0": 25,
+   "bloom1": 26,
+   "bloom2": 27,
+   "bubble": 18,
+   "carrot": 0,
+   "carrot_top": 1,
+   "cat": 9,
+   "chest": 5,
+   "chest_open": 6,
+   "fish": 12,
+   "flower": 15,
+   "hat": 11,
+   "heart": 23,
+   "mushroom": 24,
+   "pearl": 3,
+   "seed": 13,
+   "shell": 7,
+   "sparkle0": 19,
+   "sparkle1": 20,
+   "sparkle2": 21,
+   "sparkle3": 22,
+   "star": 4,
+   "starfish": 2,
+   "sun": 10,
+   "tile_blue": 17,
+   "tile_red": 16,
+   "water": 14
+  },
+  "tiles": {
+   "baseboard": 48,
+   "boulder": 35,
+   "boulder_sand": 36,
+   "bridge_ghost": 38,
+   "bridge_plank": 37,
+   "bridge_rainbow0": 39,
+   "bridge_rainbow1": 40,
+   "cobble0": 8,
+   "cobble1": 9,
+   "coral_blue": 55,
+   "coral_orange": 56,
+   "coral_pink": 54,
+   "deep_water": 58,
+   "fence_h": 33,
+   "fence_v": 34,
+   "flower_blue": 42,
+   "flower_pink": 43,
+   "flower_red": 41,
+   "flower_yellow": 44,
+   "glow_lane": 57,
+   "grass0": 0,
+   "grass1": 1,
+   "grass2": 2,
+   "grass3": 3,
+   "grass_flower0": 4,
+   "grass_flower1": 5,
+   "hedge": 32,
+   "path0": 6,
+   "path1": 7,
+   "roof_blue": 28,
+   "roof_gold": 29,
+   "sand0": 10,
+   "sand1": 11,
+   "sand_shell": 12,
+   "stream0": 21,
+   "stream1": 22,
+   "stream2": 23,
+   "stream3": 24,
+   "tree_wall0": 30,
+   "tree_wall1": 31,
+   "uw_rock0": 52,
+   "uw_rock1": 53,
+   "uw_sand0": 50,
+   "uw_sand1": 51,
+   "wall_brick": 25,
+   "wall_crenel": 27,
+   "wall_paper": 47,
+   "wall_top_int": 49,
+   "wall_window": 26,
+   "water0": 13,
+   "water1": 14,
+   "water2": 15,
+   "water3": 16,
+   "water_edge0": 17,
+   "water_edge1": 18,
+   "water_edge2": 19,
+   "water_edge3": 20,
+   "wood_floor0": 45,
+   "wood_floor1": 46
+  },
+  "ui": {
+   "icon_back": 16,
+   "icon_book": 6,
+   "icon_bridge": 23,
+   "icon_check": 8,
+   "icon_down": 11,
+   "icon_hint": 15,
+   "icon_home": 7,
+   "icon_lamp": 22,
+   "icon_left": 12,
+   "icon_lock": 24,
+   "icon_marina": 20,
+   "icon_mermaid": 4,
+   "icon_music": 26,
+   "icon_next": 9,
+   "icon_parent": 14,
+   "icon_pip": 17,
+   "icon_play": 0,
+   "icon_princess": 2,
+   "icon_rainbow": 19,
+   "icon_right": 13,
+   "icon_sound": 25,
+   "icon_speaker": 5,
+   "icon_star": 21,
+   "icon_tree": 18,
+   "icon_unicorn": 3,
+   "icon_up": 10,
+   "icon_wand": 1
+  }
+ },
+ "sheets": [
+  {
+   "file": "assets/tiles/tiles.png",
+   "frameHeight": 16,
+   "frameWidth": 16,
+   "frames": 59,
+   "key": "tiles"
+  },
+  {
+   "file": "assets/characters/princess.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "princess"
+  },
+  {
+   "file": "assets/characters/unicorn.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 48,
+   "key": "unicorn"
+  },
+  {
+   "file": "assets/characters/mermaid.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 32,
+   "key": "mermaid"
+  },
+  {
+   "file": "assets/characters/npc_pip.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_pip"
+  },
+  {
+   "file": "assets/characters/npc_willa.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_willa"
+  },
+  {
+   "file": "assets/characters/npc_bramble.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_bramble"
+  },
+  {
+   "file": "assets/characters/npc_marina.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_marina"
+  },
+  {
+   "file": "assets/characters/npc_nana.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_nana"
+  },
+  {
+   "file": "assets/characters/npc_coralie.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_coralie"
+  },
+  {
+   "file": "assets/characters/npc_tree.png",
+   "frameHeight": 64,
+   "frameWidth": 48,
+   "frames": 3,
+   "key": "npc_tree"
+  },
+  {
+   "file": "assets/items/items.png",
+   "frameHeight": 16,
+   "frameWidth": 16,
+   "frames": 28,
+   "key": "items"
+  },
+  {
+   "file": "assets/ui/ui.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 27,
+   "key": "ui"
+  },
+  {
+   "file": "assets/props/fountain.png",
+   "frameHeight": 48,
+   "frameWidth": 48,
+   "frames": 2,
+   "key": "fountain"
+  },
+  {
+   "file": "assets/props/lamp.png",
+   "frameHeight": 32,
+   "frameWidth": 16,
+   "frames": 2,
+   "key": "lamp"
+  },
+  {
+   "file": "assets/props/pedestal.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "pedestal"
+  },
+  {
+   "file": "assets/props/shell_socket.png",
+   "frameHeight": 16,
+   "frameWidth": 16,
+   "frames": 2,
+   "key": "shell_socket"
+  },
+  {
+   "file": "assets/props/plot.png",
+   "frameHeight": 24,
+   "frameWidth": 32,
+   "frames": 4,
+   "key": "plot"
+  },
+  {
+   "file": "assets/props/seaweed.png",
+   "frameHeight": 32,
+   "frameWidth": 16,
+   "frames": 4,
+   "key": "seaweed"
+  },
+  {
+   "file": "assets/props/shimmer.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 4,
+   "key": "shimmer"
+  },
+  {
+   "file": "assets/props/whirlpool.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 4,
+   "key": "whirlpool"
+  },
+  {
+   "file": "assets/props/ribbon.png",
+   "frameHeight": 16,
+   "frameWidth": 128,
+   "frames": 2,
+   "key": "ribbon"
+  }
+ ]
+}
