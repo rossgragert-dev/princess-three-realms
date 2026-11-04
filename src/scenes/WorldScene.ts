@@ -56,6 +56,8 @@ export class WorldScene extends Phaser.Scene {
     this.busy = false;
     this.idleMs = 0;
     this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.slotMarks = []; this.waterCells = [];
+    this.treeSprite = undefined;
+    this.waterTick = 0;
 
     // keep the form valid for the place
     if (this.map.medium === 'water') st.form = 'mermaid';
@@ -259,7 +261,7 @@ export class WorldScene extends Phaser.Scene {
       hop: (id: string) => self.hop(id),
       setFrame: (id: string, frame: number) => self.setObjFrame(id, frame),
       moveObject: (id: string, to: Tile) => self.moveObject(id, to),
-      requestForm: (f: Form) => void self.changeForm(f),
+      requestForm: (f: Form) => self.changeForm(f, true),
       addSticker: (id: string) => {
         const s = self.state;
         if (s.stickers.includes(id)) return false;
@@ -441,8 +443,8 @@ export class WorldScene extends Phaser.Scene {
   }
 
   // ------------------------------------------------------------------ transformations
-  async changeForm(target: Form) {
-    if (this.busy || this.leaving) return;
+  async changeForm(target: Form, fromStory = false) {
+    if ((this.busy && !fromStory) || this.leaving) return;
     const st = this.state;
     const plan = planFormChange(this.map, st.flags, this.player.tile, this.player.form, target);
     if (plan.mode === 'same') return;
@@ -452,6 +454,7 @@ export class WorldScene extends Phaser.Scene {
       this.bonk();
       return;
     }
+    const wasBusy = this.busy;
     this.busy = true;
     try {
       if (plan.mode === 'walk') {
@@ -464,7 +467,7 @@ export class WorldScene extends Phaser.Scene {
         await new Promise<void>((res) => this.player.walk([this.player.tile, plan.step!], undefined, () => res()));
       }
     } finally {
-      this.busy = false;
+      this.busy = wasBusy;
       this.afterAction();
     }
   }
@@ -556,6 +559,8 @@ export class WorldScene extends Phaser.Scene {
       home: () => this.goHome(),
       busy: () => this.busy,
       modal: () => !!this.ui?.modal,
+      moving: () => this.player.moving,
+      panel: () => this.ui?.panel ?? null,
       tilePos
     };
   }

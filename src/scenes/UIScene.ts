@@ -44,6 +44,7 @@ export class UIScene extends Phaser.Scene {
   constructor() { super('UI'); }
 
   get modal() { return this.modalDepth > 0; }
+  get panel(): 'dialogue' | 'puzzle' | null { return this.dialogue?.isOpen ? 'dialogue' : this.puzzle?.isOpen ? 'puzzle' : null; }
 
   create() {
     const setModal = (on: boolean) => {

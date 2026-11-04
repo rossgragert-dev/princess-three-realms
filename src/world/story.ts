@@ -31,7 +31,7 @@ export interface StoryCtx {
   hop(id: string): void;
   setFrame(id: string, frame: number): void;
   moveObject(id: string, to: Tile): Promise<void>;
-  requestForm(f: Form): void;
+  requestForm(f: Form): Promise<void>;
   addSticker(id: string): boolean;
   renderDecor(): void;
   sparkle(tile: Tile): void;
@@ -175,7 +175,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
 
     case 'shimmer':
       ctx.complete('SHORE_SEEN');
-      if (ctx.form !== 'mermaid') ctx.requestForm('mermaid');
+      if (ctx.form !== 'mermaid') await ctx.requestForm('mermaid');
       return;
 
     case 'marina':
