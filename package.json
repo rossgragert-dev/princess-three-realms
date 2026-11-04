@@ -1,0 +1,28 @@
+{
+  "name": "princess-three-realms",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Princess of Three Realms v0.1 - The Magical Beginning",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build && node tools/make_precache.mjs",
+    "preview": "vite preview --host",
+    "test": "tsx --test src/tests/*.test.ts",
+    "test:logic": "tsx --test src/tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "art": "python3 tools/gen_art.py",
+    "audio:script": "tsx tools/gen_audio_script.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0",
+    "tsx": "^4.19.0",
+    "@types/node": "^22.0.0"
+  }
+}
