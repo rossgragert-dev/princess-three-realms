@@ -17,6 +17,7 @@ export interface UIHandlers {
   hint?: () => void;
   book?: () => void;
   settings?: () => void;
+  dpad?: (dx: number, dy: number) => void;
 }
 
 const FORM_ICON: Record<Form, UiName> = { princess: 'icon_princess', unicorn: 'icon_unicorn', mermaid: 'icon_mermaid' };
@@ -40,6 +41,9 @@ export class UIScene extends Phaser.Scene {
   private starsTxt!: Phaser.GameObjects.Text;
   private countTray!: Phaser.GameObjects.Container;
   private seenForms = 1;
+  private dpadBtns: Btn[] = [];
+  private held: { dx: number; dy: number } | null = null;
+  private heldMs = 0;
 
   constructor() { super('UI'); }
 
@@ -73,18 +77,34 @@ export class UIScene extends Phaser.Scene {
       this.formBtns.set(f, b);
     }
     // parent gear: small and out of the way, needs an adult gate in the settings scene
-    const gear = makeButton(this, 476, 348, 'icon_parent', 0.7, tap(() => this.handlers.settings?.()));
+    const gear = makeButton(this, 300, 362, 'icon_parent', 0.7, tap(() => this.handlers.settings?.()));
     gear.container.setAlpha(0.5);
 
+    // optional on-screen arrows (Parent settings). Hold to keep walking.
+    const arm = 46, cx = 440, cy = 314;
+    const arrows: [UiName, number, number][] = [['icon_up', 0, -1], ['icon_down', 0, 1], ['icon_left', -1, 0], ['icon_right', 1, 0]];
+    for (const [icon, dx, dy] of arrows) {
+      const b = makeButton(this, cx + dx * arm, cy + dy * arm, icon, 1, () => { if (!this.modal) { this.handlers.dpad?.(dx, dy); this.held = { dx, dy }; this.heldMs = -220; } });
+      b.container.setAlpha(0.9);
+      this.dpadBtns.push(b);
+    }
+    this.input.on('pointerup', () => { this.held = null; });
     this.countTray = this.add.container(256, 70).setVisible(false);
-    this.hud = [book, home, this.hintBtn, this.wandBtn, gear];
+    this.hud = [book, home, this.hintBtn, this.wandBtn, gear, ...this.dpadBtns];
     void crown;
     this.refresh();
   }
 
   // ------------------------------------------------------------------ HUD state
+  update(_t: number, dt: number) {
+    if (!this.held || this.modal) return;
+    this.heldMs += dt;
+    if (this.heldMs >= 90) { this.heldMs = 0; this.handlers.dpad?.(this.held.dx, this.held.dy); }
+  }
+
   refresh() {
     const st = services.save.state;
+    for (const b of this.dpadBtns) b.setVisible(st.settings.dpad);
     this.starsTxt.setText(st.stars > 0 ? `x${st.stars}` : '');
     const forms = availableForms(st.flags);
     this.wandBtn.setVisible(forms.length > 1);
@@ -128,6 +148,7 @@ export class UIScene extends Phaser.Scene {
   blocksPointer(x: number, y: number): boolean {
     if (this.modal) return true;
     if (this.hud.some((b) => b.container.visible && b.hit(x, y))) return true;
+    if (this.held) return true;
     for (const b of this.formBtns.values()) if (b.container.visible && b.hit(x, y)) return true;
     return false;
   }
@@ -135,18 +156,18 @@ export class UIScene extends Phaser.Scene {
   // ------------------------------------------------------------------ modals
   say(lines: readonly Line[]) { return this.dialogue.say(lines); }
 
-  async choicePuzzle(def: PuzzleDef): Promise<PuzzleResult> {
+  async choicePuzzle(def: PuzzleDef, speakOnOpen = true): Promise<PuzzleResult> {
     const st = services.save.state;
     const prog = (st.puzzles[def.id] ??= newProgress());
-    const r = await this.puzzle.choice(def, prog);
+    const r = await this.puzzle.choice(def, prog, speakOnOpen);
     services.save.save();
     return r;
   }
 
-  async sequencePuzzle(def: PuzzleDef, prefix: string[] = []): Promise<PuzzleResult> {
+  async sequencePuzzle(def: PuzzleDef, prefix: string[] = [], speakOnOpen = true): Promise<PuzzleResult> {
     const st = services.save.state;
     const prog = (st.puzzles[def.id] ??= newProgress());
-    const r = await this.puzzle.sequence(def, prog, prefix);
+    const r = await this.puzzle.sequence(def, prog, prefix, speakOnOpen);
     services.save.save();
     return r;
   }

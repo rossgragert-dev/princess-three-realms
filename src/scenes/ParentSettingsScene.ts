@@ -15,7 +15,7 @@ export class ParentSettingsScene extends Phaser.Scene {
 
   create() {
     this.add.rectangle(256, 192, 512, 384, 0x1a1033, 0.85).setInteractive();
-    makeButton(this, 50, 50, 'icon_back', 1, () => this.close());
+    makeButton(this, 28, 30, 'icon_back', 0.9, () => this.close());
     this.gate();
   }
 
@@ -41,25 +41,26 @@ export class ParentSettingsScene extends Phaser.Scene {
     const s = services.save.state.settings;
     this.panel?.destroy();
     const c = (this.panel = this.add.container(0, 0));
-    c.add(roundedPanel(this, 56, 40, 400, 304));
-    c.add(this.add.text(256, 62, 'Settings', { fontFamily: FONT, fontSize: '20px', color: '#40255a' }).setOrigin(0.5));
-    let y = 98;
+    c.add(roundedPanel(this, 56, 24, 400, 340));
+    c.add(this.add.text(256, 46, 'Settings', { fontFamily: FONT, fontSize: '20px', color: '#40255a' }).setOrigin(0.5));
+    let y = 78;
     const row = (label: string, value: () => string, onTap: () => void) => {
       c.add(this.add.text(76, y, label, { fontFamily: FONT, fontSize: '15px', color: '#40255a' }));
       const b = this.add.text(380, y, value(), { fontFamily: FONT, fontSize: '15px', color: '#fff', backgroundColor: '#6a3fc8', padding: { x: 10, y: 6 } }).setInteractive({ useHandCursor: true });
       b.on('pointerdown', () => { onTap(); b.setText(value()); applySettingsToAudio(); services.save.save(); });
       c.add(b);
-      y += 40;
+      y += 36;
     };
     const vol = (k: 'musicVolume' | 'voiceVolume' | 'sfxVolume') => () => { s[k] = s[k] >= 1 ? 0 : Math.round((s[k] + 0.25) * 100) / 100; };
     row('Music volume', () => `${Math.round(s.musicVolume * 100)}%`, vol('musicVolume'));
     row('Voice volume', () => `${Math.round(s.voiceVolume * 100)}%`, vol('voiceVolume'));
     row('Sound effects', () => `${Math.round(s.sfxVolume * 100)}%`, vol('sfxVolume'));
     row('Captions (for grown-ups)', () => (s.captions ? 'On' : 'Off'), () => { s.captions = !s.captions; });
+    row('On-screen arrows', () => (s.dpad ? 'On' : 'Off'), () => { s.dpad = !s.dpad; });
     row('Calmer effects', () => (s.reducedEffects ? 'On' : 'Off'), () => { s.reducedEffects = !s.reducedEffects; });
     if (import.meta.env?.DEV) row('Dev: browser voice (no recordings)', () => (services.audio.devTts ? 'On' : 'Off'), () => { services.audio.devTts = !services.audio.devTts; });
-    c.add(this.add.text(76, y + 4, 'Hold to erase all progress:', { fontFamily: FONT, fontSize: '13px', color: '#a02020' }));
-    this.holdButton(330, y + 14, 'Hold 3s: reset', 3000, () => {
+    c.add(this.add.text(76, y + 10, 'Hold to erase all progress:', { fontFamily: FONT, fontSize: '13px', color: '#a02020' }));
+    this.holdButton(350, y + 18, 'Hold 3s: reset', 3000, () => {
       resetSession();
       services.save.reset();
       this.scene.stop('UI');
@@ -71,6 +72,7 @@ export class ParentSettingsScene extends Phaser.Scene {
   private close() {
     services.save.save();
     if (this.from === 'Title') { this.scene.start('Title'); return; }
+    (this.scene.get('UI') as unknown as { refresh?: () => void })?.refresh?.();
     this.scene.resume('World');
     this.scene.resume('UI');
     this.scene.stop();

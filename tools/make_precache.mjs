@@ -3,7 +3,7 @@ import { readdirSync, statSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, relative } from 'node:path';
 
-const dist = new URL('../dist/', import.meta.url).pathname;
+const dist = (process.argv[2] ? new URL(process.argv[2].replace(/\/?$/, '/'), 'file://' + process.cwd() + '/') : new URL('../dist/', import.meta.url)).pathname;
 const files = [];
 (function walk(d) {
   for (const n of readdirSync(d)) {

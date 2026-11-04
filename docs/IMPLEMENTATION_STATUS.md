@@ -1,48 +1,47 @@
-# Implementation status - v0.1 "The Magical Beginning"
+# Implementation status - v0.1a "First Light"
 
-Date: 2026-11-04. **Nothing in this project has been run in a browser.** The authoring environment could not reach
-the npm registry (DNS failure direct; 403 policy denial via proxy), so Phaser, Vite and Playwright were never installed.
-Per instructions, development continued without installs and the architecture stays on Phaser 3.90 + TypeScript + Vite.
+Date: 2026-11-04. Hosted npm/PyPI were still unreachable from the authoring session, and GitHub repository creation is blocked, so the
+**Vite production build, npm install, Playwright, GitHub Actions and Pages have NOT been run**. What changed this milestone: the game was run for the
+first time, in a real browser, with the real engine.
 
-## Verified (executed here)
+## How the game was run without npm
+The official Phaser 3.90.0 release was obtained as a read-only git checkout of the upstream tag `v3.90.0` through the session's permitted git proxy
+(no registry mirror, no bypass). `tools/local-verify/` bundles `src/` with esbuild against that `phaser.js` and drives **Chrome for Testing 153** (headless,
+touch emulation) through puppeteer-core. `package.json` still pins `phaser@3.90.0` from npm; nothing was vendored into the repo.
 
+## Verified (actually executed)
 | Area | Evidence |
 |---|---|
-| Game rules: save/sanitize, quest chain and rewards, puzzle hint ladder, counting de-dupe, navigation/A*, transformations, guide routing | `npm run test:logic` -> **71 tests pass** (node:test via tsx) |
-| Five maps: dimensions, spawns valid per form, reachability with gates open/closed, creek grove unicorn-only, bridge collision after repair, warps target real spawns, spawns never on warp tiles | `world.test.ts`, `content.test.ts` |
-| Content integrity: every narration key referenced by puzzles/scripts/stickers/objectives exists; every picture name exists in the generated frame index; 4 mandatory puzzles | `content.test.ts` |
-| Pixel-art pipeline: deterministic Pillow generation of tiles, characters, props, UI, manifest, icons, frame index | `python3 tools/gen_art.py`, previews in `docs/art_preview/` |
-| Type correctness of all non-Phaser code, and of scene code **against a permissive stub** (Phaser types = any) | `tsc` stub run: 0 errors. This catches typos, wrong imports and misuse of our own modules, **not** misuse of the Phaser API |
-| Syntax of every scene/UI module | `esbuild` bundle of `src/main.ts` (phaser external) succeeds |
-| Static map renders | `docs/screenshots/*.png` are composites of real map data + real generated art drawn by `tools/render_preview.py`. **They are not Phaser screenshots.** |
+| Real TypeScript typecheck against the real Phaser typings (`phaser/types/phaser.d.ts`) | 0 errors for `src/` and `tools/` (a deliberate wrong-type probe fails as it should) |
+| Logic and content tests | `npm run test:logic`: 73 tests pass |
+| Game boots, title renders, tilemaps render, princess walks (mouse and real touch events), all 5 scenes render | `docs/screenshots/browser/*.png` (real Chrome frames, not map renders) |
+| **Chapter 1 end to end**: Pip + 3 carrots, tree /b/ puzzle, unicorn via wand tray, rainbow-bridge pattern, shore, mermaid transformation, dive, Marina + 3 starfish, push pearl x4, wishing star, home button, lamp placed | `tools/local-verify/chapter.mjs` exits 0 only on `LAMP_PLACED`; 0 page errors |
+| Narration playback pipeline | With throw-away test tones (not committed): lines play, advance by themselves, replay button re-speaks, picture taps say their word, wrong answers give a spoken gentle hint with no penalty, 10 s idle re-prompts, hint button replays the goal, no back-to-back duplicate prompts |
+| Responsive scaling | iPad 1024x768, 1180x820, 1366x1024, portrait 768x1024, phone landscape: canvas always fits, 4:3, no page scroll, buttons >= 56 logical px (>= 84 CSS px on iPad) |
+| Touch and unintended gestures (Chrome) | Play/walk/interact by touch events; page scrolling and pinch disabled in CSS + meta; double-tap zoom prevented by `touch-action: none` |
+| Optional on-screen d-pad | Parent gate (hold 3 s) -> toggle -> tap and hold walk; walking into objects interacts |
+| Save and resume | Reload -> Play restores scene, tile, flags |
+| PWA offline (Chrome) | Service worker precaches 45 files, reload with network off shows title and plays |
 
-## Written but NOT run (awaiting runtime validation)
+## Bugs found by running it (all fixed)
+1. A story-triggered form change (shimmer -> mermaid) was blocked by the busy flag, so the mermaid transformation never happened.
+2. A stale tree sprite from the woods crashed the next scene (shore) on arrival, leaving a black screen.
+3. The puzzle panel repeated a question the dialogue had just spoken.
+4. Parent settings layout overflowed; grotto looked like a beach (added a multiply water tint and bubbles); stale counting tray carried between scenes.
 
-- All Phaser scenes: Boot, Title, World (map build, tilemap layer, camera centring, tap-to-walk, auto-approach, warps, transformations, guide trail, bedroom decor), UI (HUD, modals), Stickerbook, ParentSettings.
-- Dialogue and puzzle panels (touch handling, tweens, hand hints, idle timers).
-- Audio playback paths (WebAudio unlock, `<audio>` narration, procedural SFX/music, ducking) and the dev-only browser voice.
-- PWA: `manifest.webmanifest`, `sw.js`, `tools/make_precache.mjs`, Home Screen install, offline play.
-- Playwright specs in `tests/e2e/` (chapter 1 walk-through, responsive, audio replay) and `playwright.config.ts`.
-- GitHub Actions `ci.yml` and `pages.yml` (no remote exists; `gh` token invalid here, so Actions could not be checked). No unrelated repository was touched.
+## NOT verified
+- `npm install`, `npm run build` (Vite), `npm run test:e2e` (the Playwright specs are written, not run; an equivalent puppeteer driver is what passed), GitHub Actions, GitHub Pages.
+- **Safari / real iPad**: Safari audio unlock and silent-switch behaviour, Home Screen install, iOS safe-area rendering, WebKit double-tap/gesture quirks, performance. See `docs/IPAD_TEST_PLAN.md`.
+- Narration voices (below).
 
-## Outstanding tasks
+## Narration status: NOT complete
+- The 81 lines are organised by character **and** scene in `docs/AUDIO_SCRIPT.md` (+ machine-readable `docs/narration_manifest.json`).
+- **No audio files exist.** No text-to-speech engine was available here (no espeak/piper/macOS `say`; PyPI/npm unreachable; headless Chrome exposes no voices), so
+  no temporary recordings were generated, and none are claimed. Without clips the game shows the pulsing next arrow and, for adults, captions; puzzles still work but are silent.
+- Ready to go: `python3 tools/make_tts_clips.py --engine espeak-ng|piper|say|command` generates generic synthetic temp voices per character (never real people),
+  encodes m4a+ogg, and records provenance. Any file you drop in `public/assets/audio/narration/` is treated as a custom recording and is never overwritten. `--status` reports `custom` / `temp-tts` / `missing`.
 
-1. **Narration recordings (blocking for a non-reader).** 81 lines are scripted in `docs/AUDIO_SCRIPT.md` (80 required). Without clips each line reports "missing": the dialogue panel shows a pulsing arrow and the child must tap to continue; puzzles still work but are silent. Chapter 1 is **not complete for a 5-year-old until these are recorded.**
-2. **Browser-based acceptance testing:** run `npm install`, `npm run build`, `npm run test:e2e`, then the manual iPad pass in `docs/IPAD_TEST_PLAN.md`.
-3. `npm install` once to produce `package-lock.json` (CI uses `npm install` until one is committed).
-
-## Known risks to check first at runtime
-
-- Cross-scene input: WorldScene and UIScene both listen to pointer events. UIScene.blocksPointer() guards HUD and modals; confirm no double handling.
-- Tilemap built from the `tiles` spritesheet (`addTilesetImage('tiles','tiles',16,16,0,0,0)`): confirm frame indices line up.
-- Camera bounds trick that centres the bedroom (smaller than the 512x384 view).
-- Animation keys come from `manifest.json`; a typo shows as a missing-animation console warning, not a crash.
-- Form-tray button placement in UIScene (`toggleTray`) was written quickly; verify layout on iPad.
-- Bedroom decorating is a tap-to-cycle on glowing spots inside WorldScene (no separate BedroomScene / tray was built).
-- Deviation: the optional d-pad setting exists in the save but no d-pad is rendered yet.
-
-## Chapter 1 flow as implemented (data + story code)
-
-Pip and carrots (count 3) -> talking tree (initial /b/ sound) -> Willa, unicorn unlocked -> rainbow bridge pattern (unicorn) ->
-shore shimmer = mermaid -> dive -> Marina starfish (count 3) -> push pearl 4 times into the shell socket -> wishing star ->
-home button -> Nana -> tap the glowing table spot to place the lamp. Optional: shell rhyme, garden sequence, three chests, wand pedestal, unicorn blooms.
+## iPad / design caveats worth knowing
+- Portrait works (smaller) with a picture-only "turn sideways" hint; landscape is the intended mode.
+- Dialogue captions are on by default for grown-ups; toggle in the parent menu.
+- Bedroom decorating is tap-to-cycle on glowing spots (no separate decor tray).

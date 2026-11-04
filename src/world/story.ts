@@ -18,8 +18,8 @@ export interface StoryCtx {
   readonly form: Form;
   readonly scene: Phaser.Scene;
   say(lines: readonly Line[]): Promise<void>;
-  choicePuzzle(def: PuzzleDef): Promise<PuzzleResult>;
-  sequencePuzzle(def: PuzzleDef, prefix?: string[]): Promise<PuzzleResult>;
+  choicePuzzle(def: PuzzleDef, speakOnOpen?: boolean): Promise<PuzzleResult>;
+  sequencePuzzle(def: PuzzleDef, prefix?: string[], speakOnOpen?: boolean): Promise<PuzzleResult>;
   showCount(done: number, total: number): void;
   hideCount(): void;
   celebrate(picture: string, scale?: number): void;
@@ -111,7 +111,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       if (f.TREE_GATE_OPEN) { await ctx.say(SCRIPT.treeDone); return; }
       if (!f.PIP_CARROTS_DONE) { await remind(ctx); return; }
       await ctx.say(SCRIPT.treeAsk);
-      const r = await ctx.choicePuzzle(puzzleById('tree_sound')!);
+      const r = await ctx.choicePuzzle(puzzleById('tree_sound')!, false);
       if (!r.solved) return;
       ctx.complete('TREE_GATE_OPEN');
       await ctx.say(SCRIPT.treeDone);
@@ -143,7 +143,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       if (f.RAINBOW_BRIDGE_OPEN) return;
       await ctx.say(SCRIPT.bridgeAsk);
       // Red, blue shown; the child continues the pattern with red, blue.
-      const r = await ctx.sequencePuzzle(puzzleById('bridge_pattern')!, ['tile_red', 'tile_blue']);
+      const r = await ctx.sequencePuzzle(puzzleById('bridge_pattern')!, ['tile_red', 'tile_blue'], false);
       if (!r.solved) return;
       await ctx.cast();
       ctx.complete('RAINBOW_BRIDGE_OPEN');
@@ -165,7 +165,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
     case 'garden_plot': {
       if (f.GARDEN_SEQUENCED) { ctx.sparkle({ x: obj.x, y: obj.y }); return; }
       await ctx.say(SCRIPT.gardenAsk);
-      const r = await ctx.sequencePuzzle(puzzleById('garden_grow')!, []);
+      const r = await ctx.sequencePuzzle(puzzleById('garden_grow')!, [], false);
       if (!r.solved) return;
       ctx.complete('GARDEN_SEQUENCED');
       ctx.celebrate('bloom1');
@@ -194,7 +194,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
     case 'shell_puzzle': {
       if (f.SHELLS_MATCHED) { await ctx.say(SCRIPT.shellDone); return; }
       await ctx.say(SCRIPT.shellAsk);
-      const r = await ctx.choicePuzzle(puzzleById('shell_rhyme')!);
+      const r = await ctx.choicePuzzle(puzzleById('shell_rhyme')!, false);
       if (!r.solved) return;
       ctx.complete('SHELLS_MATCHED');
       ctx.celebrate('shell');

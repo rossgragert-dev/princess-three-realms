@@ -84,3 +84,19 @@ test('scene source files do not import anything outside the project and do not u
     assert.ok(!/\beval\(|new Function\(|https?:\/\/(?!www\.w3\.org)/.test(text), `${d}/${f}`);
   }
 });
+
+import { sceneOfClip, SCENE_ORDER, VOICE_CAST } from '../content/narrationScenes';
+
+test('recording script: every clip has a scene and every speaker has a voice direction', () => {
+  for (const c of NARRATION) {
+    assert.ok(SCENE_ORDER.includes(sceneOfClip(c)), c.key);
+    assert.ok(VOICE_CAST[c.speaker], c.speaker);
+  }
+  // each gameplay scene has its own spoken lines (not everything lumped under "anywhere")
+  for (const s of SCENE_ORDER.filter((x) => x !== 'anywhere')) assert.ok(NARRATION.some((c) => sceneOfClip(c) === s), s);
+});
+
+test('docs/narration_manifest.json is in sync with the manifest (run npm run audio:script)', () => {
+  const json = JSON.parse(readFileSync(new URL('../../docs/narration_manifest.json', import.meta.url), 'utf8')) as { key: string; text: string; speaker: string }[];
+  assert.deepEqual(json.map((j) => [j.key, j.text, j.speaker]), NARRATION.map((n) => [n.key, n.text, n.speaker]));
+});

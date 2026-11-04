@@ -62,7 +62,7 @@ export class PuzzlePanel {
   }
 
   // ------------------------------------------------------------------ one-of-N picture choice (sounds, rhymes)
-  choice(def: PuzzleDef, prog: PuzzleProgress): Promise<PuzzleResult> {
+  choice(def: PuzzleDef, prog: PuzzleProgress, speakOnOpen = true): Promise<PuzzleResult> {
     const s = this.scene;
     return new Promise<PuzzleResult>((resolve) => {
       const speakPrompt = () => void services.audio.speak(def.narrationKey);
@@ -113,7 +113,7 @@ export class PuzzlePanel {
         })];
       };
       restartIdle();
-      speakPrompt();
+      if (speakOnOpen) speakPrompt(); // callers that just spoke the same question pass false so it is not repeated back-to-back
 
       const succeed = async (assisted: boolean) => {
         locked = true;
@@ -163,7 +163,7 @@ export class PuzzlePanel {
   }
 
   // ------------------------------------------------------------------ fill-in-the-order (patterns, sequences)
-  sequence(def: PuzzleDef, prog: PuzzleProgress, prefix: string[]): Promise<PuzzleResult> {
+  sequence(def: PuzzleDef, prog: PuzzleProgress, prefix: string[], speakOnOpen = true): Promise<PuzzleResult> {
     const s = this.scene;
     const target = def.correctAnswer as string[];
     const reuse = def.type === 'pattern';
@@ -184,7 +184,7 @@ export class PuzzlePanel {
         g.lineStyle(3, filled ? 0xa06bff : 0xc9b8ff, 1).strokeRoundedRect(x0 + i * sw - 24, sy - 24, 48, 48, 8);
         this.add(g);
         if (filled) this.add(pic(s, prefix[i], x0 + i * sw, sy, 2));
-        else for (let d = 0; d <= i - prefix.length; d++) this.add(s.add.circle(x0 + i * sw - (i - prefix.length) * 4 + d * 8, sy + 34, 2.5, 0xa06bff));
+        else if (!reuse) for (let d = 0; d <= i - prefix.length; d++) this.add(s.add.circle(x0 + i * sw - (i - prefix.length) * 4 + d * 8, sy + 34, 2.5, 0xa06bff));
         slotImgs.push(undefined);
       }
       const slotXY = (k: number) => ({ x: x0 + (prefix.length + k) * sw, y: sy });
@@ -277,7 +277,7 @@ export class PuzzlePanel {
         })];
       };
       restartIdle();
-      speakPrompt();
+      if (speakOnOpen) speakPrompt(); // callers that just spoke the same question pass false so it is not repeated back-to-back
     });
   }
 }

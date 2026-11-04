@@ -1,0 +1,897 @@
+[
+  {
+    "key": "intro_welcome",
+    "speaker": "narrator",
+    "text": "Let's play! Tap anywhere to walk. Tap your friends to say hello.",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/intro_welcome.m4a",
+      "assets/audio/narration/intro_welcome.ogg"
+    ]
+  },
+  {
+    "key": "controls_tap",
+    "speaker": "narrator",
+    "text": "Tap the ground and the princess will walk there.",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/controls_tap.m4a",
+      "assets/audio/narration/controls_tap.ogg"
+    ]
+  },
+  {
+    "key": "quest_replay",
+    "speaker": "narrator",
+    "text": "Tap the picture at the top to hear what to do next.",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/quest_replay.m4a",
+      "assets/audio/narration/quest_replay.ogg"
+    ]
+  },
+  {
+    "key": "pip_intro",
+    "speaker": "pip",
+    "text": "Hi, Princess! The rainbow is missing! Can you help me find three carrots first?",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/pip_intro.m4a",
+      "assets/audio/narration/pip_intro.ogg"
+    ]
+  },
+  {
+    "key": "pip_count_carrots",
+    "speaker": "pip",
+    "text": "Tap each carrot. Let's count them. How many can you find?",
+    "note": "Warm, unhurried; pause after each sentence.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/pip_count_carrots.m4a",
+      "assets/audio/narration/pip_count_carrots.ogg"
+    ]
+  },
+  {
+    "key": "word_carrot_1",
+    "speaker": "narrator",
+    "text": "One!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/word_carrot_1.m4a",
+      "assets/audio/narration/word_carrot_1.ogg"
+    ]
+  },
+  {
+    "key": "word_carrot_2",
+    "speaker": "narrator",
+    "text": "Two!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/word_carrot_2.m4a",
+      "assets/audio/narration/word_carrot_2.ogg"
+    ]
+  },
+  {
+    "key": "word_carrot_3",
+    "speaker": "narrator",
+    "text": "Three!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/word_carrot_3.m4a",
+      "assets/audio/narration/word_carrot_3.ogg"
+    ]
+  },
+  {
+    "key": "hint_carrots_1",
+    "speaker": "pip",
+    "text": "I see one sparkling. Tap the sparkly carrot!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/hint_carrots_1.m4a",
+      "assets/audio/narration/hint_carrots_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_carrots_2",
+    "speaker": "pip",
+    "text": "Look in the garden by the flowers. Carrots like to hide.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/hint_carrots_2.m4a",
+      "assets/audio/narration/hint_carrots_2.ogg"
+    ]
+  },
+  {
+    "key": "success_carrots",
+    "speaker": "pip",
+    "text": "Three carrots! Thank you, Princess! Now let us find the rainbow in the woods.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/success_carrots.m4a",
+      "assets/audio/narration/success_carrots.ogg"
+    ]
+  },
+  {
+    "key": "tree_sound_b",
+    "speaker": "tree",
+    "text": "Listen carefully. Which picture begins with the buh sound?",
+    "note": "Say the sound /b/ as \"buh\", not the letter name.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/tree_sound_b.m4a",
+      "assets/audio/narration/tree_sound_b.ogg"
+    ]
+  },
+  {
+    "key": "word_ball",
+    "speaker": "narrator",
+    "text": "Ball.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/word_ball.m4a",
+      "assets/audio/narration/word_ball.ogg"
+    ]
+  },
+  {
+    "key": "word_cat",
+    "speaker": "narrator",
+    "text": "Cat.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/word_cat.m4a",
+      "assets/audio/narration/word_cat.ogg"
+    ]
+  },
+  {
+    "key": "word_sun",
+    "speaker": "narrator",
+    "text": "Sun.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/word_sun.m4a",
+      "assets/audio/narration/word_sun.ogg"
+    ]
+  },
+  {
+    "key": "hint_tree_1",
+    "speaker": "tree",
+    "text": "Ball. Buh, buh, ball. Do you hear the buh?",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/hint_tree_1.m4a",
+      "assets/audio/narration/hint_tree_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_tree_2",
+    "speaker": "tree",
+    "text": "Try the round bouncy one!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/hint_tree_2.m4a",
+      "assets/audio/narration/hint_tree_2.ogg"
+    ]
+  },
+  {
+    "key": "success_tree_sound",
+    "speaker": "tree",
+    "text": "Yes! Ball starts with buh. The path is open!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/success_tree_sound.m4a",
+      "assets/audio/narration/success_tree_sound.ogg"
+    ]
+  },
+  {
+    "key": "willa_intro",
+    "speaker": "willa",
+    "text": "Your magic can change you! Tap the unicorn to try.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/willa_intro.m4a",
+      "assets/audio/narration/willa_intro.ogg"
+    ]
+  },
+  {
+    "key": "transform_unicorn",
+    "speaker": "narrator",
+    "text": "You are a unicorn! Trot over the flowers to make them bloom.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/transform_unicorn.m4a",
+      "assets/audio/narration/transform_unicorn.ogg"
+    ]
+  },
+  {
+    "key": "transform_mermaid",
+    "speaker": "narrator",
+    "text": "You are a mermaid! You can swim anywhere in the water.",
+    "required": true,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/transform_mermaid.m4a",
+      "assets/audio/narration/transform_mermaid.ogg"
+    ]
+  },
+  {
+    "key": "transform_princess",
+    "speaker": "narrator",
+    "text": "You are a princess again.",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/transform_princess.m4a",
+      "assets/audio/narration/transform_princess.ogg"
+    ]
+  },
+  {
+    "key": "form_wrong_terrain",
+    "speaker": "willa",
+    "text": "Let us go to the glowing spot first. Follow the sparkles!",
+    "required": true,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/form_wrong_terrain.m4a",
+      "assets/audio/narration/form_wrong_terrain.ogg"
+    ]
+  },
+  {
+    "key": "bramble_pattern",
+    "speaker": "bramble",
+    "text": "The rainbow bridge is broken! Finish the pattern. Red, blue, red, blue.",
+    "note": "Say the colors slowly, like a song.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/bramble_pattern.m4a",
+      "assets/audio/narration/bramble_pattern.ogg"
+    ]
+  },
+  {
+    "key": "word_tile_red",
+    "speaker": "narrator",
+    "text": "Red.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/word_tile_red.m4a",
+      "assets/audio/narration/word_tile_red.ogg"
+    ]
+  },
+  {
+    "key": "word_tile_blue",
+    "speaker": "narrator",
+    "text": "Blue.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/word_tile_blue.m4a",
+      "assets/audio/narration/word_tile_blue.ogg"
+    ]
+  },
+  {
+    "key": "hint_pattern_1",
+    "speaker": "bramble",
+    "text": "Red, blue, red... what comes next?",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/hint_pattern_1.m4a",
+      "assets/audio/narration/hint_pattern_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_pattern_2",
+    "speaker": "bramble",
+    "text": "It goes red, then blue, again and again.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/hint_pattern_2.m4a",
+      "assets/audio/narration/hint_pattern_2.ogg"
+    ]
+  },
+  {
+    "key": "success_bridge_pattern",
+    "speaker": "bramble",
+    "text": "The rainbow bridge is bright again! Hooray!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/success_bridge_pattern.m4a",
+      "assets/audio/narration/success_bridge_pattern.ogg"
+    ]
+  },
+  {
+    "key": "bridge_bloom_prompt",
+    "speaker": "willa",
+    "text": "Now trot over the bridge, and make the flowers bloom!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/bridge_bloom_prompt.m4a",
+      "assets/audio/narration/bridge_bloom_prompt.ogg"
+    ]
+  },
+  {
+    "key": "shore_intro",
+    "speaker": "willa",
+    "text": "Look! Sparkly water. Tap it to become a mermaid!",
+    "required": true,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/shore_intro.m4a",
+      "assets/audio/narration/shore_intro.ogg"
+    ]
+  },
+  {
+    "key": "marina_intro",
+    "speaker": "marina",
+    "text": "Hello! Thank you for coming! Can you find my three starfish friends?",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/marina_intro.m4a",
+      "assets/audio/narration/marina_intro.ogg"
+    ]
+  },
+  {
+    "key": "marina_find_starfish",
+    "speaker": "marina",
+    "text": "Tap each starfish to count it.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/marina_find_starfish.m4a",
+      "assets/audio/narration/marina_find_starfish.ogg"
+    ]
+  },
+  {
+    "key": "word_starfish_1",
+    "speaker": "narrator",
+    "text": "One!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/word_starfish_1.m4a",
+      "assets/audio/narration/word_starfish_1.ogg"
+    ]
+  },
+  {
+    "key": "word_starfish_2",
+    "speaker": "narrator",
+    "text": "Two!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/word_starfish_2.m4a",
+      "assets/audio/narration/word_starfish_2.ogg"
+    ]
+  },
+  {
+    "key": "word_starfish_3",
+    "speaker": "narrator",
+    "text": "Three!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/word_starfish_3.m4a",
+      "assets/audio/narration/word_starfish_3.ogg"
+    ]
+  },
+  {
+    "key": "hint_starfish_1",
+    "speaker": "marina",
+    "text": "Starfish like to rest on the sand. Look down low.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_starfish_1.m4a",
+      "assets/audio/narration/hint_starfish_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_starfish_2",
+    "speaker": "marina",
+    "text": "One starfish is sparkling. Tap it!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_starfish_2.m4a",
+      "assets/audio/narration/hint_starfish_2.ogg"
+    ]
+  },
+  {
+    "key": "success_starfish",
+    "speaker": "marina",
+    "text": "Three starfish! You found all my friends! Thank you!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/success_starfish.m4a",
+      "assets/audio/narration/success_starfish.ogg"
+    ]
+  },
+  {
+    "key": "pearl_prompt",
+    "speaker": "coralie",
+    "text": "Use your bubbles to push the pearl to the shiny shell.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/pearl_prompt.m4a",
+      "assets/audio/narration/pearl_prompt.ogg"
+    ]
+  },
+  {
+    "key": "star_found",
+    "speaker": "narrator",
+    "text": "You found the first wishing star!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/star_found.m4a",
+      "assets/audio/narration/star_found.ogg"
+    ]
+  },
+  {
+    "key": "nana_return",
+    "speaker": "nana",
+    "text": "Look! Our rainbow is brighter. Let us put your new lamp in your room!",
+    "required": true,
+    "scene": "bedroom",
+    "files": [
+      "assets/audio/narration/nana_return.m4a",
+      "assets/audio/narration/nana_return.ogg"
+    ]
+  },
+  {
+    "key": "decor_tutorial",
+    "speaker": "narrator",
+    "text": "Let's decorate your room! Tap a spot, then tap a picture.",
+    "required": true,
+    "scene": "bedroom",
+    "files": [
+      "assets/audio/narration/decor_tutorial.m4a",
+      "assets/audio/narration/decor_tutorial.ogg"
+    ]
+  },
+  {
+    "key": "lamp_placed",
+    "speaker": "nana",
+    "text": "What a beautiful room, Princess!",
+    "required": true,
+    "scene": "bedroom",
+    "files": [
+      "assets/audio/narration/lamp_placed.m4a",
+      "assets/audio/narration/lamp_placed.ogg"
+    ]
+  },
+  {
+    "key": "shell_rhyme_cat",
+    "speaker": "shell",
+    "text": "Which one rhymes with cat?",
+    "note": "Elongate the \"at\" sound.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/shell_rhyme_cat.m4a",
+      "assets/audio/narration/shell_rhyme_cat.ogg"
+    ]
+  },
+  {
+    "key": "word_hat",
+    "speaker": "narrator",
+    "text": "Hat.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/word_hat.m4a",
+      "assets/audio/narration/word_hat.ogg"
+    ]
+  },
+  {
+    "key": "word_fish",
+    "speaker": "narrator",
+    "text": "Fish.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/word_fish.m4a",
+      "assets/audio/narration/word_fish.ogg"
+    ]
+  },
+  {
+    "key": "hint_rhyme_1",
+    "speaker": "shell",
+    "text": "Cat, hat. They sound the same at the end!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_rhyme_1.m4a",
+      "assets/audio/narration/hint_rhyme_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_rhyme_2",
+    "speaker": "shell",
+    "text": "Fish does not sound like cat. Try the other one.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_rhyme_2.m4a",
+      "assets/audio/narration/hint_rhyme_2.ogg"
+    ]
+  },
+  {
+    "key": "success_shell_rhyme",
+    "speaker": "shell",
+    "text": "Cat and hat! They rhyme! Thank you!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/success_shell_rhyme.m4a",
+      "assets/audio/narration/success_shell_rhyme.ogg"
+    ]
+  },
+  {
+    "key": "garden_sequence",
+    "speaker": "nana",
+    "text": "Help the garden grow! Put the pictures in order: first the seed.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/garden_sequence.m4a",
+      "assets/audio/narration/garden_sequence.ogg"
+    ]
+  },
+  {
+    "key": "word_seed",
+    "speaker": "narrator",
+    "text": "Seed.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/word_seed.m4a",
+      "assets/audio/narration/word_seed.ogg"
+    ]
+  },
+  {
+    "key": "word_water",
+    "speaker": "narrator",
+    "text": "Water.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/word_water.m4a",
+      "assets/audio/narration/word_water.ogg"
+    ]
+  },
+  {
+    "key": "word_flower",
+    "speaker": "narrator",
+    "text": "Flower.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/word_flower.m4a",
+      "assets/audio/narration/word_flower.ogg"
+    ]
+  },
+  {
+    "key": "hint_sequence_1",
+    "speaker": "nana",
+    "text": "First comes the seed. Then the water.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/hint_sequence_1.m4a",
+      "assets/audio/narration/hint_sequence_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_sequence_2",
+    "speaker": "nana",
+    "text": "Seed, water, flower. Tap them in that order.",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/hint_sequence_2.m4a",
+      "assets/audio/narration/hint_sequence_2.ogg"
+    ]
+  },
+  {
+    "key": "success_garden_grow",
+    "speaker": "nana",
+    "text": "Look at the flower grow! Beautiful!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/success_garden_grow.m4a",
+      "assets/audio/narration/success_garden_grow.ogg"
+    ]
+  },
+  {
+    "key": "obj_pip",
+    "speaker": "narrator",
+    "text": "Say hello to Pip the bunny!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/obj_pip.m4a",
+      "assets/audio/narration/obj_pip.ogg"
+    ]
+  },
+  {
+    "key": "obj_tree",
+    "speaker": "narrator",
+    "text": "Walk through the woods and find the big talking tree.",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/obj_tree.m4a",
+      "assets/audio/narration/obj_tree.ogg"
+    ]
+  },
+  {
+    "key": "obj_bridge",
+    "speaker": "narrator",
+    "text": "Find the broken rainbow bridge. Become a unicorn to fix it!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/obj_bridge.m4a",
+      "assets/audio/narration/obj_bridge.ogg"
+    ]
+  },
+  {
+    "key": "obj_lake",
+    "speaker": "narrator",
+    "text": "Tap the sparkly water to become a mermaid.",
+    "required": true,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/obj_lake.m4a",
+      "assets/audio/narration/obj_lake.ogg"
+    ]
+  },
+  {
+    "key": "obj_marina",
+    "speaker": "narrator",
+    "text": "Swim down and help Marina the turtle.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/obj_marina.m4a",
+      "assets/audio/narration/obj_marina.ogg"
+    ]
+  },
+  {
+    "key": "obj_star",
+    "speaker": "narrator",
+    "text": "Take the wishing star from the shiny stand.",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/obj_star.m4a",
+      "assets/audio/narration/obj_star.ogg"
+    ]
+  },
+  {
+    "key": "obj_home",
+    "speaker": "narrator",
+    "text": "Tap the little house to go home and decorate your room.",
+    "required": true,
+    "scene": "bedroom",
+    "files": [
+      "assets/audio/narration/obj_home.m4a",
+      "assets/audio/narration/obj_home.ogg"
+    ]
+  },
+  {
+    "key": "sticker_pip",
+    "speaker": "narrator",
+    "text": "You helped Pip the bunny count carrots!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_pip.m4a",
+      "assets/audio/narration/sticker_pip.ogg"
+    ]
+  },
+  {
+    "key": "sticker_rainbow",
+    "speaker": "narrator",
+    "text": "You fixed the rainbow bridge!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_rainbow.m4a",
+      "assets/audio/narration/sticker_rainbow.ogg"
+    ]
+  },
+  {
+    "key": "sticker_marina",
+    "speaker": "narrator",
+    "text": "You helped Marina the turtle!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_marina.m4a",
+      "assets/audio/narration/sticker_marina.ogg"
+    ]
+  },
+  {
+    "key": "sticker_star",
+    "speaker": "narrator",
+    "text": "You found the first wishing star!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_star.m4a",
+      "assets/audio/narration/sticker_star.ogg"
+    ]
+  },
+  {
+    "key": "sticker_wand",
+    "speaker": "narrator",
+    "text": "Your star wand made the stand sparkle!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_wand.m4a",
+      "assets/audio/narration/sticker_wand.ogg"
+    ]
+  },
+  {
+    "key": "sticker_chest",
+    "speaker": "narrator",
+    "text": "You found a hidden treasure!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_chest.m4a",
+      "assets/audio/narration/sticker_chest.ogg"
+    ]
+  },
+  {
+    "key": "sticker_shell",
+    "speaker": "narrator",
+    "text": "You found a treasure by the sparkly lake!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_shell.m4a",
+      "assets/audio/narration/sticker_shell.ogg"
+    ]
+  },
+  {
+    "key": "sticker_pearl",
+    "speaker": "narrator",
+    "text": "You found a treasure under the sea!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_pearl.m4a",
+      "assets/audio/narration/sticker_pearl.ogg"
+    ]
+  },
+  {
+    "key": "ui_book",
+    "speaker": "narrator",
+    "text": "This is your sticker book. Tap a sticker to hear its story.",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/ui_book.m4a",
+      "assets/audio/narration/ui_book.ogg"
+    ]
+  },
+  {
+    "key": "pearl_pushed",
+    "speaker": "coralie",
+    "text": "Pop! Bubbles can push the pearl. One more!",
+    "required": true,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/pearl_pushed.m4a",
+      "assets/audio/narration/pearl_pushed.ogg"
+    ]
+  },
+  {
+    "key": "wand_lit",
+    "speaker": "narrator",
+    "text": "Your star wand made it sparkle!",
+    "required": true,
+    "scene": "courtyard",
+    "files": [
+      "assets/audio/narration/wand_lit.m4a",
+      "assets/audio/narration/wand_lit.ogg"
+    ]
+  },
+  {
+    "key": "chest_found",
+    "speaker": "narrator",
+    "text": "A hidden treasure!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/chest_found.m4a",
+      "assets/audio/narration/chest_found.ogg"
+    ]
+  },
+  {
+    "key": "bloom_cheer",
+    "speaker": "narrator",
+    "text": "Flowers bloom wherever you trot!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/bloom_cheer.m4a",
+      "assets/audio/narration/bloom_cheer.ogg"
+    ]
+  },
+  {
+    "key": "need_unicorn",
+    "speaker": "willa",
+    "text": "Only a unicorn can fix this. Tap the magic wand and choose the unicorn!",
+    "required": true,
+    "scene": "woods",
+    "files": [
+      "assets/audio/narration/need_unicorn.m4a",
+      "assets/audio/narration/need_unicorn.ogg"
+    ]
+  },
+  {
+    "key": "hint_together",
+    "speaker": "narrator",
+    "text": "Let's do it together!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_together.m4a",
+      "assets/audio/narration/hint_together.ogg"
+    ]
+  },
+  {
+    "key": "retry_gentle",
+    "speaker": "narrator",
+    "text": "Let's try again!",
+    "required": true,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/retry_gentle.m4a",
+      "assets/audio/narration/retry_gentle.ogg"
+    ]
+  },
+  {
+    "key": "chapter_done",
+    "speaker": "narrator",
+    "text": "More adventures are coming soon!",
+    "required": false,
+    "scene": "bedroom",
+    "files": [
+      "assets/audio/narration/chapter_done.m4a",
+      "assets/audio/narration/chapter_done.ogg"
+    ]
+  }
+]

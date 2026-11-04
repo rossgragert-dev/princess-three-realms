@@ -1,13 +1,13 @@
 # Princess of Three Realms - v0.1 "The Magical Beginning"
 
 An original, cozy, picture-first top-down adventure for a non-reading 5-year-old. iPad Safari / Home Screen web app, offline-capable.
-Phaser 3.90 + TypeScript + Vite. **Read `docs/IMPLEMENTATION_STATUS.md` first: scenes are written but have not yet been run in a browser, and narration audio is not yet recorded.**
+Phaser 3.90 + TypeScript + Vite. **Read `docs/IMPLEMENTATION_STATUS.md` first.** v0.1a: Chapter 1 has been played end to end in real Chrome; the Vite build, CI, Safari/iPad and recorded narration are still outstanding.
 
 ## Commands
 ```
 npm install
 npm run dev            # local dev server (--host for iPad on the same Wi-Fi)
-npm run test:logic     # 71 rule/map/content tests (node:test via tsx) - these run today
+npm run test:logic     # 73 rule/map/content tests (node:test via tsx)
 npm run build          # tsc + vite build + offline precache list
 npm run test:e2e       # Playwright (iPad landscape/portrait + desktop)
 npm run art            # regenerate all pixel art deterministically (python3 + Pillow)
@@ -22,3 +22,9 @@ npm run audio:script   # regenerate docs/AUDIO_SCRIPT.md from the narration mani
 
 ## Debugging on iPad
 `window.__ptr` exposes state, tile, form and tap helpers (see `WorldScene.debugHook`).
+
+## More
+- `docs/GITHUB_SETUP.md` - exact commands to create the repo and Pages preview
+- `tools/local-verify/` - run the real game in real Chrome without npm
+- `tools/make_tts_clips.py` - temporary narration clips + replaceable recordings
+- `docs/screenshots/browser/` - actual browser screenshots

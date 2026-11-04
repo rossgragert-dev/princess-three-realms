@@ -77,6 +77,7 @@ export class WorldScene extends Phaser.Scene {
     this.state.tile = { ...start };
 
     this.setupCamera();
+    if (this.map.medium === 'water') this.addUnderwater();
     this.applyFlags(false);
     this.renderDecor();
     this.cameras.main.fadeIn(dur(300));
@@ -100,8 +101,10 @@ export class WorldScene extends Phaser.Scene {
         home: () => this.goHome(),
         hint: () => void this.hint(true),
         book: () => this.openOverlay('Stickerbook'),
-        settings: () => this.openOverlay('ParentSettings')
+        settings: () => this.openOverlay('ParentSettings'),
+        dpad: (dx, dy) => this.dpadStep(dx, dy)
       };
+      this.ui.hideCount();
       this.ui.refresh();
       this.busy = true;
       void onArrive(this.ctx).finally(() => { this.busy = false; });
@@ -153,6 +156,19 @@ export class WorldScene extends Phaser.Scene {
         if (o.id === 'tree') this.treeSprite = spr;
       }
       if (spr) { spr.setDepth(spr.y); this.objSprites.set(o.id, spr); }
+    }
+  }
+
+  /** Blue water tint over the whole grotto plus slow rising bubbles (calmer effects: tint only). */
+  private addUnderwater() {
+    const w = this.map.w * T, h = this.map.h * T;
+    const water = this.add.rectangle(0, 0, w, h, 0x9fe0ff, 1).setOrigin(0).setDepth(8000).setBlendMode(Phaser.BlendModes.MULTIPLY);
+    if (!reducedEffects()) this.tweens.add({ targets: water, alpha: 0.8, duration: 2600, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    if (reducedEffects()) return;
+    for (let i = 0; i < 14; i++) {
+      const b = this.add.sprite(Phaser.Math.Between(16, w - 16), Phaser.Math.Between(16, h - 16), 'items', ITEM.bubble).setDepth(8001).setAlpha(0.7).setScale(0.6 + Math.random() * 0.5);
+      this.tweens.add({ targets: b, y: b.y - Phaser.Math.Between(50, 110), x: b.x + Phaser.Math.Between(-10, 10), alpha: 0, duration: Phaser.Math.Between(3500, 6500), repeat: -1, delay: Phaser.Math.Between(0, 4000),
+        onRepeat: () => { b.y = Phaser.Math.Between(h / 2, h - 8); b.x = Phaser.Math.Between(16, w - 16); b.alpha = 0.7; } });
     }
   }
 
@@ -245,8 +261,8 @@ export class WorldScene extends Phaser.Scene {
       get form() { return self.player.form; },
       get scene() { return self as Phaser.Scene; },
       say: (l: readonly Line[]) => self.ui.say(l),
-      choicePuzzle: (d: PuzzleDef) => self.ui.choicePuzzle(d),
-      sequencePuzzle: (d: PuzzleDef, p?: string[]) => self.ui.sequencePuzzle(d, p),
+      choicePuzzle: (d: PuzzleDef, v?: boolean) => self.ui.choicePuzzle(d, v),
+      sequencePuzzle: (d: PuzzleDef, p?: string[], v?: boolean) => self.ui.sequencePuzzle(d, p, v),
       showCount: (n: number, t: number) => self.ui.showCount(n, t),
       hideCount: () => self.ui.hideCount(),
       celebrate: (p: string, s?: number) => self.ui.celebrate(p, s),
@@ -413,6 +429,21 @@ export class WorldScene extends Phaser.Scene {
     services.save.save();
   }
 
+  /** One tile in a direction (on-screen arrows). Walking into a friend or object interacts with it. */
+  private dpadStep(dx: number, dy: number) {
+    if (this.busy || this.leaving || this.player.moving) return;
+    this.idleMs = 0;
+    const from = this.player.tile, to = { x: from.x + dx, y: from.y + dy };
+    this.player.face(to.x, to.y);
+    if (this.grid.passable(to.x, to.y)) {
+      this.player.walk([from, to], (t) => this.onStep(t), () => this.afterWalk());
+      return;
+    }
+    const obj = this.pick(to);
+    if (obj && obj.kind !== 'warp') void this.goTo(obj);
+    else this.bonk();
+  }
+
   // ------------------------------------------------------------------ scene travel
   private travel(scene: SceneId, spawn: string) {
     if (this.leaving) return;
@@ -561,6 +592,7 @@ export class WorldScene extends Phaser.Scene {
       modal: () => !!this.ui?.modal,
       moving: () => this.player.moving,
       panel: () => this.ui?.panel ?? null,
+      playerXY: () => { const c = this.cameras.main; return { x: this.player.sprite.x - c.scrollX, y: this.player.sprite.y - c.scrollY }; },
       tilePos
     };
   }
