@@ -1,22 +1,113 @@
-name: pages
+name: Princess — Mobile Preview and iPad Release (no npm)
+
 on:
   push:
     branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
-permissions: { contents: read, pages: write, id-token: write }
-concurrency: { group: pages, cancel-in-progress: true }
+    inputs:
+      promote:
+        description: 'Publish the current main/site build to the stable iPad game too'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: princess-pages
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: { name: github-pages, url: '${{ steps.d.outputs.page_url }}' }
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 22, }
-      - run: npm install
-      - run: npm run test:logic
-      - run: npm run build   # vite base is './', so project-page subpaths work and the service worker scope stays relative
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: dist }
-      - id: d
+      - name: Check out development source
+        uses: actions/checkout@v4
+        with:
+          path: source
+          persist-credentials: false
+
+      - name: Check out last approved iPad release
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: stable
+
+      - name: Validate prebuilt standalone game
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in index.html app.js phaser.min.js sw.js manifest.webmanifest precache.json; do
+            test -s "source/site/$f" || { echo "Missing source/site/$f"; exit 1; }
+          done
+
+      - name: Promote development game to stable iPad release (manual approval only)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.promote == true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete --exclude='.git/' source/site/ stable/
+          cd stable
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "release: approve Princess of Three Realms ${GITHUB_SHA:0:8}"
+            git push origin HEAD:gh-pages
+          fi
+
+      - name: Assemble stable / and development /preview/
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p publish/preview
+          rsync -a --exclude='.git/' stable/ publish/
+          rsync -a source/site/ publish/preview/
+          touch publish/.nojekyll
+
+          # Each game has its own service-worker scope. Keep caches separate so
+          # visiting /preview/ cannot erase the stable game's offline cache.
+          python3 - <<'PY'
+          from pathlib import Path
+          for p in (Path("publish/sw.js"), Path("publish/preview/sw.js")):
+              src = p.read_text()
+              needle = "const PRECACHE_URL = './precache.json';"
+              old_cleanup = "for (const k of await caches.keys()) if (k !== CACHE) await caches.delete(k);"
+              assert needle in src, f"Cannot find precache marker in {p}"
+              assert old_cleanup in src, f"Cannot find old cache cleanup in {p}"
+              assert "caches.open(CACHE)" in src, f"Cannot find cache open in {p}"
+              src = src.replace(needle, (
+                  "const SCOPE_CACHE_PREFIX = 'ptr-scope:' + encodeURIComponent(new URL(self.registration.scope).pathname) + ':';\n"
+                  "const SCOPED_CACHE = SCOPE_CACHE_PREFIX + CACHE;\n" + needle
+              ))
+              src = src.replace("caches.open(CACHE)", "caches.open(SCOPED_CACHE)")
+              src = src.replace(old_cleanup, (
+                  "for (const k of await caches.keys()) "
+                  "if (k.startsWith(SCOPE_CACHE_PREFIX) && k !== SCOPED_CACHE) await caches.delete(k);"
+              ))
+              p.write_text(src)
+          PY
+          test -s publish/index.html
+          test -s publish/preview/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload ready-to-serve files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish
+          include-hidden-files: true
+
+      - name: Publish to GitHub Pages
+        id: deploy
         uses: actions/deploy-pages@v4
