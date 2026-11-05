@@ -188,6 +188,7 @@ function woods(): MapDef {
     { id: 'chest_creek', kind: 'chest', x: 35, y: 5, sprite: item('chest'), radius: 1.5, reward: 'sticker_chest' },
     { id: 'warp_courtyard', kind: 'warp', x: 0, y: 15, tiles: col(0, 14, 16), to: { scene: 'courtyard', spawn: 'from_woods' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'warp_shore', kind: 'warp', x: 47, y: 15, tiles: col(47, 14, 16), to: { scene: 'shore', spawn: 'from_woods' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'fairy_dust_spot', kind: 'find', hideWhen: 'FAIRY_DUST_FOUND', x: 3, y: 4, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.6 },
   ];
   const gates: Gate[] = [
     { id: 'tree_gate', flag: 'TREE_GATE_OPEN', tiles: [22, 23, 24].flatMap((x) => col(x, 14, 16)) },
@@ -229,6 +230,7 @@ function shore(): MapDef {
     { id: 'dive', kind: 'warp', x: 28, y: 13, tiles: [tile(28, 13)], to: { scene: 'grotto', spawn: 'from_shore' }, sprite: { key: 'whirlpool', anim: 'whirlpool_spin' }, forms: ['mermaid'], radius: 1.5 },
     { id: 'chest_shore', kind: 'chest', x: 6, y: 4, sprite: item('chest'), radius: 1.6, reward: 'sticker_shell' },
     { id: 'warp_woods', kind: 'warp', x: 0, y: 13, tiles: col(0, 12, 14), to: { scene: 'woods', spawn: 'from_shore' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'moonstone_spot', kind: 'find', hideWhen: 'MOONSTONE_FOUND', x: 30, y: 2, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.6 },
   ];
   return {
     id: 'shore', w: 40, h: 26, medium: 'air', mermaidAllowed: true, bg: '#3aa0e8', ground: g.cells, props, objects, gates: [],
@@ -293,10 +295,16 @@ function bedroom(): MapDef {
     { key: 'crown_hud', x: 11, y: 2, ox: 8, depthBias: -2 },
     { key: 'shelf', x: 20, y: 2, ox: 8, depthBias: -1 },
     { key: 'items', frame: ITEM.star, x: 11, y: 1, ox: 8, showWhen: 'STAR_1_FOUND', depthBias: -2 },
+    // v0.3: the two customization stations. Tall ornate armoire on the west wall, lit vanity on the east wall.
+    { key: 'wardrobe_prop', anim: 'wardrobe_glow', x: 1, y: 12, ox: 8, blocks: [[0, 0], [1, 0]] },
+    { key: 'vanity_prop', anim: 'vanity_glow', x: 21, y: 13, ox: 8, blocks: [[0, 0], [1, 0]] },
   ];
   const objects: ObjDef[] = [
     { id: 'nana', kind: 'npc', x: 10, y: 9, sprite: npc('nana'), blocks: true, radius: 1.8 },
     ...SLOTS.map((sl): ObjDef => ({ id: sl.id, kind: 'slot', x: sl.x, y: sl.y, radius: 3.2 })),
+    // stations sit mid-furniture (so taps anywhere on the tall prop find them); the player walks up to the free floor in front
+    { id: 'wardrobe_station', kind: 'station', x: 1, y: 13, radius: 2.2 },
+    { id: 'vanity_station', kind: 'station', x: 21, y: 14, radius: 2.2 },
     { id: 'door_exit', kind: 'warp', x: 11, y: 17, tiles: [tile(11, 17), tile(12, 17)], to: { scene: 'courtyard', spawn: 'from_bedroom' }, radius: 1.5 },
   ];
   return {

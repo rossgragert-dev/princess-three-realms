@@ -37,6 +37,8 @@ export interface StoryCtx {
   /** Opens the bedroom picker for one hotspot: item id, null (empty it) or undefined (closed). */
   pickDecor(slot: string, current: string | undefined): Promise<string | null | undefined>;
   sparkle(tile: Tile): void;
+  /** v0.3: open the full-screen Royal Wardrobe or Enchanted Vanity; resolves when she comes back to the room. */
+  openStation(which: 'Wardrobe' | 'Vanity'): Promise<void>;
 }
 
 /** Progress that only matters during one play session (everything important is a quest flag). */
@@ -96,6 +98,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
 
   // ---------------------------------------------------------------- slots in the bedroom
   if (obj.kind === 'slot') return decorate(ctx, id);
+  if (obj.kind === 'station') return ctx.openStation(id === 'wardrobe_station' ? 'Wardrobe' : 'Vanity');
 
   // ---------------------------------------------------------------- chests and hidden finds
   if (obj.kind === 'chest') return chest(ctx, obj);
@@ -271,7 +274,7 @@ async function bloom(ctx: StoryCtx, obj: ObjDef) {
 
 /** Which flag each world chest / hidden spot sets (each flag unlocks one room item, see decorCatalog). */
 export const CHEST_FLAG: Record<string, QuestFlag> = { chest_creek: 'CREEK_CHEST', chest_shore: 'SHORE_CHEST', chest_grotto: 'GROTTO_CHEST' };
-export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND' };
+export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND', fairy_dust_spot: 'FAIRY_DUST_FOUND', moonstone_spot: 'MOONSTONE_FOUND' };
 
 async function chest(ctx: StoryCtx, obj: ObjDef) {
   const reward = obj.reward!;

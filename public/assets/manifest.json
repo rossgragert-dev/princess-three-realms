@@ -667,6 +667,26 @@
    "key": "whirlpool_spin",
    "repeat": -1,
    "sheet": "whirlpool"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "wardrobe_glow",
+   "repeat": -1,
+   "sheet": "wardrobe_prop"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "vanity_glow",
+   "repeat": -1,
+   "sheet": "vanity_prop"
   }
  ],
  "images": [
@@ -905,8 +925,14 @@
    "icon_back": 16,
    "icon_book": 6,
    "icon_bridge": 23,
+   "icon_cape": 32,
    "icon_check": 8,
    "icon_down": 11,
+   "icon_dress": 29,
+   "icon_earring": 36,
+   "icon_face": 38,
+   "icon_hair": 33,
+   "icon_haircolor": 34,
    "icon_hint": 15,
    "icon_home": 7,
    "icon_lamp": 22,
@@ -914,21 +940,29 @@
    "icon_lock": 24,
    "icon_marina": 20,
    "icon_mermaid": 4,
+   "icon_mirror": 28,
    "icon_music": 26,
+   "icon_necklace": 37,
    "icon_next": 9,
+   "icon_none": 40,
+   "icon_palette": 30,
    "icon_parent": 14,
    "icon_pip": 17,
    "icon_play": 0,
    "icon_princess": 2,
    "icon_rainbow": 19,
    "icon_right": 13,
+   "icon_shoe": 31,
+   "icon_skin": 39,
    "icon_sound": 25,
    "icon_speaker": 5,
    "icon_star": 21,
+   "icon_tiara": 35,
    "icon_tree": 18,
    "icon_unicorn": 3,
    "icon_up": 10,
-   "icon_wand": 1
+   "icon_wand": 1,
+   "icon_wardrobe": 27
   }
  },
  "sheets": [
@@ -938,6 +972,90 @@
    "frameWidth": 16,
    "frames": 59,
    "key": "tiles"
+  },
+  {
+   "file": "assets/characters/ow_hair_long.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_long"
+  },
+  {
+   "file": "assets/characters/ow_hair_bob.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_bob"
+  },
+  {
+   "file": "assets/characters/ow_hair_ponytail.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_ponytail"
+  },
+  {
+   "file": "assets/characters/ow_hair_braids.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_braids"
+  },
+  {
+   "file": "assets/characters/ow_hair_bun.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_bun"
+  },
+  {
+   "file": "assets/characters/ow_hair_curls.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_curls"
+  },
+  {
+   "file": "assets/characters/ow_crown_gold_tiara.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_gold_tiara"
+  },
+  {
+   "file": "assets/characters/ow_crown_pearl_crown.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_pearl_crown"
+  },
+  {
+   "file": "assets/characters/ow_crown_star_tiara.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_star_tiara"
+  },
+  {
+   "file": "assets/characters/ow_crown_flower_crown.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_flower_crown"
+  },
+  {
+   "file": "assets/characters/ow_crown_bunny_ribbon.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_bunny_ribbon"
+  },
+  {
+   "file": "assets/characters/ow_crown_butterfly_clip.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_butterfly_clip"
   },
   {
    "file": "assets/characters/princess.png",
@@ -959,6 +1077,13 @@
    "frameWidth": 32,
    "frames": 32,
    "key": "mermaid"
+  },
+  {
+   "file": "assets/characters/mermaid_m.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 32,
+   "key": "mermaid_m"
   },
   {
    "file": "assets/characters/npc_pip.png",
@@ -1020,7 +1145,7 @@
    "file": "assets/ui/ui.png",
    "frameHeight": 32,
    "frameWidth": 32,
-   "frames": 27,
+   "frames": 41,
    "key": "ui"
   },
   {
@@ -1085,6 +1210,34 @@
    "frameWidth": 128,
    "frames": 2,
    "key": "ribbon"
+  },
+  {
+   "file": "assets/props/wardrobe_prop.png",
+   "frameHeight": 48,
+   "frameWidth": 32,
+   "frames": 2,
+   "key": "wardrobe_prop"
+  },
+  {
+   "file": "assets/props/vanity_prop.png",
+   "frameHeight": 44,
+   "frameWidth": 32,
+   "frames": 2,
+   "key": "vanity_prop"
+  },
+  {
+   "file": "assets/wardrobe/wd_full.png",
+   "frameHeight": 144,
+   "frameWidth": 96,
+   "frames": 56,
+   "key": "wd_full"
+  },
+  {
+   "file": "assets/wardrobe/wd_port.png",
+   "frameHeight": 140,
+   "frameWidth": 112,
+   "frames": 48,
+   "key": "wd_port"
   }
  ]
 }

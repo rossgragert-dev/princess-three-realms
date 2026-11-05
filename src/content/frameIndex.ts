@@ -117,7 +117,21 @@ export const UI = {
   icon_bridge: 23,
   icon_lock: 24,
   icon_sound: 25,
-  icon_music: 26
+  icon_music: 26,
+  icon_wardrobe: 27,
+  icon_mirror: 28,
+  icon_dress: 29,
+  icon_palette: 30,
+  icon_shoe: 31,
+  icon_cape: 32,
+  icon_hair: 33,
+  icon_haircolor: 34,
+  icon_tiara: 35,
+  icon_earring: 36,
+  icon_necklace: 37,
+  icon_face: 38,
+  icon_skin: 39,
+  icon_none: 40
 } as const;
 export type TileName = keyof typeof TILE;
 export type ItemName = keyof typeof ITEM;

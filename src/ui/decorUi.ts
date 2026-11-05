@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { ThumbPool } from '../art/looks';
+import { optionOf, slotOfWearable } from '../content/appearance';
 import { DECOR, optionsForSlot, type DecorDef, type SlotDef } from '../content/decorCatalog';
 import { services } from '../systems/services';
 import { dur } from '../systems/accessibility';
@@ -97,8 +99,10 @@ export class DecorReveal {
   constructor(private scene: Phaser.Scene, private setModal: (on: boolean) => void) {}
 
   async show(id: string): Promise<void> {
-    const d = DECOR[id];
-    if (!d) return;
+    const wearable = id.startsWith('w:') ? id.slice(2) : null;
+    const wslot = wearable ? slotOfWearable(wearable) : undefined;
+    const d = wearable ? undefined : DECOR[id];
+    if (!d && !(wearable && wslot)) return;
     const s = this.scene;
     this.setModal(true);
     this.isOpen = true;
@@ -117,7 +121,17 @@ export class DecorReveal {
     card.fillStyle(0x40255a, 0.3).fillRoundedRect(256 - 98, 178 - 98 + 5, 196, 196, 24);
     card.fillStyle(0xfff6e4, 1).fillRoundedRect(256 - 98, 178 - 98, 196, 196, 24);
     card.lineStyle(7, 0xffc800, 1).strokeRoundedRect(256 - 98, 178 - 98, 196, 196, 24);
-    const img = add(decorImage(s, d, 256, 178, 150, 6).setDepth(83));
+    let img: Phaser.GameObjects.Image;
+    let hintIcon: string;
+    if (d) { img = add(decorImage(s, d, 256, 178, 150, 6).setDepth(83)); hintIcon = d.hintIcon; }
+    else {
+      // a wearable: a real picture of her wearing it, then a cue towards the wardrobe / mirror
+      const pool = new ThumbPool(s, 'reveal_thumb_', 1);
+      pool.drawOption(0, services.save.state.appearance, wslot!, wearable!, { w: 88, h: 80 });
+      img = add(s.add.image(256, 178, pool.key(0)).setOrigin(0.44, 0.476).setScale(1.7).setCrop(0, 0, 88, 80).setDepth(83));
+      const opt = optionOf(wslot!, wearable!);
+      hintIcon = opt?.hintIcon ?? 'sparkle0';
+    }
     const final = img.scale;
     img.setScale(0.1);
     s.tweens.add({ targets: img, scale: final, duration: dur(550), ease: 'Back.Out' });
@@ -128,9 +142,10 @@ export class DecorReveal {
     const star2 = add(pic(s, 'sparkle1', 256 + 98, 178 + 98, 3).setDepth(84));
     s.tweens.add({ targets: [star, star2], scale: 4.5, duration: 500, yoyo: true, repeat: -1 });
     // who/where it came from, then the "go decorate" cue
-    const from = add(pic(s, d.hintIcon, 256 - 56, 322, d.hintIcon.startsWith('icon_') ? 1.4 : 3).setDepth(83));
+    const from = add(pic(s, hintIcon, 256 - 56, 322, hintIcon.startsWith('icon_') ? 1.4 : 3).setDepth(83));
     const arrow = add(pic(s, 'icon_next', 256, 322, 1).setDepth(83));
-    const home = add(pic(s, 'icon_home', 256 + 56, 322, 1.4).setDepth(83));
+    const station = wearable && wslot && ['hairstyle', 'hairColor', 'tiara', 'earrings', 'necklace', 'faceAccent', 'skinTone'].includes(wslot) ? 'icon_mirror' : 'icon_wardrobe';
+    const home = add(pic(s, wearable ? station : 'icon_home', 256 + 56, 322, 1.4).setDepth(83));
     s.tweens.add({ targets: [from, arrow, home], y: 316, duration: 500, yoyo: true, repeat: -1 });
     await new Promise<void>((resolve) => {
       let fin = false;

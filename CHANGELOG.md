@@ -1,4 +1,9 @@
 # Changelog
+## 0.3.0 "Royal Wardrobe & Enchanted Vanity"
+- Bedroom: pink-gold armoire and lit-mirror vanity open two full-screen, picture-only customization scenes (8 dresses, 10 dress colours, 6 shoes, 5 cape/gloves/wings, 6 hairstyles, 10 hair colours, 6 tiaras, 3 earrings, 5 necklaces, 4 face accents, 6 skin tones).
+- Choices recolour the animated overworld princess and mermaid (same animations), save automatically, survive scene changes, transformations and reloads.
+- 13 earnable wearables tied to Chapter 1 quests and finds (2 new sparkle finds), "new!" reveal, locked silhouettes, older saves migrate.
+- Tests 94 -> 124; new Chrome drivers `v03.mjs`, `v03b.mjs`.
 ## 0.2.0 "Picture-first + Bedroom Rewards"
 - Narration optional (default off): picture-bubble dialogue, letter-card puzzle, visual hint hand, lightbulb hint button; speaker/replay only when narration is on.
 - Bedroom: 12 hotspots, 12 earnable items (quest, puzzle, NPC gift, hidden find, chests), picture picker with locked silhouettes, "new item" reveal, glowing Home button, saved decor, v0.1 save migration.

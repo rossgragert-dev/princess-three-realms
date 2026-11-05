@@ -33,7 +33,7 @@ export interface PropDef {
   depthBias?: number;
 }
 
-export type ObjKind = 'npc' | 'warp' | 'collect' | 'ability' | 'puzzle' | 'slot' | 'portal' | 'chest' | 'find';
+export type ObjKind = 'npc' | 'warp' | 'collect' | 'ability' | 'puzzle' | 'slot' | 'portal' | 'chest' | 'find' | 'station';
 
 export interface ObjDef {
   id: string;

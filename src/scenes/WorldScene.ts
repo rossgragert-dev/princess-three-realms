@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { applyOverworldLook } from '../art/looks';
+import { slotOfWearable } from '../content/appearance';
 import type { Form, GameState, PuzzleDef, QuestFlag, SceneId } from '../types/game';
 import type { MapDef, ObjDef, PropDef, Tile } from '../world/types';
 import type { Line } from '../content/dialogue';
@@ -14,7 +16,7 @@ import { completeFlag, nextObjective } from '../systems/questEngine';
 import { services, applySettingsToAudio } from '../systems/services';
 import { reducedEffects, sparkleCount, dur } from '../systems/accessibility';
 import { DECOR, SLOTS, slotById, slotHasNewOption } from '../content/decorCatalog';
-import { ITEM, TILE } from '../content/frameIndex';
+import { ITEM, TILE, UI } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
 
 const T = 16;
@@ -107,7 +109,16 @@ export class WorldScene extends Phaser.Scene {
       this.ui.hideCount();
       this.ui.refresh();
       this.busy = true;
-      void onArrive(this.ctx).finally(() => { this.busy = false; });
+      void onArrive(this.ctx).then(async () => {
+        if (this.map.id === 'bedroom' && this.state.wardrobe.pending.length && !this.revealQueue.some((q) => q.startsWith('w:'))) {
+          // an older save may have finished many quests: celebrate the first three, quietly add the rest to her wardrobe
+          const pend = this.state.wardrobe.pending;
+          for (const w of pend.slice(0, 3)) this.revealQueue.push('w:' + w);
+          this.state.wardrobe.pending = pend.slice(0, 3);
+          services.save.save();
+          await this.flushReveals();
+        }
+      }).finally(() => { this.busy = false; });
     };
     if (this.ui.sys.settings.status === Phaser.Scenes.RUNNING) ready();
     else this.ui.events.once(Phaser.Scenes.Events.CREATE, ready);
@@ -141,6 +152,14 @@ export class WorldScene extends Phaser.Scene {
       const s = this.makeSprite(p.key, p.x * T + T / 2 + (p.ox ?? 0), (p.y + 1) * T, p.frame, p.anim);
       s.setDepth((p.y + 1) * T + (p.depthBias ?? 0));
       this.props.push({ def: p, sprite: s });
+    }
+    if (this.map.id === 'bedroom') {
+      // picture cues so a child can find the two customization stations: bobbing wardrobe / mirror icons
+      for (const [key, icon, x, y] of [['wardrobe_prop', 'icon_wardrobe', 32, 152], ['vanity_prop', 'icon_mirror', 352, 170]] as const) {
+        if (!this.props.some((q) => q.def.key === key)) continue;
+        const cue = this.add.image(x, y, 'ui', UI[icon]).setDepth(9000).setScale(0.6).setAlpha(0.95);
+        if (!reducedEffects()) this.tweens.add({ targets: cue, y: y - 4, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+      }
     }
   }
 
@@ -256,7 +275,11 @@ export class WorldScene extends Phaser.Scene {
   // ------------------------------------------------------------------ "new item" reveals
   private revealQueue: string[] = [];
   private async flushReveals() {
-    while (this.revealQueue.length) await this.ui.revealDecor(this.revealQueue.shift()!);
+    while (this.revealQueue.length) {
+      const id = this.revealQueue.shift()!;
+      await this.ui.revealDecor(id);
+      if (id.startsWith('w:')) { const w = this.state.wardrobe; w.pending = w.pending.filter((x) => x !== id.slice(2)); services.save.save(); }
+    }
     this.ui.refresh();
   }
 
@@ -278,13 +301,16 @@ export class WorldScene extends Phaser.Scene {
       celebrate: (p: string, s?: number) => self.ui.celebrate(p, s),
       complete: (flag: QuestFlag) => {
         const had = new Set(self.state.unlockedDecor);
+        const hadWear = new Set(self.state.wardrobe.unlocked);
         const fresh = completeFlag(self.state, flag);
         if (fresh) {
           for (const id of self.state.unlockedDecor) if (!had.has(id)) self.revealQueue.push(id);
+          for (const id of self.state.wardrobe.unlocked) if (!hadWear.has(id)) self.revealQueue.push('w:' + id);
           services.save.save(); self.ui.refresh(); self.applyFlags(true);
         }
         return fresh;
       },
+      openStation: (which: 'Wardrobe' | 'Vanity') => self.openStation(which),
       cast: () => self.player.cast(),
       face: (o: ObjDef) => { const p = self.objPos.get(o.id) ?? o; self.player.face(p.x, p.y); },
       react: (id: string) => self.react(id),
@@ -480,6 +506,28 @@ export class WorldScene extends Phaser.Scene {
     this.travel('bedroom', 'from_courtyard');
   }
 
+  private stationOpen = false;
+  /** Opens the full-screen Wardrobe/Vanity; resolves when she finishes (the look is refreshed first). */
+  private openStation(which: 'Wardrobe' | 'Vanity'): Promise<void> {
+    if (this.stationOpen) return Promise.resolve();
+    this.stationOpen = true;
+    return new Promise<void>((resolve) => {
+      this.events.once('station-closed', () => {
+        this.stationOpen = false;
+        this.refreshLook();
+        services.save.save();
+        resolve();
+      });
+      this.scene.pause('World');
+      this.scene.pause('UI');
+      this.scene.launch(which);
+      this.scene.bringToTop(which);
+    });
+  }
+
+  /** Re-colour the animated princess/mermaid from the saved look. Same textures and animations, new pixels. */
+  refreshLook() { applyOverworldLook(this, this.state.appearance); }
+
   private openOverlay(key: 'Stickerbook' | 'ParentSettings') {
     if (this.busy) return;
     this.scene.pause('World');
@@ -611,7 +659,11 @@ export class WorldScene extends Phaser.Scene {
       moving: () => this.player.moving,
       panel: () => this.ui?.panel ?? null,
       playerXY: () => { const c = this.cameras.main; return { x: this.player.sprite.x - c.scrollX, y: this.player.sprite.y - c.scrollY }; },
-      tilePos
+      tilePos,
+      openStation: (w: 'Wardrobe' | 'Vanity') => this.openStation(w),
+      refreshLook: () => this.refreshLook(),
+      dumpTexture: (k: string) => (this.textures.get(k).getSourceImage() as HTMLCanvasElement).toDataURL(),
+      playerSprite: () => ({ tex: this.player.sprite.texture.key, frame: this.player.sprite.frame.name })
     };
   }
 }

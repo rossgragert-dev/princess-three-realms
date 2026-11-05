@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { initLooks, applyOverworldLook, lookKey } from '../art/looks';
+import { services } from '../systems/services';
 
 interface SheetEntry { key: string; file: string; frameWidth: number; frameHeight: number }
 interface ImageEntry { key: string; file: string }
@@ -24,9 +26,12 @@ export class BootScene extends Phaser.Scene {
 
   create() {
     const m = this.cache.json.get('manifest') as Manifest;
+    // v0.3: the princess and mermaid are live recoloured canvases (her chosen dress, hair, skin); animations play on those.
+    initLooks(this);
+    applyOverworldLook(this, services.save.state.appearance);
     for (const a of m.anims) {
       if (this.anims.exists(a.key)) continue;
-      this.anims.create({ key: a.key, frames: this.anims.generateFrameNumbers(a.sheet, { frames: a.frames }), frameRate: a.frameRate, repeat: a.repeat });
+      this.anims.create({ key: a.key, frames: this.anims.generateFrameNumbers(lookKey(a.sheet), { frames: a.frames }), frameRate: a.frameRate, repeat: a.repeat });
     }
     this.scene.start('Title');
   }

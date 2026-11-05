@@ -1,5 +1,6 @@
 import type { GameState, SceneId } from '../types/game';
 import { sanitizeDecor } from '../content/decorCatalog';
+import { defaultAppearance, defaultWardrobe, sanitizeWardrobe } from '../content/appearance';
 
 export const SAVE_KEY = 'ptr_save_v1';
 
@@ -22,6 +23,8 @@ export function defaultState(): GameState {
     stickers: [],
     unlockedDecor: [],
     bedroom: {},
+    appearance: defaultAppearance(),
+    wardrobe: defaultWardrobe(),
     puzzles: {},
     settings: {
       musicVolume: 0.5,
@@ -47,17 +50,21 @@ export function sanitize(raw: unknown): GameState {
   // Form must be valid for the scene: water-only scene needs mermaid, land scenes can't be mermaid.
   const safeForm = scene === 'grotto' ? 'mermaid' : form === 'mermaid' && scene !== 'shore' ? 'princess' : form;
   const decor = sanitizeDecor(r.unlockedDecor, r.bedroom);
+  const flags = { ...(typeof r.flags === 'object' && r.flags ? r.flags : {}) };
+  const look = sanitizeWardrobe(r.appearance, r.wardrobe, flags);
   return {
     version: 1,
     scene,
     spawn: typeof r.spawn === 'string' ? r.spawn : SAFE_SPAWN[scene],
     form: safeForm,
     tile: r.tile && Number.isFinite(r.tile.x) && Number.isFinite(r.tile.y) ? { x: r.tile.x | 0, y: r.tile.y | 0 } : undefined,
-    flags: { ...(typeof r.flags === 'object' && r.flags ? r.flags : {}) },
+    flags,
     stars: Number.isFinite(r.stars) ? Math.max(0, Math.min(6, r.stars as number)) : 0,
     stickers: Array.isArray(r.stickers) ? r.stickers.filter((s) => typeof s === 'string') : [],
     unlockedDecor: decor.unlockedDecor,
     bedroom: decor.bedroom,
+    appearance: look.appearance,
+    wardrobe: look.wardrobe,
     puzzles: typeof r.puzzles === 'object' && r.puzzles ? { ...r.puzzles } : {},
     settings: { ...d.settings, ...(typeof r.settings === 'object' && r.settings ? r.settings : {}) }
   };

@@ -1,4 +1,6 @@
-# Implementation status - v0.2 "Picture-first + Bedroom Rewards"
+# Implementation status - v0.3 Royal Wardrobe & Enchanted Vanity: implemented and browser-tested on the preview; details in `docs/ROYAL_WARDROBE_IMPLEMENTATION.md`.
+
+(Earlier status below: v0.2) "Picture-first + Bedroom Rewards"
 
 Two design changes on top of the standalone v0.1b build (details: `docs/PICTURE_FIRST.md`, `docs/DECORATING.md`):
 1. **Narration is no longer a dependency.** New saves start with narration OFF; the child flow is pictures only. Audio code, manifest, tools and the 81 temporary clips remain and work when a grown-up turns narration on.

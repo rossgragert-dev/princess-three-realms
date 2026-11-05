@@ -1,5 +1,6 @@
 import type { GameState, QuestFlag } from '../types/game';
 import { decorForFlag } from '../content/decorCatalog';
+import { grantForFlag } from '../content/appearance';
 
 /** The ordered main path. Each step lists the flag that completes it and the flags that must come first. */
 export const MAIN_PATH: { flag: QuestFlag; requires: QuestFlag[]; hintIcon: string; where: string }[] = [
@@ -37,6 +38,7 @@ export function completeFlag(state: GameState, flag: QuestFlag): boolean {
   if (flag === 'CREEK_CHEST') addUnique(state.stickers, 'sticker_chest');
   const item = decorForFlag(flag);
   if (item) addUnique(state.unlockedDecor, item); // every decor reward comes from exactly one flag
+  grantForFlag(state.wardrobe, flag); // v0.3: optional wearables, same one-flag rule; never replaces what she is wearing
   return true;
 }
 

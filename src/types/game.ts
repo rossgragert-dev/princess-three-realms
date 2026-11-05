@@ -1,3 +1,5 @@
+import type { PrincessAppearance, WardrobeState } from '../content/appearance';
+
 export type Form = 'princess' | 'unicorn' | 'mermaid';
 export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom';
 
@@ -19,7 +21,9 @@ export type QuestFlag =
   | 'GROTTO_SEEN'
   | 'BUTTERFLY_FOUND'
   | 'SHORE_CHEST'
-  | 'GROTTO_CHEST';
+  | 'GROTTO_CHEST'
+  | 'FAIRY_DUST_FOUND'
+  | 'MOONSTONE_FOUND';
 
 export type PuzzleType = 'count' | 'sound-picture' | 'pattern' | 'matching' | 'sequence';
 
@@ -70,6 +74,10 @@ export interface GameState {
   unlockedDecor: string[];
   /** slotId -> decorId */
   bedroom: Record<string, string>;
+  /** v0.3: what the princess is wearing right now (separate from what she owns). */
+  appearance: PrincessAppearance;
+  /** v0.3: earned wearables. */
+  wardrobe: WardrobeState;
   puzzles: Record<string, PuzzleProgress>;
   settings: {
     musicVolume: number;

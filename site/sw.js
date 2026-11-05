@@ -1,5 +1,5 @@
 /* Offline cache. CACHE is bumped by tools/make_precache.mjs on every build (it rewrites the line below). */
-const CACHE = 'ptr-460b2ded8f';
+const CACHE = 'ptr-55e0a59531';
 const PRECACHE_URL = './precache.json';
 
 self.addEventListener('install', (event) => {

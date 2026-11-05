@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import type { Form } from '../types/game';
 import type { Tile } from '../world/types';
 import { FORM_SPEED } from './transformations';
+import { lookKey } from '../art/looks';
 
 export type Dir = 'down' | 'up' | 'left' | 'right';
 
@@ -26,14 +27,14 @@ export class Player {
   constructor(private scene: Phaser.Scene, public form: Form, tile: Tile) {
     this.tile = { ...tile };
     const p = tilePos(tile, form);
-    this.sprite = scene.add.sprite(p.x, p.y, form, 0).setOrigin(0.5, ORIGIN_Y[form]);
+    this.sprite = scene.add.sprite(p.x, p.y, lookKey(form), 0).setOrigin(0.5, ORIGIN_Y[form]);
     this.idle();
   }
 
   setForm(form: Form) {
     this.form = form;
     this.lastKey = '';
-    this.sprite.setTexture(form).setOrigin(0.5, ORIGIN_Y[form]);
+    this.sprite.setTexture(lookKey(form)).setOrigin(0.5, ORIGIN_Y[form]);
     const p = tilePos(this.tile, form);
     this.sprite.setPosition(p.x, p.y);
     this.idle();

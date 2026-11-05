@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { lookKey } from '../art/looks';
 import { services, applySettingsToAudio } from '../systems/services';
 import { makeButton, burst } from '../ui/touchTargets';
 import { UI } from '../content/frameIndex';
@@ -19,7 +20,7 @@ export class TitleScene extends Phaser.Scene {
     // three forms parade across the title
     const forms = ['princess', 'unicorn', 'mermaid'] as const;
     forms.forEach((f, i) => {
-      const s = this.add.sprite(130 + i * 126, 150, f, 0).setScale(3);
+      const s = this.add.sprite(130 + i * 126, 150, lookKey(f), 0).setScale(3);
       if (this.anims.exists(`${f}_idle_down`)) s.play(`${f}_idle_down`);
       this.tweens.add({ targets: s, y: 142, duration: 900 + i * 150, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     });
