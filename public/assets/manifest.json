@@ -684,6 +684,16 @@
     0,
     1
    ],
+   "key": "paint_glow",
+   "repeat": -1,
+   "sheet": "paint_prop"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
    "key": "vanity_glow",
    "repeat": -1,
    "sheet": "vanity_prop"
@@ -827,6 +837,96 @@
    "height": 32,
    "key": "hand",
    "width": 32
+  },
+  {
+   "file": "assets/props/plain_rug.png",
+   "height": 22,
+   "key": "plain_rug",
+   "width": 44
+  },
+  {
+   "file": "assets/props/striped_rug.png",
+   "height": 22,
+   "key": "striped_rug",
+   "width": 44
+  },
+  {
+   "file": "assets/props/small_lamp.png",
+   "height": 26,
+   "key": "small_lamp",
+   "width": 14
+  },
+  {
+   "file": "assets/props/wall_hanging.png",
+   "height": 26,
+   "key": "wall_hanging",
+   "width": 20
+  },
+  {
+   "file": "assets/props/round_mirror.png",
+   "height": 20,
+   "key": "round_mirror",
+   "width": 20
+  },
+  {
+   "file": "assets/props/pink_curtain.png",
+   "height": 36,
+   "key": "pink_curtain",
+   "width": 44
+  },
+  {
+   "file": "assets/props/floor_pillow.png",
+   "height": 12,
+   "key": "floor_pillow",
+   "width": 20
+  },
+  {
+   "file": "assets/props/reading_cushion.png",
+   "height": 12,
+   "key": "reading_cushion",
+   "width": 22
+  },
+  {
+   "file": "assets/props/pink_chair.png",
+   "height": 24,
+   "key": "pink_chair",
+   "width": 18
+  },
+  {
+   "file": "assets/props/wooden_chair.png",
+   "height": 24,
+   "key": "wooden_chair",
+   "width": 18
+  },
+  {
+   "file": "assets/props/little_couch.png",
+   "height": 24,
+   "key": "little_couch",
+   "width": 36
+  },
+  {
+   "file": "assets/props/dresser.png",
+   "height": 26,
+   "key": "dresser",
+   "width": 26
+  },
+  {
+   "file": "assets/props/toy_basket.png",
+   "height": 22,
+   "key": "toy_basket",
+   "width": 22
+  },
+  {
+   "file": "assets/props/desk.png",
+   "height": 28,
+   "key": "desk",
+   "width": 36
+  },
+  {
+   "file": "assets/props/plant_stand.png",
+   "height": 28,
+   "key": "plant_stand",
+   "width": 16
   }
  ],
  "index": {
@@ -861,6 +961,13 @@
    "water": 14
   },
   "tiles": {
+   "base_cream": 66,
+   "base_floral": 68,
+   "base_lavender": 60,
+   "base_mint": 62,
+   "base_rainbow": 72,
+   "base_sky": 64,
+   "base_starry": 70,
    "baseboard": 48,
    "boulder": 35,
    "boulder_sand": 36,
@@ -876,6 +983,16 @@
    "deep_water": 58,
    "fence_h": 33,
    "fence_v": 34,
+   "floor_cream_tile0": 75,
+   "floor_cream_tile1": 76,
+   "floor_dark_wood0": 73,
+   "floor_dark_wood1": 74,
+   "floor_pastel_tile0": 77,
+   "floor_pastel_tile1": 78,
+   "floor_patterned_carpet0": 79,
+   "floor_patterned_carpet1": 80,
+   "floor_royal_rug0": 81,
+   "floor_royal_rug1": 82,
    "flower_blue": 42,
    "flower_pink": 43,
    "flower_red": 41,
@@ -906,8 +1023,15 @@
    "uw_sand0": 50,
    "uw_sand1": 51,
    "wall_brick": 25,
+   "wall_cream": 65,
    "wall_crenel": 27,
+   "wall_floral": 67,
+   "wall_lavender": 59,
+   "wall_mint": 61,
    "wall_paper": 47,
+   "wall_rainbow": 71,
+   "wall_sky": 63,
+   "wall_starry": 69,
    "wall_top_int": 49,
    "wall_window": 26,
    "water0": 13,
@@ -922,15 +1046,18 @@
    "wood_floor1": 46
   },
   "ui": {
+   "icon_a": 44,
    "icon_back": 16,
    "icon_book": 6,
    "icon_bridge": 23,
+   "icon_brush": 41,
    "icon_cape": 32,
    "icon_check": 8,
    "icon_down": 11,
    "icon_dress": 29,
    "icon_earring": 36,
    "icon_face": 38,
+   "icon_floor": 43,
    "icon_hair": 33,
    "icon_haircolor": 34,
    "icon_hint": 15,
@@ -938,6 +1065,7 @@
    "icon_lamp": 22,
    "icon_left": 12,
    "icon_lock": 24,
+   "icon_magic": 45,
    "icon_marina": 20,
    "icon_mermaid": 4,
    "icon_mirror": 28,
@@ -961,6 +1089,7 @@
    "icon_tree": 18,
    "icon_unicorn": 3,
    "icon_up": 10,
+   "icon_wall": 42,
    "icon_wand": 1,
    "icon_wardrobe": 27
   }
@@ -970,7 +1099,7 @@
    "file": "assets/tiles/tiles.png",
    "frameHeight": 16,
    "frameWidth": 16,
-   "frames": 59,
+   "frames": 83,
    "key": "tiles"
   },
   {
@@ -1145,7 +1274,7 @@
    "file": "assets/ui/ui.png",
    "frameHeight": 32,
    "frameWidth": 32,
-   "frames": 41,
+   "frames": 46,
    "key": "ui"
   },
   {
@@ -1217,6 +1346,13 @@
    "frameWidth": 32,
    "frames": 2,
    "key": "wardrobe_prop"
+  },
+  {
+   "file": "assets/props/paint_prop.png",
+   "frameHeight": 34,
+   "frameWidth": 26,
+   "frames": 2,
+   "key": "paint_prop"
   },
   {
    "file": "assets/props/vanity_prop.png",

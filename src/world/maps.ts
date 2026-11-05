@@ -296,15 +296,18 @@ function bedroom(): MapDef {
     { key: 'shelf', x: 20, y: 2, ox: 8, depthBias: -1 },
     { key: 'items', frame: ITEM.star, x: 11, y: 1, ox: 8, showWhen: 'STAR_1_FOUND', depthBias: -2 },
     // v0.3: the two customization stations. Tall ornate armoire on the west wall, lit vanity on the east wall.
-    { key: 'wardrobe_prop', anim: 'wardrobe_glow', x: 1, y: 12, ox: 8, blocks: [[0, 0], [1, 0]] },
+    { key: 'wardrobe_prop', anim: 'wardrobe_glow', x: 1, y: 10, ox: 8, blocks: [[0, 0], [1, 0]] },
     { key: 'vanity_prop', anim: 'vanity_glow', x: 21, y: 13, ox: 8, blocks: [[0, 0], [1, 0]] },
+    // v0.4a: the paintbrush easel opens the room designer (wallpaper + floor)
+    { key: 'paint_prop', anim: 'paint_glow', x: 6, y: 15, blocks: [[0, 0]] },
   ];
   const objects: ObjDef[] = [
     { id: 'nana', kind: 'npc', x: 10, y: 9, sprite: npc('nana'), blocks: true, radius: 1.8 },
     ...SLOTS.map((sl): ObjDef => ({ id: sl.id, kind: 'slot', x: sl.x, y: sl.y, radius: 3.2 })),
     // stations sit mid-furniture (so taps anywhere on the tall prop find them); the player walks up to the free floor in front
-    { id: 'wardrobe_station', kind: 'station', x: 1, y: 13, radius: 2.2 },
+    { id: 'wardrobe_station', kind: 'station', x: 1, y: 11, radius: 2.2 },
     { id: 'vanity_station', kind: 'station', x: 21, y: 14, radius: 2.2 },
+    { id: 'paint_station', kind: 'station', x: 6, y: 16, radius: 2.2 },
     { id: 'door_exit', kind: 'warp', x: 11, y: 17, tiles: [tile(11, 17), tile(12, 17)], to: { scene: 'courtyard', spawn: 'from_bedroom' }, radius: 1.5 },
   ];
   return {

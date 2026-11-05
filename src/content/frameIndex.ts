@@ -58,7 +58,31 @@ export const TILE = {
   coral_blue: 55,
   coral_orange: 56,
   glow_lane: 57,
-  deep_water: 58
+  deep_water: 58,
+  wall_lavender: 59,
+  base_lavender: 60,
+  wall_mint: 61,
+  base_mint: 62,
+  wall_sky: 63,
+  base_sky: 64,
+  wall_cream: 65,
+  base_cream: 66,
+  wall_floral: 67,
+  base_floral: 68,
+  wall_starry: 69,
+  base_starry: 70,
+  wall_rainbow: 71,
+  base_rainbow: 72,
+  floor_dark_wood0: 73,
+  floor_dark_wood1: 74,
+  floor_cream_tile0: 75,
+  floor_cream_tile1: 76,
+  floor_pastel_tile0: 77,
+  floor_pastel_tile1: 78,
+  floor_patterned_carpet0: 79,
+  floor_patterned_carpet1: 80,
+  floor_royal_rug0: 81,
+  floor_royal_rug1: 82
 } as const;
 export const ITEM = {
   carrot: 0,
@@ -131,7 +155,12 @@ export const UI = {
   icon_necklace: 37,
   icon_face: 38,
   icon_skin: 39,
-  icon_none: 40
+  icon_none: 40,
+  icon_brush: 41,
+  icon_wall: 42,
+  icon_floor: 43,
+  icon_a: 44,
+  icon_magic: 45
 } as const;
 export type TileName = keyof typeof TILE;
 export type ItemName = keyof typeof ITEM;

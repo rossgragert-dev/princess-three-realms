@@ -57,7 +57,7 @@ describe('bedroom decor catalog', () => {
   });
   it('slots only offer items of their category', () => {
     for (const s of SLOTS) for (const d of optionsForSlot(s.id)) assert.equal(d.category, s.category);
-    assert.equal(decorForSlot('slot_wall_a', ['mermaid_art', 'star_lamp']).length, 1);
+    assert.equal(decorForSlot('slot_wall_a', ['mermaid_art', 'star_lamp']).filter((d) => d.source !== 'starter').length, 1);
   });
 });
 
@@ -125,7 +125,7 @@ describe('placing items', () => {
 describe('saved bedroom state', () => {
   it('round-trips unlocked + placed items through storage', () => {
     const store = memStore(); const a = new SaveManager(store);
-    a.state.unlockedDecor = ['star_lamp', 'unicorn_plush', 'moon_curtain'];
+    a.state.unlockedDecor = ['star_lamp', 'unicorn_plush', 'moon_curtain']; a.state.bedroom = {};
     placeDecor(a.state, 'slot_lamp', 'star_lamp'); placeDecor(a.state, 'slot_plush_b', 'unicorn_plush'); placeDecor(a.state, 'slot_window', 'moon_curtain');
     a.save();
     const b = new SaveManager(store);

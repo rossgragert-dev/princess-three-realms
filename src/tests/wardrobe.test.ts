@@ -252,7 +252,7 @@ describe('bedroom stations', () => {
   const room = getMap('bedroom');
   const stations = room.objects.filter((o) => (o.kind as string) === 'station');
   it('has a wardrobe and a vanity station with their own props', () => {
-    assert.deepEqual(stations.map((s) => s.id).sort(), ['vanity_station', 'wardrobe_station']);
+    assert.deepEqual(stations.map((s) => s.id).sort(), ['paint_station', 'vanity_station', 'wardrobe_station']);
     assert.ok(room.props.some((p) => p.key === 'wardrobe_prop') && room.props.some((p) => p.key === 'vanity_prop'));
   });
   it('are always available (no quest gating) and reachable from the entrance', () => {
@@ -273,10 +273,10 @@ describe('bedroom stations', () => {
     for (const o of room.objects) { if (o.kind === 'slot') assert.ok([...reach.keys()].some((k) => Math.hypot((k % 4096) - o.x, Math.floor(k / 4096) - o.y) <= (o.radius ?? 1.6)), `${o.id} cannot be approached`); }
     assert.ok(reachable(11, 16) && reachable(12, 16), 'exit approach free');
     const blocked = new Set<string>();
-    for (const p of room.props) for (const [dx, dy] of p.blocks ?? []) { const k = `${p.x + dx},${p.y + dy}`; if (p.key === 'wardrobe_prop' || p.key === 'vanity_prop') blocked.add(k); }
+    for (const p of room.props) for (const [dx, dy] of p.blocks ?? []) { const k = `${p.x + dx},${p.y + dy}`; if (p.key === 'wardrobe_prop' || p.key === 'vanity_prop' || p.key === 'paint_prop') blocked.add(k); }
     for (const o of room.objects) if (o.kind === 'slot' || o.kind === 'warp') for (const t of o.tiles ?? [{ x: o.x, y: o.y }]) assert.ok(!blocked.has(`${t.x},${t.y}`), `${o.id} is under furniture`);
     // furniture footprints do not overlap other props' footprints
-    const others = new Set<string>(); for (const p of room.props) if (p.key !== 'wardrobe_prop' && p.key !== 'vanity_prop') for (const [dx, dy] of p.blocks ?? []) others.add(`${p.x + dx},${p.y + dy}`);
+    const others = new Set<string>(); for (const p of room.props) if (p.key !== 'wardrobe_prop' && p.key !== 'vanity_prop' && p.key !== 'paint_prop') for (const [dx, dy] of p.blocks ?? []) others.add(`${p.x + dx},${p.y + dy}`);
     for (const k of blocked) assert.ok(!others.has(k), `furniture overlaps a prop at ${k}`);
   });
   it('new hidden finds exist in real, reachable places', () => {

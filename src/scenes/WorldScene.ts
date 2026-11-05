@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { applyOverworldLook } from '../art/looks';
+import { themedTile } from '../content/roomThemes';
 import type { Form, GameState, PuzzleDef, QuestFlag, SceneId } from '../types/game';
 import type { MapDef, ObjDef, PropDef, Tile } from '../world/types';
 import type { Line } from '../content/dialogue';
@@ -14,7 +15,7 @@ import { narrationForPlan, planFormChange } from '../actors/transformations';
 import { completeFlag, nextObjective } from '../systems/questEngine';
 import { services, applySettingsToAudio } from '../systems/services';
 import { reducedEffects, sparkleCount, dur } from '../systems/accessibility';
-import { DECOR, SLOTS, slotById, slotHasNewOption } from '../content/decorCatalog';
+import { decorById, SLOTS, slotById, slotHasNewOption } from '../content/decorCatalog';
 import { ITEM, TILE, UI } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
 
@@ -103,7 +104,9 @@ export class WorldScene extends Phaser.Scene {
         hint: () => void this.hint(true),
         book: () => this.openOverlay('Stickerbook'),
         settings: () => this.openOverlay('ParentSettings'),
-        dpad: (dx, dy) => this.dpadStep(dx, dy)
+        dpad: (dx, dy) => this.dpadStep(dx, dy),
+        action: () => this.actionPress(),
+        magic: () => void this.magicPress()
       };
       this.ui.hideCount();
       this.ui.refresh();
@@ -130,7 +133,7 @@ export class WorldScene extends Phaser.Scene {
       const row: number[] = [];
       for (let x = 0; x < m.w; x++) {
         const name = effectiveTile(m, flags, x, y);
-        row.push(TILE[name]);
+        row.push(TILE[this.map.id === 'bedroom' ? themedTile(name, this.state.roomTheme) : name]);
         if (/^water[0-3]$/.test(name)) this.waterCells.push({ x, y, phase: (x + y) % 4 });
       }
       data.push(row);
@@ -154,7 +157,7 @@ export class WorldScene extends Phaser.Scene {
     }
     if (this.map.id === 'bedroom') {
       // picture cues so a child can find the two customization stations: bobbing wardrobe / mirror icons
-      for (const [key, icon, x, y] of [['wardrobe_prop', 'icon_wardrobe', 32, 152], ['vanity_prop', 'icon_mirror', 352, 170]] as const) {
+      for (const [key, icon, x, y] of [['wardrobe_prop', 'icon_wardrobe', 32, 152], ['vanity_prop', 'icon_mirror', 352, 170], ['paint_prop', 'icon_brush', 104, 212]] as const) {
         if (!this.props.some((q) => q.def.key === key)) continue;
         const cue = this.add.image(x, y, 'ui', UI[icon]).setDepth(9000).setScale(0.6).setAlpha(0.95);
         if (!reducedEffects()) this.tweens.add({ targets: cue, y: y - 4, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
@@ -242,7 +245,7 @@ export class WorldScene extends Phaser.Scene {
     this.decorSprites = [];
     if (this.map.id !== 'bedroom') return;
     for (const [slotId, decorId] of Object.entries(this.state.bedroom)) {
-      const d = DECOR[decorId];
+      const d = decorById(decorId);
       const sl = slotById(slotId);
       if (!d || !sl) continue;
       const x = sl.x * T + T / 2 + (d.ox ?? 0);
@@ -309,7 +312,7 @@ export class WorldScene extends Phaser.Scene {
         }
         return fresh;
       },
-      openStation: (which: 'Wardrobe' | 'Vanity') => self.openStation(which),
+      openStation: (which: 'Wardrobe' | 'Vanity' | 'RoomDesigner') => self.openStation(which),
       cast: () => self.player.cast(),
       face: (o: ObjDef) => { const p = self.objPos.get(o.id) ?? o; self.player.face(p.x, p.y); },
       react: (id: string) => self.react(id),
@@ -484,6 +487,78 @@ export class WorldScene extends Phaser.Scene {
     else this.bonk();
   }
 
+  // ------------------------------------------------------------------ A button + magic button
+  private cue?: Phaser.GameObjects.Image;
+  private cueRing?: Phaser.GameObjects.Graphics;
+  private cueMs = 0;
+  /** After a room screen closes, a second tap meant for its "done" button must not land on A / magic and reopen it. */
+  private buttonsLockedUntil = 0;
+  private cueTarget: { obj: ObjDef; near: boolean } | null = null;
+
+  /** The friend / thing the A button would act on: the nearest one in reach, else the nearest one on screen (A walks there first). */
+  private contextTarget(): { obj: ObjDef; near: boolean } | null {
+    const me = this.player.tile;
+    let best: { obj: ObjDef; near: boolean; score: number } | null = null;
+    for (const o of visibleObjects(this.map, this.state.flags)) {
+      if (o.kind === 'warp') continue;
+      const p = this.live(o);
+      const d = Math.hypot(me.x - p.x, me.y - p.y);
+      const near = withinRadius(me, p);
+      if (!near && d > 10) continue;
+      const score = d + (o.kind === 'slot' ? 1.5 : 0) + (near ? 0 : 20);
+      if (!best || score < best.score) best = { obj: o, near, score };
+    }
+    return best;
+  }
+
+  private updateCue(dt: number) {
+    this.cueMs += dt;
+    if (this.cueMs < 120) return;
+    this.cueMs = 0;
+    const hidden = this.busy || this.leaving || !this.ui || this.ui.modal || this.player.moving;
+    const t = hidden ? null : this.contextTarget();
+    this.cueTarget = t;
+    this.ui?.setAction(!t ? 'none' : t.near ? 'near' : 'far');
+    if (!this.cue) {
+      this.cue = this.add.image(0, 0, 'ui', UI.icon_a).setScale(0.5).setDepth(9500).setVisible(false);
+      this.cueRing = this.add.graphics().setDepth(9400).setVisible(false);
+      this.tweens.add({ targets: this.cue, angle: { from: -8, to: 8 }, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    }
+    if (!t) { this.cue.setVisible(false); this.cueRing!.setVisible(false); return; }
+    const p = this.live(t.obj);
+    const spr = this.objSprites.get(t.obj.id);
+    const top = spr ? spr.y - spr.displayHeight - 8 : p.y * T - 6;
+    this.cue.setPosition(p.x * T + T / 2, top).setAlpha(t.near ? 1 : 0.5).setVisible(true);
+    this.cueRing!.clear().setVisible(true);
+    this.cueRing!.lineStyle(2, 0xffffff, t.near ? 0.9 : 0.4).strokeEllipse(p.x * T + T / 2, (p.y + 1) * T - 2, 22, 9);
+  }
+
+  /** A: act on the highlighted thing. In reach -> do it. Highlighted but far -> walk there, then do it. Nothing -> a gentle nudge. */
+  private actionPress() {
+    if (this.busy || this.leaving || this.ui?.modal || performance.now() < this.buttonsLockedUntil) return;
+    this.idleMs = 0;
+    const t = this.contextTarget();
+    if (!t) { this.bonk(); void this.hint(false); return; }
+    void this.goTo(t.obj);
+  }
+
+  /** Magic: the form's spell. Next to something that needs it (a bloom) it acts on it; otherwise it is a pretty sparkle. */
+  private async magicPress() {
+    if (this.busy || this.leaving || this.ui?.modal || performance.now() < this.buttonsLockedUntil) return;
+    this.idleMs = 0;
+    const me = this.player.tile;
+    if (this.player.form === 'unicorn') {
+      const bloom = visibleObjects(this.map, this.state.flags).find((o) => o.id.startsWith('bloom_') && withinRadius(me, this.live(o)));
+      if (bloom) { void this.goTo(bloom); return; }
+    }
+    this.busy = true;
+    try {
+      services.audio.sfx(this.player.form === 'mermaid' ? 'splash' : 'sparkle');
+      this.sparkleAt(me.x, me.y - 1, 10);
+      await this.player.cast();
+    } finally { this.busy = false; }
+  }
+
   // ------------------------------------------------------------------ scene travel
   private travel(scene: SceneId, spawn: string) {
     if (this.leaving) return;
@@ -507,13 +582,15 @@ export class WorldScene extends Phaser.Scene {
 
   private stationOpen = false;
   /** Opens the full-screen Wardrobe/Vanity; resolves when she finishes (the look is refreshed first). */
-  private openStation(which: 'Wardrobe' | 'Vanity'): Promise<void> {
+  private openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner'): Promise<void> {
     if (this.stationOpen) return Promise.resolve();
     this.stationOpen = true;
     return new Promise<void>((resolve) => {
       this.events.once('station-closed', () => {
+        this.buttonsLockedUntil = performance.now() + 800;
         this.stationOpen = false;
         this.refreshLook();
+        this.applyRoomTheme();
         services.save.save();
         resolve();
       });
@@ -522,6 +599,13 @@ export class WorldScene extends Phaser.Scene {
       this.scene.launch(which);
       this.scene.bringToTop(which);
     });
+  }
+
+  /** Redraw the bedroom's wallpaper and floor from the saved theme. Cosmetic only: the walkable grid is untouched. */
+  private applyRoomTheme() {
+    if (this.map.id !== 'bedroom' || !this.layer) return;
+    for (let y = 0; y < this.map.h; y++) for (let x = 0; x < this.map.w; x++)
+      this.layer.putTileAt(TILE[themedTile(effectiveTile(this.map, this.state.flags, x, y), this.state.roomTheme)], x, y);
   }
 
   /** Re-colour the animated princess/mermaid from the saved look. Same textures and animations, new pixels. */
@@ -628,6 +712,7 @@ export class WorldScene extends Phaser.Scene {
         for (const c of this.waterCells) { c.phase = (c.phase + 1) % 4; this.layer.putTileAt(TILE[`water${c.phase}` as 'water0'], c.x, c.y); }
       }
     }
+    this.updateCue(dt);
     const idle = !this.busy && !this.player.moving && !(this.ui && this.ui.modal);
     this.idleMs = idle ? this.idleMs + dt : 0;
     if (this.idleMs > 12000 && this.idleMs - dt <= 12000) { void this.hint(false); this.ui?.pulseHint(true); }
@@ -656,10 +741,16 @@ export class WorldScene extends Phaser.Scene {
       pickerCards: () => this.ui.pickerCards.map((c) => ({ ...c })),
       puzzleCards: () => this.ui.puzzleCards.map((c) => ({ ...c })),
       moving: () => this.player.moving,
+      action: () => this.actionPress(),
+      magic: () => void this.magicPress(),
+      cue: () => (this.cueTarget ? { id: this.cueTarget.obj.id, near: this.cueTarget.near } : null),
+      uiButtons: () => this.ui.buttonPos,
+      dialogueText: () => this.ui.dialogueText,
+      playerPx: () => ({ x: this.player.sprite.x, y: this.player.sprite.y }),
       panel: () => this.ui?.panel ?? null,
       playerXY: () => { const c = this.cameras.main; return { x: this.player.sprite.x - c.scrollX, y: this.player.sprite.y - c.scrollY }; },
       tilePos,
-      openStation: (w: 'Wardrobe' | 'Vanity') => this.openStation(w),
+      openStation: (w: 'Wardrobe' | 'Vanity' | 'RoomDesigner') => this.openStation(w),
       refreshLook: () => this.refreshLook(),
       dumpTexture: (k: string) => (this.textures.get(k).getSourceImage() as HTMLCanvasElement).toDataURL(),
       playerSprite: () => ({ tex: this.player.sprite.texture.key, frame: this.player.sprite.frame.name })

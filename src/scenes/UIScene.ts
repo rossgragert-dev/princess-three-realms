@@ -11,7 +11,7 @@ import { PuzzlePanel, type PuzzleResult } from '../ui/puzzlePanel';
 import type { Line } from '../content/dialogue';
 import { DecorPicker, DecorReveal } from '../ui/decorUi';
 import { slotById, unplacedCount } from '../content/decorCatalog';
-import type { UiName } from '../content/frameIndex';
+import { UI, type UiName } from '../content/frameIndex';
 
 export interface UIHandlers {
   form?: (f: Form) => void;
@@ -20,6 +20,10 @@ export interface UIHandlers {
   book?: () => void;
   settings?: () => void;
   dpad?: (dx: number, dy: number) => void;
+  /** The big A button: talk / open / plant / collect, or walk to the highlighted friend first. */
+  action?: () => void;
+  /** The magic button: the form's spell (wand sparkles / rainbow bloom / bubbles). */
+  magic?: () => void;
 }
 
 const FORM_ICON: Record<Form, UiName> = { princess: 'icon_princess', unicorn: 'icon_unicorn', mermaid: 'icon_mermaid' };
@@ -46,9 +50,14 @@ export class UIScene extends Phaser.Scene {
   private starsTxt!: Phaser.GameObjects.Text;
   private countTray!: Phaser.GameObjects.Container;
   private seenForms = 1;
-  private dpadBtns: Btn[] = [];
   private held: { dx: number; dy: number } | null = null;
-  private heldMs = 0;
+  private heldId = -1;
+  private padArrows = new Map<string, Phaser.GameObjects.Image>();
+  private aBtn!: Btn;
+  private magicBtn!: Btn;
+  private gearBtn!: Btn;
+  /** Where the permanent d-pad sits (logical px). Exposed for the browser test drivers. */
+  readonly pad = { x: 62, y: 322, r: 66 };
 
   constructor() { super('UI'); }
 
@@ -58,6 +67,7 @@ export class UIScene extends Phaser.Scene {
   create() {
     const setModal = (on: boolean) => {
       this.modalDepth = Math.max(0, this.modalDepth + (on ? 1 : -1));
+      if (on) this.releasePad();
       this.hud.forEach((b) => b.container.setAlpha(this.modal ? 0.45 : 1));
     };
     this.dialogue = new DialoguePanel(this, setModal);
@@ -67,52 +77,87 @@ export class UIScene extends Phaser.Scene {
 
     const tap = (fn?: () => void) => () => { if (!this.modal) fn?.(); };
 
-    // top-left: sticker book, home
-    const book = makeButton(this, 36, 36, 'icon_book', 1.1, tap(() => this.handlers.book?.()));
-    const home = makeButton(this, 100, 36, 'icon_home', 1.1, tap(() => this.handlers.home?.()));
+    // ---- top strip (slim): Home + Book left, star count centre, goal hint right, quiet grown-up gear below
+    const home = makeButton(this, 36, 30, 'icon_home', 1, tap(() => this.handlers.home?.()));
+    const book = makeButton(this, 96, 30, 'icon_book', 1, tap(() => this.handlers.book?.()));
     this.homeBtn = home;
-    // top-right: hint (replays the next-goal narration) with the goal picture beside it
-    this.hintBtn = makeButton(this, 476, 36, 'icon_hint', 1.1, tap(() => this.handlers.hint?.()));
-    this.objBubble = this.add.container(412, 36);
-    // star counter, centre top
-    const crown = this.add.image(214, 30, 'crown_hud').setScale(1);
-    this.starsTxt = this.add.text(236, 20, '', { fontFamily: 'Trebuchet MS, Arial, sans-serif', fontSize: '20px', color: '#fff2a8', stroke: '#40255a', strokeThickness: 4 });
-    // bottom-left: wand opens the form tray
-    this.wandBtn = makeButton(this, 36, 348, 'icon_wand', 1.25, tap(() => this.toggleTray()));
+    this.hintBtn = makeButton(this, 476, 30, 'icon_hint', 1, tap(() => this.handlers.hint?.()));
+    this.objBubble = this.add.container(416, 30);
+    this.add.image(222, 26, 'crown_hud').setScale(1);
+    this.starsTxt = this.add.text(244, 16, '', { fontFamily: 'Trebuchet MS, Arial, sans-serif', fontSize: '20px', color: '#fff2a8', stroke: '#40255a', strokeThickness: 4 });
+    // ---- bottom centre: the wand opens a small tray of forms (never overlaps the pad or the two big buttons)
+    this.wandBtn = makeButton(this, 256, 352, 'icon_wand', 1.1, tap(() => this.toggleTray()));
     for (const f of ['princess', 'unicorn', 'mermaid'] as Form[]) {
-      const b = makeButton(this, 36, 348, FORM_ICON[f], 1.1, tap(() => { this.toggleTray(false); this.handlers.form?.(f); }));
+      const b = makeButton(this, 256, 296, FORM_ICON[f], 1.1, tap(() => { this.toggleTray(false); this.handlers.form?.(f); }));
       b.setVisible(false);
       this.formBtns.set(f, b);
     }
-    // parent gear: small and out of the way, needs an adult gate in the settings scene
-    const gear = makeButton(this, 300, 362, 'icon_parent', 0.7, tap(() => this.handlers.settings?.()));
-    gear.container.setAlpha(0.5);
+    this.gearBtn = makeButton(this, 176, 362, 'icon_parent', 0.7, tap(() => this.handlers.settings?.()));
+    this.gearBtn.container.setAlpha(0.5);
 
-    // optional on-screen arrows (Parent settings). Hold to keep walking.
-    const arm = 46, cx = 440, cy = 314;
-    const arrows: [UiName, number, number][] = [['icon_up', 0, -1], ['icon_down', 0, 1], ['icon_left', -1, 0], ['icon_right', 1, 0]];
-    for (const [icon, dx, dy] of arrows) {
-      const b = makeButton(this, cx + dx * arm, cy + dy * arm, icon, 1, () => { if (!this.modal) { this.handlers.dpad?.(dx, dy); this.held = { dx, dy }; this.heldMs = -220; } });
-      b.container.setAlpha(0.9);
-      this.dpadBtns.push(b);
+    // ---- bottom left: the permanent four-way pad. Press and hold; slide the thumb to change direction.
+    const { x: px, y: py, r } = this.pad;
+    const base = this.add.graphics().setDepth(5);
+    base.fillStyle(0x40255a, 0.28).fillCircle(px, py, r);
+    base.lineStyle(3, 0xffffff, 0.35).strokeCircle(px, py, r);
+    const arrows: [UiName, number, number, string][] = [['icon_up', 0, -1, 'up'], ['icon_down', 0, 1, 'down'], ['icon_left', -1, 0, 'left'], ['icon_right', 1, 0, 'right']];
+    for (const [icon, dx, dy, name] of arrows) {
+      const im = this.add.image(px + dx * 40, py + dy * 40, 'ui', UI[icon]).setScale(1.25).setAlpha(0.92).setDepth(6);
+      this.padArrows.set(name, im);
     }
-    this.input.on('pointerup', () => { this.held = null; });
+    this.input.on('pointerdown', (p: Phaser.Input.Pointer) => { if (!this.modal && this.inPad(p.x, p.y) && this.heldId < 0) { this.heldId = p.id; this.setHeld(p); } });
+    this.input.on('pointermove', (p: Phaser.Input.Pointer) => { if (p.id === this.heldId) this.setHeld(p); });
+    const up = (p: Phaser.Input.Pointer) => { if (p.id === this.heldId) this.releasePad(); };
+    this.input.on('pointerup', up); this.input.on('pointerupoutside', up);
+    this.input.on('gameout', () => this.releasePad());
+    this.game.events.on(Phaser.Core.Events.BLUR, () => this.releasePad());
+    this.game.events.on(Phaser.Core.Events.HIDDEN, () => this.releasePad());
+
+    // ---- bottom right: two clearly different big buttons, well apart
+    this.aBtn = makeButton(this, 458, 318, 'icon_a', 2.0, tap(() => this.handlers.action?.()));
+    this.magicBtn = makeButton(this, 386, 344, 'icon_magic', 1.7, tap(() => this.handlers.magic?.()));
+    this.aBtn.container.setDepth(6); this.magicBtn.container.setDepth(6);
+
     this.countTray = this.add.container(256, 70).setVisible(false);
-    this.hud = [book, home, this.hintBtn, this.wandBtn, gear, ...this.dpadBtns];
-    void crown;
+    this.hud = [book, home, this.hintBtn, this.wandBtn, this.gearBtn, this.aBtn, this.magicBtn];
     this.refresh();
   }
 
   // ------------------------------------------------------------------ HUD state
-  update(_t: number, dt: number) {
-    if (!this.held || this.modal) return;
-    this.heldMs += dt;
-    if (this.heldMs >= 90) { this.heldMs = 0; this.handlers.dpad?.(this.held.dx, this.held.dy); }
+  update() {
+    // While a direction is held, ask the world for the next tile every frame (it ignores the call mid-step), so walking is smooth.
+    if (this.held && !this.modal) this.handlers.dpad?.(this.held.dx, this.held.dy);
   }
+
+  private inPad(x: number, y: number) { return Math.hypot(x - this.pad.x, y - this.pad.y) <= this.pad.r + 6; }
+
+  private setHeld(p: Phaser.Input.Pointer) {
+    const dx = p.x - this.pad.x, dy = p.y - this.pad.y;
+    let dir: { dx: number; dy: number } | null = null, name = '';
+    if (Math.hypot(dx, dy) >= 10) {
+      if (Math.abs(dx) >= Math.abs(dy)) { dir = { dx: Math.sign(dx), dy: 0 }; name = dx > 0 ? 'right' : 'left'; }
+      else { dir = { dx: 0, dy: Math.sign(dy) }; name = dy > 0 ? 'down' : 'up'; }
+    }
+    this.held = dir;
+    this.padArrows.forEach((im, k) => im.setScale(k === name ? 1.5 : 1.25).setAlpha(k === name ? 1 : 0.92));
+  }
+
+  private releasePad() {
+    this.held = null; this.heldId = -1;
+    this.padArrows.forEach((im) => im.setScale(1.25).setAlpha(0.92));
+  }
+
+  /** WorldScene tells the A button whether something is in reach (glow) or merely highlighted (walk there first). */
+  setAction(state: 'none' | 'near' | 'far') {
+    this.aBtn?.pulse(state === 'near');
+    this.aBtn?.container.setAlpha(this.modal ? 0.45 : state === 'none' ? 0.7 : 1);
+  }
+
+  /** Button centres for the browser test drivers. */
+  get buttonPos() { return { pad: { ...this.pad }, a: { x: this.aBtn.container.x, y: this.aBtn.container.y }, magic: { x: this.magicBtn.container.x, y: this.magicBtn.container.y }, wand: { x: this.wandBtn.container.x, y: this.wandBtn.container.y }, home: { x: this.homeBtn.container.x, y: this.homeBtn.container.y }, book: { x: 96, y: 30 }, hint: { x: this.hintBtn.container.x, y: this.hintBtn.container.y } }; }
 
   refresh() {
     const st = services.save.state;
-    for (const b of this.dpadBtns) b.setVisible(st.settings.dpad);
     this.starsTxt.setText(st.stars > 0 ? `x${st.stars}` : '');
     const forms = availableForms(st.flags);
     this.wandBtn.setVisible(forms.length > 1);
@@ -133,6 +178,7 @@ export class UIScene extends Phaser.Scene {
     this.objBubble.setVisible(!!step);
   }
 
+  get dialogueText() { return this.dialogue.current; }
   get pickerCards() { return this.picker.cards; }
   get puzzleCards() { return this.puzzle.cardPos; }
 
@@ -142,18 +188,16 @@ export class UIScene extends Phaser.Scene {
     this.trayOpen = open;
     const forms: Form[] = ['princess', 'unicorn', 'mermaid'];
     const avail = availableForms(services.save.state.flags);
-    let i = 0;
-    for (const f of forms) {
+    const shown = forms.filter((f) => avail.includes(f));
+    shown.forEach((f, i) => {
       const b = this.formBtns.get(f)!;
-      const show = open && avail.includes(f);
-      b.setVisible(show);
-      if (show) {
-        const x = 36 + 64 * (++i);
-        b.container.setPosition(x - 64 + 64, 348);
-        b.container.x = x;
-        this.tweens.add({ targets: b.container, y: { from: 380, to: 348 }, duration: dur(160) });
+      b.setVisible(open);
+      if (open) {
+        b.container.setPosition(256 + (i - (shown.length - 1) / 2) * 66, 296);
+        this.tweens.add({ targets: b.container, y: { from: 330, to: 296 }, duration: dur(160) });
       }
-    }
+    });
+    forms.filter((f) => !shown.includes(f)).forEach((f) => this.formBtns.get(f)!.setVisible(false));
   }
 
   // ------------------------------------------------------------------ pointer arbitration
@@ -161,7 +205,7 @@ export class UIScene extends Phaser.Scene {
   blocksPointer(x: number, y: number): boolean {
     if (this.modal) return true;
     if (this.hud.some((b) => b.container.visible && b.hit(x, y))) return true;
-    if (this.held) return true;
+    if (this.heldId >= 0 || this.inPad(x, y)) return true;
     for (const b of this.formBtns.values()) if (b.container.visible && b.hit(x, y)) return true;
     return false;
   }

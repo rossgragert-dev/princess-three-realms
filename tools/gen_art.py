@@ -5,7 +5,7 @@ import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from pxlib import Px, C, sheet, upscale, Image, rgb, mix
-import art_tiles, art_chars as AC, art_props as AP, art_overworld as AO, art_wardrobe as AW
+import art_tiles, art_chars as AC, art_props as AP, art_overworld as AO, art_wardrobe as AW, art_home as AH
 
 ROOT = os.path.dirname(HERE)
 PUB = os.path.join(ROOT, 'public', 'assets')
@@ -37,7 +37,7 @@ def save_image(name, px):
 
 
 # ---- tiles
-tiles = art_tiles.build()
+tiles = art_tiles.build() + AH.room_tiles()
 im = save_sheet('tiles/tiles.png', [t for _, t in tiles], 16, 'tiles')
 tile_index = {n: i for i, (n, _) in enumerate(tiles)}
 manifest['index']['tiles'] = tile_index
@@ -148,7 +148,7 @@ previews['items'] = (im, 6, (200, 230, 255, 255))
 anim('sparkle', 'items', [manifest['index']['items'][f'sparkle{i}'] for i in range(4)], 8)
 
 # ---- UI (32x32 round icon buttons)
-ui = AP.icons() + AW.ui_icons()
+ui = AP.icons() + AW.ui_icons() + AH.home_icons()
 im = save_sheet('ui/ui.png', [p for _, p in ui], 8, 'ui')
 manifest['index']['ui'] = {n: i for i, (n, _) in enumerate(ui)}
 previews['ui'] = (im, 4, (255, 245, 220, 255))
@@ -161,6 +161,8 @@ for nm, px in (('tree_a', AP.tree('a')), ('tree_b', AP.tree('b')), ('bush', AP.b
                ('canopy_bed', AP.canopy_bed()), ('moon_curtain', AP.moon_curtain()), ('crystal_nightstand', AP.crystal_nightstand()),
                ('decor_chest', AP.decor_chest()), ('shelf', AP.shelf()), ('crown_hud', AP.crown_hud()), ('sign_arch', AP.sign_arch()), ('hand', AP.hand())):
     save_image(nm, px)
+for nm, fn in AH.FURNITURE:
+    save_image(nm, fn())
 save_sheet('props/fountain.png', [AP.fountain(i) for i in range(2)], 2, 'fountain'); anim('fountain_flow', 'fountain', [0, 1], 4)
 save_sheet('props/lamp.png', [AP.lamp(False), AP.lamp(True)], 2, 'lamp')
 save_sheet('props/pedestal.png', [AP.pedestal(i) for i in range(3)], 3, 'pedestal')
@@ -182,6 +184,7 @@ previews['props'] = (pv, 3, (190, 235, 190, 255))
 
 # ---- Royal Wardrobe / Enchanted Vanity: bedroom props, layered art atlases
 save_sheet('props/wardrobe_prop.png', [AW.wardrobe_prop(0), AW.wardrobe_prop(1)], 2, 'wardrobe_prop'); anim('wardrobe_glow', 'wardrobe_prop', [0, 1], 2)
+save_sheet('props/paint_prop.png', [AH.paint_prop(0), AH.paint_prop(1)], 2, 'paint_prop'); anim('paint_glow', 'paint_prop', [0, 1], 2)
 save_sheet('props/vanity_prop.png', [AW.vanity_prop(0), AW.vanity_prop(1)], 2, 'vanity_prop'); anim('vanity_glow', 'vanity_prop', [0, 1], 2)
 os.makedirs(os.path.join(PUB, 'wardrobe'), exist_ok=True)
 atlas_meta = {}

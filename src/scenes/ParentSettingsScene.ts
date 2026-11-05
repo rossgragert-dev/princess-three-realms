@@ -56,8 +56,6 @@ export class ParentSettingsScene extends Phaser.Scene {
     row('Music volume', () => `${Math.round(s.musicVolume * 100)}%`, vol('musicVolume'));
     row('Narration volume', () => `${Math.round(s.voiceVolume * 100)}%`, vol('voiceVolume'));
     row('Sound effects', () => `${Math.round(s.sfxVolume * 100)}%`, vol('sfxVolume'));
-    row('Captions (for grown-ups)', () => (s.captions ? 'On' : 'Off'), () => { s.captions = !s.captions; });
-    row('On-screen arrows', () => (s.dpad ? 'On' : 'Off'), () => { s.dpad = !s.dpad; });
     row('Calmer effects', () => (s.reducedEffects ? 'On' : 'Off'), () => { s.reducedEffects = !s.reducedEffects; });
     if (import.meta.env?.DEV) row('Dev: browser voice (no recordings)', () => (services.audio.devTts ? 'On' : 'Off'), () => { services.audio.devTts = !services.audio.devTts; });
     c.add(this.add.text(76, y + 10, 'Hold to erase all progress:', { fontFamily: FONT, fontSize: '13px', color: '#a02020' }));

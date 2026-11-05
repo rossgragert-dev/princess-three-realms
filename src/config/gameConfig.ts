@@ -6,6 +6,7 @@ import { UIScene } from '../scenes/UIScene';
 import { StickerbookScene } from '../scenes/StickerbookScene';
 import { WardrobeScene } from '../scenes/WardrobeScene';
 import { VanityScene } from '../scenes/VanityScene';
+import { RoomDesignerScene } from '../scenes/RoomDesignerScene';
 import { ParentSettingsScene } from '../scenes/ParentSettingsScene';
 
 export const LOGICAL_W = 512;
@@ -22,6 +23,6 @@ export function makeConfig(parent: string): Phaser.Types.Core.GameConfig {
     roundPixels: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     input: { activePointers: 2, touch: { capture: true } },
-    scene: [BootScene, TitleScene, WorldScene, UIScene, StickerbookScene, WardrobeScene, VanityScene, ParentSettingsScene]
+    scene: [BootScene, TitleScene, WorldScene, UIScene, StickerbookScene, WardrobeScene, VanityScene, RoomDesignerScene, ParentSettingsScene]
   };
 }

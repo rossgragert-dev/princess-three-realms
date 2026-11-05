@@ -4,8 +4,8 @@ import type { QuestFlag } from '../types/game';
  * Princess bedroom: slots (hotspots), the 12 unlockable items, and the rules that tie them together.
  * Pure data + pure functions (unit tested). Rendering lives in WorldScene, the picker in UIScene.
  */
-export type DecorCategory = 'bed' | 'rug' | 'lamp' | 'wall' | 'plush' | 'shelf' | 'window' | 'accent';
-export type UnlockSource = 'quest' | 'puzzle' | 'gift' | 'hidden' | 'chest';
+export type DecorCategory = 'bed' | 'rug' | 'lamp' | 'wall' | 'plush' | 'shelf' | 'window' | 'accent' | 'seat' | 'storage' | 'desk';
+export type UnlockSource = 'quest' | 'puzzle' | 'gift' | 'hidden' | 'chest' | 'starter';
 export type DecorLayer = 'floor' | 'stand' | 'wall';
 
 export interface SlotDef {
@@ -46,7 +46,18 @@ export const SLOTS: SlotDef[] = [
   { id: 'slot_window', category: 'window', x: 15, y: 2 },
   { id: 'slot_shelf', category: 'shelf', x: 20, y: 2 },
   { id: 'slot_accent', category: 'accent', x: 20, y: 9 },
-  { id: 'slot_accent_b', category: 'accent', x: 9, y: 15 }
+  { id: 'slot_accent_b', category: 'accent', x: 9, y: 15 },
+  // v0.4a: room for the starter furniture (free from the first minute). None sits at the Star Lamp's spot.
+  { id: 'slot_seat_a', category: 'seat', x: 7, y: 5 },
+  { id: 'slot_seat_b', category: 'seat', x: 13, y: 5 },
+  { id: 'slot_seat_c', category: 'seat', x: 16, y: 12 },
+  { id: 'slot_storage_a', category: 'storage', x: 19, y: 5 },
+  { id: 'slot_storage_b', category: 'storage', x: 2, y: 9 },
+  { id: 'slot_desk', category: 'desk', x: 14, y: 8 },
+  { id: 'slot_plush_c', category: 'plush', x: 13, y: 10 },
+  { id: 'slot_window_b', category: 'window', x: 6, y: 2 },
+  { id: 'slot_lamp_b', category: 'lamp', x: 6, y: 12 },
+  { id: 'slot_accent_c', category: 'accent', x: 19, y: 11 }
 ];
 
 export const DECOR: Record<string, DecorDef> = {
@@ -64,6 +75,41 @@ export const DECOR: Record<string, DecorDef> = {
   treasure_chest: { id: 'treasure_chest', name: 'Treasure Chest', category: 'accent', source: 'chest', flag: 'CREEK_CHEST', hintIcon: 'chest', sprite: { key: 'decor_chest' }, layer: 'stand' }
 };
 
+/**
+ * v0.4a starter furniture: owned from the very first minute (never stored in `unlockedDecor`, never gated by a quest,
+ * never counted as "new"). Swapping them costs nothing.
+ */
+const st = (id: string, name: string, category: DecorCategory, key: string, layer: DecorLayer, extra: Partial<DecorDef> = {}): DecorDef =>
+  ({ id, name, category, source: 'starter', flag: 'INTRO_DONE', hintIcon: 'icon_home', sprite: { key }, layer, ...extra });
+export const STARTERS: Record<string, DecorDef> = {
+  plain_rug: st('plain_rug', 'Plain Rug', 'rug', 'plain_rug', 'floor'),
+  striped_rug: st('striped_rug', 'Striped Rug', 'rug', 'striped_rug', 'floor'),
+  small_lamp: st('small_lamp', 'Small Lamp', 'lamp', 'small_lamp', 'stand'),
+  wall_hanging: st('wall_hanging', 'Wall Hanging', 'wall', 'wall_hanging', 'wall', { dy: -3 }),
+  round_mirror: st('round_mirror', 'Round Mirror', 'wall', 'round_mirror', 'wall', { dy: -3 }),
+  pink_curtain: st('pink_curtain', 'Pink Curtain', 'window', 'pink_curtain', 'wall', { ox: 8 }),
+  floor_pillow: st('floor_pillow', 'Floor Pillow', 'plush', 'floor_pillow', 'stand'),
+  reading_cushion: st('reading_cushion', 'Reading Cushion', 'plush', 'reading_cushion', 'stand'),
+  pink_chair: st('pink_chair', 'Pink Chair', 'seat', 'pink_chair', 'stand'),
+  wooden_chair: st('wooden_chair', 'Wooden Chair', 'seat', 'wooden_chair', 'stand'),
+  little_couch: st('little_couch', 'Little Couch', 'seat', 'little_couch', 'stand', { ox: 8 }),
+  dresser: st('dresser', 'Dresser', 'storage', 'dresser', 'stand'),
+  toy_basket: st('toy_basket', 'Toy Basket', 'storage', 'toy_basket', 'stand'),
+  desk: st('desk', 'Little Desk', 'desk', 'desk', 'stand', { ox: 8 }),
+  plant_stand: st('plant_stand', 'Plant Stand', 'accent', 'plant_stand', 'stand')
+};
+export const STARTER_IDS = Object.keys(STARTERS);
+/** Any piece of furniture by id, earned or starter. */
+export const decorById = (id: string): DecorDef | undefined => DECOR[id] ?? STARTERS[id];
+export const isStarter = (id: string) => id in STARTERS;
+/** Owned = a starter, or earned (in `unlocked`). */
+export const ownsDecor = (id: string, unlocked: readonly string[]) => isStarter(id) || unlocked.includes(id);
+
+/** What a brand-new save's bedroom looks like: partly furnished, with the Star Lamp spot clear. */
+export const STARTER_ROOM: Record<string, string> = {
+  slot_rug: 'plain_rug', slot_seat_a: 'pink_chair', slot_storage_a: 'dresser', slot_wall_a: 'wall_hanging', slot_window_b: 'pink_curtain', slot_plush_c: 'floor_pillow'
+};
+
 export const DECOR_IDS = Object.keys(DECOR);
 export const slotById = (id: string) => SLOTS.find((s) => s.id === id);
 
@@ -77,20 +123,21 @@ export const decorForFlag = (flag: QuestFlag): string | undefined => DECOR_IDS.f
 /** Every item a given slot can ever hold (its category), unlocked or not. */
 export const optionsForSlot = (slot: string): DecorDef[] => {
   const s = slotById(slot);
-  return s ? Object.values(DECOR).filter((d) => d.category === s.category) : [];
+  return s ? [...Object.values(STARTERS), ...Object.values(DECOR)].filter((d) => d.category === s.category) : [];
 };
 
 /** Items the child can place in this slot right now. */
-export const decorForSlot = (slot: string, unlocked: readonly string[]): DecorDef[] => optionsForSlot(slot).filter((d) => unlocked.includes(d.id));
+export const decorForSlot = (slot: string, unlocked: readonly string[]): DecorDef[] => optionsForSlot(slot).filter((d) => ownsDecor(d.id, unlocked));
 
 /** True if something unlocked fits the slot and nothing is placed there yet (drives the sparkle marker). */
 export const slotHasNewOption = (slot: string, unlocked: readonly string[], placed: Record<string, string>) =>
-  !placed[slot] && decorForSlot(slot, unlocked).length > 0;
+  !placed[slot] && decorForSlot(slot, unlocked).some((d) => !isStarter(d.id));
 
 /** Count of unlocked items not placed anywhere (drives the glowing Home button outside the bedroom). */
 export const unplacedCount = (unlocked: readonly string[], placed: Record<string, string>) => {
   const used = new Set(Object.values(placed));
-  return unlocked.filter((id) => DECOR[id] && !used.has(id)).length;
+  return unlocked.filter((id) => DECOR[id] && !used.has(id)).length; // starters never count as "new"
+
 };
 
 /**
@@ -101,8 +148,8 @@ export function placeDecor(state: { unlockedDecor: string[]; bedroom: Record<str
   const sd = slotById(slot);
   if (!sd) return false;
   if (item === null) { delete state.bedroom[slot]; return true; }
-  const d = DECOR[item];
-  if (!d || d.category !== sd.category || !state.unlockedDecor.includes(item)) return false;
+  const d = decorById(item);
+  if (!d || d.category !== sd.category || !ownsDecor(item, state.unlockedDecor)) return false;
   for (const k of Object.keys(state.bedroom)) if (state.bedroom[k] === item) delete state.bedroom[k];
   state.bedroom[slot] = item;
   return true;
@@ -123,9 +170,9 @@ export function sanitizeDecor(unlocked: unknown, bedroom: unknown): { unlockedDe
       if (typeof rawItem !== 'string') continue;
       const slot = LEGACY_SLOTS[rawSlot] ?? rawSlot;
       const item = LEGACY_DECOR[rawItem] ?? rawItem;
-      const sd = slotById(slot), d = DECOR[item];
+      const sd = slotById(slot), d = decorById(item);
       if (!sd || !d || d.category !== sd.category || used.has(item) || out[slot]) continue;
-      if (!ids.includes(item)) ids.push(item); // placed implies owned
+      if (!isStarter(item) && !ids.includes(item)) ids.push(item); // placed implies owned
       out[slot] = item; used.add(item);
     }
   }

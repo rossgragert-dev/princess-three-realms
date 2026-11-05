@@ -1,5 +1,6 @@
 import type { GameState, SceneId } from '../types/game';
-import { sanitizeDecor } from '../content/decorCatalog';
+import { sanitizeDecor, STARTER_ROOM } from '../content/decorCatalog';
+import { defaultRoomTheme, sanitizeRoomTheme } from '../content/roomThemes';
 import { defaultAppearance, defaultWardrobe, sanitizeWardrobe } from '../content/appearance';
 
 export const SAVE_KEY = 'ptr_save_v1';
@@ -22,7 +23,8 @@ export function defaultState(): GameState {
     stars: 0,
     stickers: [],
     unlockedDecor: [],
-    bedroom: {},
+    bedroom: { ...STARTER_ROOM },
+    roomTheme: defaultRoomTheme(),
     appearance: defaultAppearance(),
     wardrobe: defaultWardrobe(),
     puzzles: {},
@@ -33,7 +35,7 @@ export function defaultState(): GameState {
       narration: false,
       captions: false,
       reducedEffects: false,
-      dpad: false
+      dpad: true
     }
   };
 }
@@ -50,6 +52,8 @@ export function sanitize(raw: unknown): GameState {
   // Form must be valid for the scene: water-only scene needs mermaid, land scenes can't be mermaid.
   const safeForm = scene === 'grotto' ? 'mermaid' : form === 'mermaid' && scene !== 'shore' ? 'princess' : form;
   const decor = sanitizeDecor(r.unlockedDecor, r.bedroom);
+  // A save from before v0.4a with an empty room gets the starter furniture; one with placements keeps them exactly.
+  if (r.roomTheme === undefined && Object.keys(decor.bedroom).length === 0) Object.assign(decor.bedroom, STARTER_ROOM);
   const flags = { ...(typeof r.flags === 'object' && r.flags ? r.flags : {}) };
   const look = sanitizeWardrobe(r.appearance, r.wardrobe, flags);
   return {
@@ -63,10 +67,12 @@ export function sanitize(raw: unknown): GameState {
     stickers: Array.isArray(r.stickers) ? r.stickers.filter((s) => typeof s === 'string') : [],
     unlockedDecor: decor.unlockedDecor,
     bedroom: decor.bedroom,
+    roomTheme: sanitizeRoomTheme(r.roomTheme),
     appearance: look.appearance,
     wardrobe: look.wardrobe,
     puzzles: typeof r.puzzles === 'object' && r.puzzles ? { ...r.puzzles } : {},
-    settings: { ...d.settings, ...(typeof r.settings === 'object' && r.settings ? r.settings : {}) }
+    // the on-screen arrows are permanent since v0.4a, whatever an older save said
+    settings: { ...d.settings, ...(typeof r.settings === 'object' && r.settings ? r.settings : {}), dpad: true }
   };
 }
 

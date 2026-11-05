@@ -1,3 +1,4 @@
+import type { RoomTheme } from '../content/roomThemes';
 import type { PrincessAppearance, WardrobeState } from '../content/appearance';
 
 export type Form = 'princess' | 'unicorn' | 'mermaid';
@@ -78,6 +79,8 @@ export interface GameState {
   appearance: PrincessAppearance;
   /** v0.3: earned wearables. */
   wardrobe: WardrobeState;
+  /** v0.4a: wallpaper + floor of the bedroom (cosmetic). */
+  roomTheme: RoomTheme;
   puzzles: Record<string, PuzzleProgress>;
   settings: {
     musicVolume: number;
@@ -87,6 +90,7 @@ export interface GameState {
     narration: boolean;
     captions: boolean;
     reducedEffects: boolean;
+    /** Always on since v0.4a; kept in the save for compatibility. */
     dpad: boolean;
   };
 }

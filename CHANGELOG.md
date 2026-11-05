@@ -1,4 +1,13 @@
 # Changelog
+## 0.4.0a "Living Kingdom: Comfort & Home" (preview)
+- Controls: permanent four-way pad (bottom-left, slide-to-steer), two large buttons bottom-right (A = interact, magic = form spell), simplified top HUD (Home, Book, star count, goal hint), form tray in bottom-middle. Parent-only gear is faint. Pad releases on modals/blur. Tap-to-walk still works.
+- A button: highlights the nearest friend/thing, walks there first if far, nudges gently if nothing is near. Briefly locked after a room screen closes so a double-tap can't reopen it.
+- Faster walking: princess 84, unicorn 132, mermaid 104 px/s (about +35%/+27%/+30%).
+- Written dialogue: portrait + large text panel, no voiceover by default, tap to advance, never auto-advances.
+- Bedroom starts furnished: 15 free starter pieces (chairs, couch, dresser, desk, rugs, lamp, curtain, etc.) with free swapping; Star Lamp spot stays empty so the quest is unchanged.
+- Room designer (easel): 8 wallpapers and 6 floors, live preview, saved immediately, cosmetic only. `roomTheme` in saves; older saves migrate and keep all placements.
+- `settings.dpad` now migrates to ON; "On-screen arrows" and "Captions" removed from parent settings.
+- Tests 124 -> 141; new Chrome driver `v04a.mjs`; older drivers updated for the new HUD.
 ## 0.3.0 "Royal Wardrobe & Enchanted Vanity"
 - Bedroom: pink-gold armoire and lit-mirror vanity open two full-screen, picture-only customization scenes (8 dresses, 10 dress colours, 6 shoes, 5 cape/gloves/wings, 6 hairstyles, 10 hair colours, 6 tiaras, 3 earrings, 5 necklaces, 4 face accents, 6 skin tones).
 - Choices recolour the animated overworld princess and mermaid (same animations), save automatically, survive scene changes, transformations and reloads.

@@ -44,7 +44,7 @@ for (const c of combos) {
   await load(mk({ flags: Object.fromEntries(allFlags.map((f) => [f, true])) }));
   await clear(page, 12);
   const bad = await page.evaluate((a) => { const st = window.__ptr.state(); Object.assign(st.appearance, a); window.__ptr.refreshLook(); return JSON.stringify(st.appearance); }, c.a);
-  await ptr(page, 'tapTile', 12, 9); await sleep(1500);
+  await ptr(page, 'tapTile', 4, 13); await sleep(1500);
   await shot(page, `v3b_world_${c.n}`);
   await ptr(page, 'tapObject', 'wardrobe_station'); await page.waitForFunction(() => window.__station?.key === 'Wardrobe', { timeout: 8000 }); await sleep(600);
   await shot(page, `v3b_${c.n}_wardrobe`);

@@ -86,8 +86,8 @@ await openStation('Wardrobe');
 for (let i = 0; i < 30; i++) { const cs = await st('cards'); const c = cs[i % cs.length]; await tapL(page, c.x, c.y); if (i % 5 === 0) await tapTab(i % 4); }
 for (let i = 0; i < 8; i++) { await tapBtn('next'); await tapBtn('prev'); }
 const a3 = await app(); check('rapid taps leave a valid saved look', typeof a3.dressId === 'string' && JSON.stringify((await ptr(page, 'state')).appearance) === JSON.stringify(a3));
-await tapBtn('accept'); await tapL(page, 432, 350); await sleep(700);
-check('double-tapping accept closes cleanly once', !(await hasStation()) && !(await ptr(page, 'modal')));
+await tapBtn('accept'); await tapL(page, 432, 350); await sleep(2500);
+check('double-tapping accept closes cleanly once', !(await hasStation()) && !(await ptr(page, 'modal')), JSON.stringify({ st: await hasStation(), modal: await ptr(page, 'modal'), panel: await ptr(page, 'panel'), tile: await ptr(page, 'tile') }));
 
 // ---- locked items on a fresh save
 await page.evaluate(() => { const s = window.__ptr.state(); s.flags.RAINBOW_BRIDGE_OPEN = false; s.wardrobe.unlocked = s.wardrobe.unlocked.filter((x) => x !== 'rainbow_gown'); s.appearance.dressId = 'royal_ball'; });

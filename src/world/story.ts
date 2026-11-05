@@ -38,7 +38,7 @@ export interface StoryCtx {
   pickDecor(slot: string, current: string | undefined): Promise<string | null | undefined>;
   sparkle(tile: Tile): void;
   /** v0.3: open the full-screen Royal Wardrobe or Enchanted Vanity; resolves when she comes back to the room. */
-  openStation(which: 'Wardrobe' | 'Vanity'): Promise<void>;
+  openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner'): Promise<void>;
 }
 
 /** Progress that only matters during one play session (everything important is a quest flag). */
@@ -98,7 +98,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
 
   // ---------------------------------------------------------------- slots in the bedroom
   if (obj.kind === 'slot') return decorate(ctx, id);
-  if (obj.kind === 'station') return ctx.openStation(id === 'wardrobe_station' ? 'Wardrobe' : 'Vanity');
+  if (obj.kind === 'station') return ctx.openStation(id === 'wardrobe_station' ? 'Wardrobe' : id === 'paint_station' ? 'RoomDesigner' : 'Vanity');
 
   // ---------------------------------------------------------------- chests and hidden finds
   if (obj.kind === 'chest') return chest(ctx, obj);

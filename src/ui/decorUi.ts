@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { ThumbPool } from '../art/looks';
 import { optionOf, slotOfWearable } from '../content/appearance';
-import { DECOR, optionsForSlot, type DecorDef, type SlotDef } from '../content/decorCatalog';
+import { DECOR, ownsDecor, optionsForSlot, type DecorDef, type SlotDef } from '../content/decorCatalog';
 import { services } from '../systems/services';
 import { dur } from '../systems/accessibility';
 import { burst, makeButton, pic, roundedPanel, sleep, type Btn } from './touchTargets';
@@ -54,14 +54,14 @@ export class DecorPicker {
       dim.on('pointerdown', () => finish(undefined));
       const top = 262, h = 118;
       this.add(roundedPanel(s, 12, top, 488, h));
-      const back = makeButton(s, 40, top + 30, 'icon_back', 0.9, () => finish(undefined));
+      const back = makeButton(s, 474, top - 6, 'icon_back', 0.9, () => finish(undefined));
       this.btns.push(back); this.root.add(back.container); this.objs.push(back.container);
 
       const options = optionsForSlot(slot.id);
-      const cardW = 92, gap = 100, x0 = 276 - ((options.length - 1) * gap) / 2, cy = top + 62;
+      const gap = Math.min(100, 440 / options.length), cardW = Math.min(92, gap - 6), x0 = 256 - ((options.length - 1) * gap) / 2, cy = top + 62;
       options.forEach((d, i) => {
         const x = x0 + i * gap;
-        const owned = unlocked.includes(d.id);
+        const owned = ownsDecor(d.id, unlocked);
         this.cards.push({ id: d.id, x, y: cy, owned });
         const here = current === d.id;
         const g = s.add.graphics();
@@ -87,7 +87,7 @@ export class DecorPicker {
           finish(here ? null : d.id, { x, y: cy });
         });
         this.add(c);
-        if (owned && !here && !current && options.filter((o) => unlocked.includes(o.id)).length === 1) s.tweens.add({ targets: c, y: cy - 5, duration: dur(500), yoyo: true, repeat: -1 }); // single choice: bounce it
+        if (owned && !here && !current && options.filter((o) => ownsDecor(o.id, unlocked)).length === 1) s.tweens.add({ targets: c, y: cy - 5, duration: dur(500), yoyo: true, repeat: -1 }); // single choice: bounce it
       });
     });
   }

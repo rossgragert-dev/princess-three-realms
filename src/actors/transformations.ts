@@ -2,7 +2,7 @@ import type { Form } from '../types/game';
 import { flood, makeGrid, type Flags } from '../world/navigation';
 import type { MapDef, Tile } from '../world/types';
 
-export const FORM_SPEED: Record<Form, number> = { princess: 62, unicorn: 104, mermaid: 80 }; // logical px/s
+export const FORM_SPEED: Record<Form, number> = { princess: 84, unicorn: 132, mermaid: 104 }; // logical px/s (v0.4a: ~30% faster than v0.3's 62 / 104 / 80)
 
 export type Unavailable = 'locked' | 'underwater' | 'no_water' | 'no_route';
 
