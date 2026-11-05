@@ -55,10 +55,16 @@ describe('wardrobe catalog (spec minimums)', () => {
 });
 
 describe('appearance logic', () => {
-  it('defaults are all owned and match the original sprite (pink dress, golden hair, gold tiara)', () => {
+  it('defaults are all owned and use the new family look (pink dress, long brown hair, gold tiara)', () => {
     const d = defaultAppearance();
     for (const slot of SLOTS_ALL) assert.ok(isOwned(slot, d[FIELD[slot]], []), slot);
-    assert.equal(d.dressColorId, 'pink'); assert.equal(d.hairColorId, 'blonde'); assert.equal(d.tiaraId, 'gold_tiara');
+    assert.equal(d.dressColorId, 'pink'); assert.equal(d.hairstyleId, 'long'); assert.equal(d.hairColorId, 'light_brown'); assert.equal(d.tiaraId, 'gold_tiara');
+  });
+  it('keeps an existing saved hairstyle and blonde hair after the default changes', () => {
+    const r = sanitizeWardrobe({ hairstyleId: 'curls', hairColorId: 'blonde' }, {}, {});
+    assert.equal(r.appearance.hairstyleId, 'curls');
+    assert.equal(r.appearance.hairColorId, 'blonde');
+    assert.equal(defaultAppearance().hairColorId, 'light_brown');
   });
   it('selecting is free for owned options and refused for locked or unknown ones', () => {
     const a = defaultAppearance(), w = defaultWardrobe();
@@ -218,10 +224,10 @@ describe('compositing and colour remap (real atlas pixels, no browser needed)', 
     const markers = new Set<number>(); for (const g of ['dress', 'hair', 'skin'] as const) for (const m of MARKERS[g]) markers.add((m[0] << 16) | (m[1] << 8) | m[2]);
     for (let i = 0; i < base.length; i += 4) if (base[i + 3] === 255) { const k = (base[i] << 16) | (base[i + 1] << 8) | base[i + 2]; if (markers.has(k) && !buildRemap(a).has(k)) assert.fail('marker leaked'); }
   });
-  it('the default look reproduces the original palette (pink dress, golden hair)', () => {
+  it('the default look reproduces the new palette (pink dress, brown hair)', () => {
     const m = buildRemap(defaultAppearance());
     assert.deepEqual(m.get((MARKERS.dress[1][0] << 16) | (MARKERS.dress[1][1] << 8) | MARKERS.dress[1][2]), hexToRgb('#ff7ec3'));
-    assert.deepEqual(m.get((MARKERS.hair[1][0] << 16) | (MARKERS.hair[1][1] << 8) | MARKERS.hair[1][2]), hexToRgb('#ffbf3f'));
+    assert.deepEqual(m.get((MARKERS.hair[1][0] << 16) | (MARKERS.hair[1][1] << 8) | MARKERS.hair[1][2]), hexToRgb('#a8743f'));
   });
   it('every dress x hairstyle composes in under a frame budget and differs from each other', async () => {
     const atlas = await pngPixels('assets/wardrobe/wd_full.png');

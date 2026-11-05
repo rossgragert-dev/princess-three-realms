@@ -12,60 +12,118 @@ W = C['white']
 def king(f):
     p = Px(32, 32)
     up = -1 if f == 1 else (-3 if f == 2 else 0)
-    # royal red cape behind, ermine collar, blue tunic
-    p.poly([(7, 17 + up), (25, 17 + up), (27, 30), (5, 30)], C['red_sh']); p.poly([(8, 17 + up), (24, 17 + up), (25, 29), (7, 29)], C['red'])
-    p.poly([(11, 19 + up), (21, 19 + up), (22, 29), (10, 29)], C['blue']); p.rect(11, 19 + up, 3, 10, C['blue_hi'])
+    hair = rgb('#865333')
+    hair_hi = rgb('#b77b4a')
+    hair_sh = rgb('#513521')
+    glasses = rgb('#493229')
+    # Royal red cape, ermine collar and blue tunic (unchanged silhouette).
+    p.poly([(7, 17 + up), (25, 17 + up), (27, 30), (5, 30)], C['red_sh'])
+    p.poly([(8, 17 + up), (24, 17 + up), (25, 29), (7, 29)], C['red'])
+    p.poly([(11, 19 + up), (21, 19 + up), (22, 29), (10, 29)], C['blue'])
+    p.rect(11, 19 + up, 3, 10, C['blue_hi'])
     p.rect(10, 26, 12, 1, C['gold']); p.rect(15, 26, 2, 1, C['gold_hi'])
-    p.ell(16, 19 + up, 8, 2.6, C['white']); [p.set(9 + i * 4, 19 + up, C['ol']) for i in range(5)]       # ermine
+    p.ell(16, 19 + up, 8, 2.6, C['white'])
+    for i in range(5):
+        p.set(9 + i * 4, 19 + up, C['ol'])
     p.rect(12, 29, 3, 2, C['brown']); p.rect(17, 29, 3, 2, C['brown'])
     if f == 2:
-        p.rect(5, 19 + up, 3, 3, C['skin']); p.rect(24, 19 + up, 3, 3, C['skin'])                       # arms up, celebrating
-    # head, beard, moustache, crown
-    p.ell(16, 11 + up, 6.4, 6, C['skin']); p.ell(16, 16 + up, 6, 4.2, C['stone_hi']); p.ell(16, 15 + up, 4.2, 2.4, C['skin'])
-    p.rect(11, 15 + up, 10, 1, C['stone_hi'])
+        p.rect(5, 19 + up, 3, 3, C['skin'])
+        p.rect(24, 19 + up, 3, 3, C['skin'])
+    # Shoulder-length brown curls, behind his face and crown. Short clustered locks
+    # on each side make the hair read as curly rather than a long straight sheet.
+    p.ell(16, 11 + up, 8.6, 8.4, hair_sh)
+    for x, y in ((9, 8), (7, 12), (8, 16), (9, 20),
+                 (23, 8), (25, 12), (24, 16), (23, 20)):
+        p.ell(x, y + up, 2.5, 2.8, hair)
+        p.set(x - 1, y - 1 + up, hair_hi)
+    # Face with a short, tidy brown beard rather than the original grey beard.
+    p.ell(16, 11 + up, 6.4, 6, C['skin'])
+    p.ell(16, 15.5 + up, 5.2, 2.6, hair_sh)
+    p.ell(16, 14.4 + up, 5, 2.2, hair)
+    p.ell(16, 13.4 + up, 4, 1.5, C['skin'])
+    p.rect(12, 14 + up, 3, 1, hair)
+    p.rect(17, 14 + up, 3, 1, hair)
+    p.rect(15, 15 + up, 2, 1, C['mouth'])
+    # Short curls across the forehead and two temples.
+    for x, y in ((10, 7), (13, 6), (17, 6), (21, 8), (9, 13), (23, 13)):
+        p.ell(x, y + up, 2.0, 1.9, hair)
+        p.set(x - 1, y - 1 + up, hair_hi)
     for ex in (13, 18):
-        p.rect(ex, 10 + up, 2, 2, EYE); p.set(ex, 10 + up, W)
-    p.rect(11, 13 + up, 2, 1, C['blush']); p.rect(20, 13 + up, 2, 1, C['blush'])
-    p.rect(13, 13 + up, 6, 2, C['stone_hi']); p.rect(15, 15 + up, 2, 1, C['mouth'])
-    p.rect(10, 5 + up, 12, 4, C['gold']); p.rect(10, 5 + up, 12, 1, C['gold_hi'])
+        p.rect(ex, 10 + up, 2, 2, EYE)
+        p.set(ex, 10 + up, W)
+    p.rect(11, 13 + up, 1, 1, C['blush'])
+    p.rect(21, 13 + up, 1, 1, C['blush'])
+    # Two clearly separate framed lenses with bridge and arms. Eyes remain visible.
+    for x in (11, 17):
+        p.line(x, 9 + up, x + 4, 9 + up, glasses)
+        p.set(x, 10 + up, glasses)
+        p.set(x + 4, 10 + up, glasses)
+        p.set(x, 11 + up, glasses)
+        p.set(x + 4, 11 + up, glasses)
+        p.line(x, 12 + up, x + 4, 12 + up, glasses)
+    p.rect(15, 10 + up, 2, 1, glasses)
+    p.set(10, 10 + up, glasses); p.set(22, 10 + up, glasses)
+    p.rect(10, 5 + up, 12, 4, C['gold'])
+    p.rect(10, 5 + up, 12, 1, C['gold_hi'])
     for x in (10, 14, 18, 21):
         p.poly([(x, 5 + up), (x + 2, 5 + up), (x + 1, 2 + up)], C['gold'])
-    p.set(11, 3 + up, C['red']); p.set(15, 3 + up, C['blue']); p.set(19, 3 + up, C['green']); p.set(16, 7 + up, C['red'])
+    p.set(11, 3 + up, C['red']); p.set(15, 3 + up, C['blue'])
+    p.set(19, 3 + up, C['green']); p.set(16, 7 + up, C['red'])
     p.outline(C['ol']); shadow(p, 16, 30.8, 9, 1.8)
     if f == 2:
         sparkle(p, 3, 6); sparkle(p, 28, 8, 'pink_hi')
     return p
 
-
 def queen(f):
     p = Px(32, 32)
     up = -1 if f == 1 else (-3 if f == 2 else 0)
-    # long lilac hair, flowing violet gown with gold trim
-    p.ell(16, 12 + up, 8.4, 9, C['hair_sh']); p.rect(8, 12 + up, 3, 12, C['hair_sh']); p.rect(21, 12 + up, 3, 12, C['hair_sh'])
-    p.poly([(11, 18 + up), (21, 18 + up), (26, 30), (6, 30)], C['purple_sh']); p.poly([(12, 18 + up), (20, 18 + up), (24, 29), (8, 29)], C['purple'])
+    hair = rgb('#b8895f')
+    hair_hi = rgb('#dfb58a')
+    hair_sh = rgb('#775036')
+    # Queen's lighter, flowing brown hair, shaded in a soft chestnut palette.
+    p.ell(16, 12 + up, 8.4, 9, hair_sh)
+    p.rect(8, 12 + up, 3, 12, hair_sh)
+    p.rect(21, 12 + up, 3, 12, hair_sh)
+    p.ell(9, 19 + up, 2.3, 5, hair)
+    p.ell(23, 19 + up, 2.3, 5, hair)
+    for x, y in ((8, 16), (9, 21), (22, 16), (23, 21)):
+        p.set(x, y + up, hair_hi)
+    p.poly([(11, 18 + up), (21, 18 + up), (26, 30), (6, 30)], C['purple_sh'])
+    p.poly([(12, 18 + up), (20, 18 + up), (24, 29), (8, 29)], C['purple'])
     p.poly([(12, 18 + up), (16, 18 + up), (16, 29), (8, 29)], C['purple_hi'])
-    p.rect(11, 22 + up, 10, 1, C['gold']); p.rect(8, 28, 16, 1, C['gold']); p.rect(15, 18 + up, 2, 4, C['gold_hi'])
+    p.rect(11, 22 + up, 10, 1, C['gold'])
+    p.rect(8, 28, 16, 1, C['gold'])
+    p.rect(15, 18 + up, 2, 4, C['gold_hi'])
     for x in (10, 14, 18, 21):
         p.set(x, 25, C['pink_hi'])
-    p.rect(13, 29, 2, 2, C['pink']); p.rect(17, 29, 2, 2, C['pink'])
+    p.rect(13, 29, 2, 2, C['pink'])
+    p.rect(17, 29, 2, 2, C['pink'])
     p.ell(16, 11 + up, 6.2, 6.2, C['skin'])
-    p.ell(16, 7 + up, 7, 3, C['hair_sh']); p.ell(16, 8 + up, 6.4, 2.4, C['hair'])
+    # Warm brown swept fringe instead of the previous lilac-coloured bangs.
+    p.ell(16, 7 + up, 7, 3, hair_sh)
+    p.ell(16, 8 + up, 6.4, 2.4, hair)
+    p.line(10, 7 + up, 18, 6 + up, hair_hi)
     for ex in (13, 18):
-        p.rect(ex, 10 + up, 2, 3, EYE); p.set(ex, 10 + up, W)
-    p.rect(11, 13 + up, 2, 1, C['blush']); p.rect(20, 13 + up, 2, 1, C['blush']); p.rect(15, 14 + up, 2, 1, C['mouth'])
-    # tall tiara
-    p.rect(11, 5 + up, 10, 2, C['gold']); p.rect(11, 5 + up, 10, 1, C['gold_hi'])
+        p.rect(ex, 10 + up, 2, 3, EYE)
+        p.set(ex, 10 + up, W)
+    p.rect(11, 13 + up, 2, 1, C['blush'])
+    p.rect(20, 13 + up, 2, 1, C['blush'])
+    p.rect(15, 14 + up, 2, 1, C['mouth'])
+    p.rect(11, 5 + up, 10, 2, C['gold'])
+    p.rect(11, 5 + up, 10, 1, C['gold_hi'])
     for x, h in ((11, 2), (15, 4), (20, 2)):
         p.poly([(x, 5 + up), (x + 2, 5 + up), (x + 1, 5 - h + up)], C['gold'])
-    p.set(16, 3 + up, C['pink']); p.set(12, 4 + up, C['blue']); p.set(20, 4 + up, C['teal'])
-    # wand in hand
+    p.set(16, 3 + up, C['pink'])
+    p.set(12, 4 + up, C['blue'])
+    p.set(20, 4 + up, C['teal'])
     wy = 17 + up - (3 if f == 2 else 0)
-    p.line(24, 24 + up, 28, wy, C['wood']); _star_poly(p, 28, wy - 2, 3.4, 1.4, C['gold']); p.set(28, wy - 2, W)
+    p.line(24, 24 + up, 28, wy, C['wood'])
+    _star_poly(p, 28, wy - 2, 3.4, 1.4, C['gold'])
+    p.set(28, wy - 2, W)
     p.outline(C['ol']); shadow(p, 16, 30.8, 9, 1.8)
     if f == 2:
         sparkle(p, 3, 5, 'pink_hi'); sparkle(p, 29, 4)
     return p
-
 
 # ---------------------------------------------------------------- Dapple: a golden-peach unicorn with a teal-violet mane
 def dapple_recolor(im):

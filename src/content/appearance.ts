@@ -167,7 +167,7 @@ export const SLOTS_ALL = Object.keys(CATALOG) as AppearanceSlot[];
 export function defaultAppearance(): PrincessAppearance {
   return {
     dressId: 'royal_ball', dressColorId: 'pink', shoesId: 'slippers', accessoryId: 'none',
-    hairstyleId: 'long', hairColorId: 'blonde', tiaraId: 'gold_tiara', earringsId: 'none',
+    hairstyleId: 'long', hairColorId: 'light_brown', tiaraId: 'gold_tiara', earringsId: 'none',
     necklaceId: 'none', faceAccentId: 'none', skinToneId: 'porcelain'
   };
 }

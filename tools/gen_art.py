@@ -200,7 +200,7 @@ for kind, key, w, h in (('full', 'wd_full', AW.FW, AW.FH), ('portrait', 'wd_port
     save_png_sheet(f'wardrobe/{key}.png', ai, w, h, key, cols * rows)
     atlas_meta[key] = {'w': w, 'h': h, 'cols': cols, 'cells': {nm: i for i, (nm, _) in enumerate(cells)}}
 ramps = AW.load_ramps()
-base_app = dict(dressId='royal_ball', dressColorId='pink', shoesId='slippers', accessoryId='none', hairstyleId='long', hairColorId='blonde', tiaraId='gold_tiara', earringsId='none', necklaceId='none', faceAccentId='none', skinToneId='porcelain')
+base_app = dict(dressId='royal_ball', dressColorId='pink', shoesId='slippers', accessoryId='none', hairstyleId='long', hairColorId='light_brown', tiaraId='gold_tiara', earringsId='none', necklaceId='none', faceAccentId='none', skinToneId='porcelain')
 sample_looks = [
     {}, dict(dressId='rainbow_gown', dressColorId='lavender', shoesId='jeweled', accessoryId='butterfly_wings', hairstyleId='ponytail', hairColorId='auburn', tiaraId='star_tiara', earringsId='star_drops', necklaceId='star_pendant', faceAccentId='glitter_cheeks', skinToneId='tan'),
     dict(dressId='garden', dressColorId='mint', shoesId='sandals', accessoryId='flower_shawl', hairstyleId='braids', hairColorId='dark_brown', tiaraId='flower_crown', earringsId='flower_dangles', necklaceId='shell_necklace', faceAccentId='star_freckles', skinToneId='brown'),

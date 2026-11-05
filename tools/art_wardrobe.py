@@ -19,7 +19,7 @@ MARKERS = {'dress': DM, 'hair': HM, 'skin': SM}
 # default (un-recoloured) targets, to preview art without the game
 DEFAULT_TARGET = {
     'dress': [rgb('#ffb8e2'), rgb('#ff7ec3'), rgb('#cf4f9f'), rgb('#9b3a86')],
-    'hair': [rgb('#ffe27a'), rgb('#ffbf3f'), rgb('#d98a1f'), rgb('#9c5a12')],
+    'hair': [rgb('#c99a6a'), rgb('#a8743f'), rgb('#7a4e26'), rgb('#4f3017')],
     'skin': [rgb('#fff0e0'), rgb('#ffdcc0'), rgb('#f3aa8c'), rgb('#c97a6a')],
 }
 

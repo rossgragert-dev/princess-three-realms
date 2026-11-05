@@ -42,6 +42,38 @@ jobs:
           ref: gh-pages
           path: stable
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow for deterministic family sprites
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Refresh family art and offline cache in deployment copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source
+          python tools/gen_art.py
+          for name in npc_king npc_queen princess; do
+            cp "public/assets/characters/${name}.png" "site/assets/characters/${name}.png"
+          done
+          node tools/make_precache.mjs site
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          expected = {
+              "npc_king": ((96, 32), (134, 83, 51)),
+              "npc_queen": ((96, 32), (184, 137, 95)),
+              "princess": ((192, 128), (168, 116, 63)),
+          }
+          for name, (size, colour) in expected.items():
+              im = Image.open(Path("site/assets/characters") / (name + ".png")).convert("RGBA")
+              assert im.size == size, (name, im.size)
+              assert colour in {p[:3] for p in im.getdata()}, f"{name}: expected brown palette missing"
+          print("Family sprites: dimensions and brown palettes verified")
+          PY
+
       - name: Validate prebuilt standalone game
         shell: bash
         run: |
@@ -51,7 +83,7 @@ jobs:
           done
 
       - name: Promote development game to stable iPad release (manual approval only)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.promote == true }}
+        if: ${{ (github.event_name == 'workflow_dispatch' && inputs.promote == true) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[ipad-release]')) }}
         shell: bash
         run: |
           set -euo pipefail
