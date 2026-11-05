@@ -326,6 +326,142 @@
     0,
     1
    ],
+   "key": "dapple_idle_down",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "key": "dapple_walk_down",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    6,
+    7,
+    8,
+    9
+   ],
+   "key": "dapple_gallop_down",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    12,
+    13
+   ],
+   "key": "dapple_idle_up",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    14,
+    15,
+    16,
+    17
+   ],
+   "key": "dapple_walk_up",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    18,
+    19,
+    20,
+    21
+   ],
+   "key": "dapple_gallop_up",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    24,
+    25
+   ],
+   "key": "dapple_idle_left",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    26,
+    27,
+    28,
+    29
+   ],
+   "key": "dapple_walk_left",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    30,
+    31,
+    32,
+    33
+   ],
+   "key": "dapple_gallop_left",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    36,
+    37
+   ],
+   "key": "dapple_idle_right",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    38,
+    39,
+    40,
+    41
+   ],
+   "key": "dapple_walk_right",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    42,
+    43,
+    44,
+    45
+   ],
+   "key": "dapple_gallop_right",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
    "key": "mermaid_idle_down",
    "repeat": -1,
    "sheet": "mermaid"
@@ -611,6 +747,50 @@
    "sheet": "npc_tree"
   },
   {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "king_idle",
+   "repeat": -1,
+   "sheet": "npc_king"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "king_react",
+   "repeat": 0,
+   "sheet": "npc_king"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "queen_idle",
+   "repeat": -1,
+   "sheet": "npc_queen"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "queen_react",
+   "repeat": 0,
+   "sheet": "npc_queen"
+  },
+  {
    "frameRate": 8,
    "frames": [
     19,
@@ -667,6 +847,36 @@
    "key": "whirlpool_spin",
    "repeat": -1,
    "sheet": "whirlpool"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "wardrobe_glow",
+   "repeat": -1,
+   "sheet": "wardrobe_prop"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "paint_glow",
+   "repeat": -1,
+   "sheet": "paint_prop"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "vanity_glow",
+   "repeat": -1,
+   "sheet": "vanity_prop"
   }
  ],
  "images": [
@@ -731,6 +941,66 @@
    "width": 32
   },
   {
+   "file": "assets/props/bunny_pillow.png",
+   "height": 24,
+   "key": "bunny_pillow",
+   "width": 22
+  },
+  {
+   "file": "assets/props/unicorn_plush.png",
+   "height": 26,
+   "key": "unicorn_plush",
+   "width": 24
+  },
+  {
+   "file": "assets/props/shell_mirror.png",
+   "height": 26,
+   "key": "shell_mirror",
+   "width": 22
+  },
+  {
+   "file": "assets/props/mermaid_art.png",
+   "height": 24,
+   "key": "mermaid_art",
+   "width": 26
+  },
+  {
+   "file": "assets/props/butterfly_painting.png",
+   "height": 24,
+   "key": "butterfly_painting",
+   "width": 26
+  },
+  {
+   "file": "assets/props/canopy_bed.png",
+   "height": 50,
+   "key": "canopy_bed",
+   "width": 50
+  },
+  {
+   "file": "assets/props/moon_curtain.png",
+   "height": 36,
+   "key": "moon_curtain",
+   "width": 44
+  },
+  {
+   "file": "assets/props/crystal_nightstand.png",
+   "height": 28,
+   "key": "crystal_nightstand",
+   "width": 22
+  },
+  {
+   "file": "assets/props/decor_chest.png",
+   "height": 18,
+   "key": "decor_chest",
+   "width": 22
+  },
+  {
+   "file": "assets/props/shelf.png",
+   "height": 12,
+   "key": "shelf",
+   "width": 34
+  },
+  {
    "file": "assets/props/crown_hud.png",
    "height": 20,
    "key": "crown_hud",
@@ -747,6 +1017,756 @@
    "height": 32,
    "key": "hand",
    "width": 32
+  },
+  {
+   "file": "assets/props/plain_rug.png",
+   "height": 22,
+   "key": "plain_rug",
+   "width": 44
+  },
+  {
+   "file": "assets/props/striped_rug.png",
+   "height": 22,
+   "key": "striped_rug",
+   "width": 44
+  },
+  {
+   "file": "assets/props/small_lamp.png",
+   "height": 26,
+   "key": "small_lamp",
+   "width": 14
+  },
+  {
+   "file": "assets/props/wall_hanging.png",
+   "height": 26,
+   "key": "wall_hanging",
+   "width": 20
+  },
+  {
+   "file": "assets/props/round_mirror.png",
+   "height": 20,
+   "key": "round_mirror",
+   "width": 20
+  },
+  {
+   "file": "assets/props/pink_curtain.png",
+   "height": 36,
+   "key": "pink_curtain",
+   "width": 44
+  },
+  {
+   "file": "assets/props/floor_pillow.png",
+   "height": 12,
+   "key": "floor_pillow",
+   "width": 20
+  },
+  {
+   "file": "assets/props/reading_cushion.png",
+   "height": 12,
+   "key": "reading_cushion",
+   "width": 22
+  },
+  {
+   "file": "assets/props/pink_chair.png",
+   "height": 24,
+   "key": "pink_chair",
+   "width": 18
+  },
+  {
+   "file": "assets/props/wooden_chair.png",
+   "height": 24,
+   "key": "wooden_chair",
+   "width": 18
+  },
+  {
+   "file": "assets/props/little_couch.png",
+   "height": 24,
+   "key": "little_couch",
+   "width": 36
+  },
+  {
+   "file": "assets/props/dresser.png",
+   "height": 26,
+   "key": "dresser",
+   "width": 26
+  },
+  {
+   "file": "assets/props/toy_basket.png",
+   "height": 22,
+   "key": "toy_basket",
+   "width": 22
+  },
+  {
+   "file": "assets/props/desk.png",
+   "height": 28,
+   "key": "desk",
+   "width": 36
+  },
+  {
+   "file": "assets/props/plant_stand.png",
+   "height": 28,
+   "key": "plant_stand",
+   "width": 16
+  },
+  {
+   "file": "assets/props/sunny_bed.png",
+   "height": 32,
+   "key": "sunny_bed",
+   "width": 48
+  },
+  {
+   "file": "assets/props/round_table.png",
+   "height": 24,
+   "key": "round_table",
+   "width": 28
+  },
+  {
+   "file": "assets/props/square_table.png",
+   "height": 24,
+   "key": "square_table",
+   "width": 32
+  },
+  {
+   "file": "assets/props/tea_table.png",
+   "height": 20,
+   "key": "tea_table",
+   "width": 20
+  },
+  {
+   "file": "assets/props/bean_bag.png",
+   "height": 20,
+   "key": "bean_bag",
+   "width": 22
+  },
+  {
+   "file": "assets/props/star_stool.png",
+   "height": 18,
+   "key": "star_stool",
+   "width": 16
+  },
+  {
+   "file": "assets/props/heart_rug.png",
+   "height": 26,
+   "key": "heart_rug",
+   "width": 34
+  },
+  {
+   "file": "assets/props/leafy_plant.png",
+   "height": 34,
+   "key": "leafy_plant",
+   "width": 20
+  },
+  {
+   "file": "assets/props/sunflower_pot.png",
+   "height": 34,
+   "key": "sunflower_pot",
+   "width": 20
+  },
+  {
+   "file": "assets/props/tulip_pot.png",
+   "height": 22,
+   "key": "tulip_pot",
+   "width": 16
+  },
+  {
+   "file": "assets/props/daisy_pot.png",
+   "height": 22,
+   "key": "daisy_pot",
+   "width": 16
+  },
+  {
+   "file": "assets/props/cactus_pot.png",
+   "height": 20,
+   "key": "cactus_pot",
+   "width": 16
+  },
+  {
+   "file": "assets/props/beach_ball.png",
+   "height": 16,
+   "key": "beach_ball",
+   "width": 16
+  },
+  {
+   "file": "assets/props/rainbow_ball.png",
+   "height": 16,
+   "key": "rainbow_ball",
+   "width": 16
+  },
+  {
+   "file": "assets/props/teddy_bear.png",
+   "height": 20,
+   "key": "teddy_bear",
+   "width": 18
+  },
+  {
+   "file": "assets/props/kitty_plush.png",
+   "height": 20,
+   "key": "kitty_plush",
+   "width": 18
+  },
+  {
+   "file": "assets/props/duck_plush.png",
+   "height": 18,
+   "key": "duck_plush",
+   "width": 18
+  },
+  {
+   "file": "assets/props/rag_doll.png",
+   "height": 24,
+   "key": "rag_doll",
+   "width": 16
+  },
+  {
+   "file": "assets/props/ballerina_doll.png",
+   "height": 24,
+   "key": "ballerina_doll",
+   "width": 18
+  },
+  {
+   "file": "assets/props/toy_blocks.png",
+   "height": 16,
+   "key": "toy_blocks",
+   "width": 18
+  },
+  {
+   "file": "assets/props/floor_lamp.png",
+   "height": 42,
+   "key": "floor_lamp",
+   "width": 16
+  },
+  {
+   "file": "assets/props/night_light.png",
+   "height": 18,
+   "key": "night_light",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bookshelf.png",
+   "height": 38,
+   "key": "bookshelf",
+   "width": 32
+  },
+  {
+   "file": "assets/props/star_banner.png",
+   "height": 24,
+   "key": "star_banner",
+   "width": 32
+  },
+  {
+   "file": "assets/props/flower_wreath.png",
+   "height": 20,
+   "key": "flower_wreath",
+   "width": 20
+  },
+  {
+   "file": "assets/props/fx_bolt.png",
+   "height": 14,
+   "key": "fx_bolt",
+   "width": 14
+  },
+  {
+   "file": "assets/props/fx_trail.png",
+   "height": 8,
+   "key": "fx_trail",
+   "width": 8
+  },
+  {
+   "file": "assets/props/fx_petal.png",
+   "height": 8,
+   "key": "fx_petal",
+   "width": 8
+  },
+  {
+   "file": "assets/props/fx_apple.png",
+   "height": 9,
+   "key": "fx_apple",
+   "width": 9
+  },
+  {
+   "file": "assets/props/fx_drop.png",
+   "height": 8,
+   "key": "fx_drop",
+   "width": 6
+  },
+  {
+   "file": "assets/props/fx_jet.png",
+   "height": 28,
+   "key": "fx_jet",
+   "width": 10
+  },
+  {
+   "file": "assets/props/fx_glow.png",
+   "height": 20,
+   "key": "fx_glow",
+   "width": 20
+  },
+  {
+   "file": "assets/props/fx_flutter.png",
+   "height": 8,
+   "key": "fx_flutter",
+   "width": 10
+  },
+  {
+   "file": "assets/props/fw_spark.png",
+   "height": 5,
+   "key": "fw_spark",
+   "width": 5
+  },
+  {
+   "file": "assets/props/fw_rocket.png",
+   "height": 14,
+   "key": "fw_rocket",
+   "width": 6
+  },
+  {
+   "file": "assets/props/fw_dais.png",
+   "height": 28,
+   "key": "fw_dais",
+   "width": 48
+  },
+  {
+   "file": "assets/props/fw_castle.png",
+   "height": 72,
+   "key": "fw_castle",
+   "width": 160
+  },
+  {
+   "file": "assets/props/wand_bench.png",
+   "height": 32,
+   "key": "wand_bench",
+   "width": 32
+  },
+  {
+   "file": "assets/props/festival_garland.png",
+   "height": 16,
+   "key": "festival_garland",
+   "width": 32
+  },
+  {
+   "file": "assets/props/meadow_cushion.png",
+   "height": 16,
+   "key": "meadow_cushion",
+   "width": 16
+  },
+  {
+   "file": "assets/props/fx_heart.png",
+   "height": 11,
+   "key": "fx_heart",
+   "width": 12
+  },
+  {
+   "file": "assets/props/wand_shaft.png",
+   "height": 40,
+   "key": "wand_shaft",
+   "width": 8
+  },
+  {
+   "file": "assets/props/trail_star.png",
+   "height": 7,
+   "key": "trail_star",
+   "width": 7
+  },
+  {
+   "file": "assets/props/trail_butterfly.png",
+   "height": 7,
+   "key": "trail_butterfly",
+   "width": 9
+  },
+  {
+   "file": "assets/props/trail_petal.png",
+   "height": 7,
+   "key": "trail_petal",
+   "width": 7
+  },
+  {
+   "file": "assets/props/trail_bubble.png",
+   "height": 8,
+   "key": "trail_bubble",
+   "width": 8
+  },
+  {
+   "file": "assets/props/fw_shape_star.png",
+   "height": 24,
+   "key": "fw_shape_star",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_heart.png",
+   "height": 24,
+   "key": "fw_shape_heart",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_flower.png",
+   "height": 24,
+   "key": "fw_shape_flower",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_spiral.png",
+   "height": 24,
+   "key": "fw_shape_spiral",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_rainbow.png",
+   "height": 24,
+   "key": "fw_shape_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_mode_1.png",
+   "height": 24,
+   "key": "fw_mode_1",
+   "width": 36
+  },
+  {
+   "file": "assets/props/fw_mode_2.png",
+   "height": 24,
+   "key": "fw_mode_2",
+   "width": 36
+  },
+  {
+   "file": "assets/props/fw_mode_3.png",
+   "height": 24,
+   "key": "fw_mode_3",
+   "width": 36
+  },
+  {
+   "file": "assets/props/wand_star_pink.png",
+   "height": 24,
+   "key": "wand_star_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_gold.png",
+   "height": 24,
+   "key": "wand_star_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_blue.png",
+   "height": 24,
+   "key": "wand_star_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_mint.png",
+   "height": 24,
+   "key": "wand_star_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_lavender.png",
+   "height": 24,
+   "key": "wand_star_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_red.png",
+   "height": 24,
+   "key": "wand_star_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_pearl.png",
+   "height": 24,
+   "key": "wand_star_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_rainbow.png",
+   "height": 24,
+   "key": "wand_star_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_pink.png",
+   "height": 24,
+   "key": "wand_moon_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_gold.png",
+   "height": 24,
+   "key": "wand_moon_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_blue.png",
+   "height": 24,
+   "key": "wand_moon_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_mint.png",
+   "height": 24,
+   "key": "wand_moon_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_lavender.png",
+   "height": 24,
+   "key": "wand_moon_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_red.png",
+   "height": 24,
+   "key": "wand_moon_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_pearl.png",
+   "height": 24,
+   "key": "wand_moon_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_rainbow.png",
+   "height": 24,
+   "key": "wand_moon_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_pink.png",
+   "height": 24,
+   "key": "wand_flower_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_gold.png",
+   "height": 24,
+   "key": "wand_flower_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_blue.png",
+   "height": 24,
+   "key": "wand_flower_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_mint.png",
+   "height": 24,
+   "key": "wand_flower_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_lavender.png",
+   "height": 24,
+   "key": "wand_flower_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_red.png",
+   "height": 24,
+   "key": "wand_flower_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_pearl.png",
+   "height": 24,
+   "key": "wand_flower_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_rainbow.png",
+   "height": 24,
+   "key": "wand_flower_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_pink.png",
+   "height": 24,
+   "key": "wand_heart_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_gold.png",
+   "height": 24,
+   "key": "wand_heart_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_blue.png",
+   "height": 24,
+   "key": "wand_heart_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_mint.png",
+   "height": 24,
+   "key": "wand_heart_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_lavender.png",
+   "height": 24,
+   "key": "wand_heart_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_red.png",
+   "height": 24,
+   "key": "wand_heart_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_pearl.png",
+   "height": 24,
+   "key": "wand_heart_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_rainbow.png",
+   "height": 24,
+   "key": "wand_heart_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_pink.png",
+   "height": 24,
+   "key": "wand_crystal_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_gold.png",
+   "height": 24,
+   "key": "wand_crystal_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_blue.png",
+   "height": 24,
+   "key": "wand_crystal_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_mint.png",
+   "height": 24,
+   "key": "wand_crystal_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_lavender.png",
+   "height": 24,
+   "key": "wand_crystal_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_red.png",
+   "height": 24,
+   "key": "wand_crystal_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_pearl.png",
+   "height": 24,
+   "key": "wand_crystal_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_rainbow.png",
+   "height": 24,
+   "key": "wand_crystal_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_pink.png",
+   "height": 24,
+   "key": "wand_seashell_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_gold.png",
+   "height": 24,
+   "key": "wand_seashell_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_blue.png",
+   "height": 24,
+   "key": "wand_seashell_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_mint.png",
+   "height": 24,
+   "key": "wand_seashell_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_lavender.png",
+   "height": 24,
+   "key": "wand_seashell_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_red.png",
+   "height": 24,
+   "key": "wand_seashell_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_pearl.png",
+   "height": 24,
+   "key": "wand_seashell_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_rainbow.png",
+   "height": 24,
+   "key": "wand_seashell_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/bolt_pink.png",
+   "height": 14,
+   "key": "bolt_pink",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_gold.png",
+   "height": 14,
+   "key": "bolt_gold",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_blue.png",
+   "height": 14,
+   "key": "bolt_blue",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_mint.png",
+   "height": 14,
+   "key": "bolt_mint",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_lavender.png",
+   "height": 14,
+   "key": "bolt_lavender",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_red.png",
+   "height": 14,
+   "key": "bolt_red",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_pearl.png",
+   "height": 14,
+   "key": "bolt_pearl",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_rainbow.png",
+   "height": 14,
+   "key": "bolt_rainbow",
+   "width": 14
   }
  ],
  "index": {
@@ -781,6 +1801,13 @@
    "water": 14
   },
   "tiles": {
+   "base_cream": 66,
+   "base_floral": 68,
+   "base_lavender": 60,
+   "base_mint": 62,
+   "base_rainbow": 72,
+   "base_sky": 64,
+   "base_starry": 70,
    "baseboard": 48,
    "boulder": 35,
    "boulder_sand": 36,
@@ -796,6 +1823,16 @@
    "deep_water": 58,
    "fence_h": 33,
    "fence_v": 34,
+   "floor_cream_tile0": 75,
+   "floor_cream_tile1": 76,
+   "floor_dark_wood0": 73,
+   "floor_dark_wood1": 74,
+   "floor_pastel_tile0": 77,
+   "floor_pastel_tile1": 78,
+   "floor_patterned_carpet0": 79,
+   "floor_patterned_carpet1": 80,
+   "floor_royal_rug0": 81,
+   "floor_royal_rug1": 82,
    "flower_blue": 42,
    "flower_pink": 43,
    "flower_red": 41,
@@ -826,8 +1863,15 @@
    "uw_sand0": 50,
    "uw_sand1": 51,
    "wall_brick": 25,
+   "wall_cream": 65,
    "wall_crenel": 27,
+   "wall_floral": 67,
+   "wall_lavender": 59,
+   "wall_mint": 61,
    "wall_paper": 47,
+   "wall_rainbow": 71,
+   "wall_sky": 63,
+   "wall_starry": 69,
    "wall_top_int": 49,
    "wall_window": 26,
    "water0": 13,
@@ -842,33 +1886,58 @@
    "wood_floor1": 46
   },
   "ui": {
+   "icon_a": 44,
    "icon_back": 16,
    "icon_book": 6,
    "icon_bridge": 23,
+   "icon_brush": 41,
+   "icon_cape": 32,
    "icon_check": 8,
+   "icon_cross": 48,
+   "icon_decorate": 47,
    "icon_down": 11,
+   "icon_dress": 29,
+   "icon_earring": 36,
+   "icon_face": 38,
+   "icon_flip": 50,
+   "icon_floor": 43,
+   "icon_hair": 33,
+   "icon_haircolor": 34,
    "icon_hint": 15,
    "icon_home": 7,
+   "icon_knob": 46,
    "icon_lamp": 22,
    "icon_left": 12,
    "icon_lock": 24,
+   "icon_magic": 45,
    "icon_marina": 20,
    "icon_mermaid": 4,
+   "icon_mirror": 28,
    "icon_music": 26,
+   "icon_necklace": 37,
    "icon_next": 9,
+   "icon_none": 40,
+   "icon_palette": 30,
    "icon_parent": 14,
    "icon_pip": 17,
    "icon_play": 0,
    "icon_princess": 2,
    "icon_rainbow": 19,
    "icon_right": 13,
+   "icon_shoe": 31,
+   "icon_skin": 39,
    "icon_sound": 25,
    "icon_speaker": 5,
    "icon_star": 21,
+   "icon_tiara": 35,
+   "icon_trash": 51,
    "icon_tree": 18,
+   "icon_undo": 49,
    "icon_unicorn": 3,
    "icon_up": 10,
-   "icon_wand": 1
+   "icon_wall": 42,
+   "icon_wand": 1,
+   "icon_wardrobe": 27
   }
  },
  "sheets": [
@@ -876,8 +1945,92 @@
    "file": "assets/tiles/tiles.png",
    "frameHeight": 16,
    "frameWidth": 16,
-   "frames": 59,
+   "frames": 83,
    "key": "tiles"
+  },
+  {
+   "file": "assets/characters/ow_hair_long.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_long"
+  },
+  {
+   "file": "assets/characters/ow_hair_bob.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_bob"
+  },
+  {
+   "file": "assets/characters/ow_hair_ponytail.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_ponytail"
+  },
+  {
+   "file": "assets/characters/ow_hair_braids.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_braids"
+  },
+  {
+   "file": "assets/characters/ow_hair_bun.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_bun"
+  },
+  {
+   "file": "assets/characters/ow_hair_curls.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_hair_curls"
+  },
+  {
+   "file": "assets/characters/ow_crown_gold_tiara.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_gold_tiara"
+  },
+  {
+   "file": "assets/characters/ow_crown_pearl_crown.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_pearl_crown"
+  },
+  {
+   "file": "assets/characters/ow_crown_star_tiara.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_star_tiara"
+  },
+  {
+   "file": "assets/characters/ow_crown_flower_crown.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_flower_crown"
+  },
+  {
+   "file": "assets/characters/ow_crown_bunny_ribbon.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_bunny_ribbon"
+  },
+  {
+   "file": "assets/characters/ow_crown_butterfly_clip.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_crown_butterfly_clip"
   },
   {
    "file": "assets/characters/princess.png",
@@ -894,11 +2047,25 @@
    "key": "unicorn"
   },
   {
+   "file": "assets/characters/dapple.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 48,
+   "key": "dapple"
+  },
+  {
    "file": "assets/characters/mermaid.png",
    "frameHeight": 32,
    "frameWidth": 32,
    "frames": 32,
    "key": "mermaid"
+  },
+  {
+   "file": "assets/characters/mermaid_m.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 32,
+   "key": "mermaid_m"
   },
   {
    "file": "assets/characters/npc_pip.png",
@@ -950,6 +2117,20 @@
    "key": "npc_tree"
   },
   {
+   "file": "assets/characters/npc_king.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_king"
+  },
+  {
+   "file": "assets/characters/npc_queen.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_queen"
+  },
+  {
    "file": "assets/items/items.png",
    "frameHeight": 16,
    "frameWidth": 16,
@@ -960,7 +2141,7 @@
    "file": "assets/ui/ui.png",
    "frameHeight": 32,
    "frameWidth": 32,
-   "frames": 27,
+   "frames": 52,
    "key": "ui"
   },
   {
@@ -1025,6 +2206,41 @@
    "frameWidth": 128,
    "frames": 2,
    "key": "ribbon"
+  },
+  {
+   "file": "assets/props/wardrobe_prop.png",
+   "frameHeight": 48,
+   "frameWidth": 32,
+   "frames": 2,
+   "key": "wardrobe_prop"
+  },
+  {
+   "file": "assets/props/paint_prop.png",
+   "frameHeight": 34,
+   "frameWidth": 26,
+   "frames": 2,
+   "key": "paint_prop"
+  },
+  {
+   "file": "assets/props/vanity_prop.png",
+   "frameHeight": 44,
+   "frameWidth": 32,
+   "frames": 2,
+   "key": "vanity_prop"
+  },
+  {
+   "file": "assets/wardrobe/wd_full.png",
+   "frameHeight": 144,
+   "frameWidth": 96,
+   "frames": 56,
+   "key": "wd_full"
+  },
+  {
+   "file": "assets/wardrobe/wd_port.png",
+   "frameHeight": 140,
+   "frameWidth": 112,
+   "frames": 48,
+   "key": "wd_port"
   }
  ]
 }
