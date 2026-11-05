@@ -36,20 +36,43 @@ await go('shell_puzzle', 2500); console.log('shell panel', await talkUntilPuzzle
 await go('star_pedestal'); await settleTalk(); await shot(page,'star'); await F('star');
 await tapL(page, 36, 30); await waitScene(page,'bedroom',30000); await sleep(1500); await settleTalk(); await shot(page,'bedroom_arrive'); await F('bedroom');
 console.log('unlocked before decorating:', (await unlocked()).length, JSON.stringify(await unlocked()));
-console.log('place star lamp ->', await placeItem(page, 'slot_lamp', 'star_lamp', 'bedroom_picker_lamp')); await settleTalk(); await shot(page,'bedroom_lamp'); await F('lamp');
+const D = (f, ...a) => page.evaluate((fn, args) => window.__decor[fn](...args), f, a);
+const openDeco = async () => { await tapL(page, 156, 30); await page.waitForFunction(() => !!window.__decor, { timeout: 10000 }); await sleep(900); };
+const placeAnywhere = async (id) => {
+  const groups = await D('groups');
+  for (const g of groups) {
+    await tapL(page, g.x, g.y); await sleep(250);
+    for (let pg = 0; pg < 3; pg++) {
+      const card = (await D('cards')).find((c) => c.id === id);
+      if (card) {
+        if (!card.owned) return 'locked';
+        await tapL(page, card.x, card.y); await sleep(200);
+        const cands = []; for (let y = 2; y <= 14; y++) for (let x = 2; x <= 21; x++) cands.push([x, y]);
+        for (const [x, y] of cands) { const sc = await D('tileToScreen', x, y); await tapL(page, sc.x, sc.y); await sleep(60); const st = await D('status'); if (st.ok) { const b = await D('buttons'); await tapL(page, b.accept.x, b.accept.y); await sleep(300); return `placed@${x},${y}`; } }
+        return 'nospot';
+      }
+      const b = await D('buttons'); if (!(await D('cards')).length || !b.next) break; const nb = (await D('buttons')).next; if (!nb?.visible) break; await tapL(page, nb.x, nb.y); await sleep(250);
+    }
+  }
+  return 'nocard';
+};
+await openDeco();
+console.log('place star lamp ->', await placeAnywhere('star_lamp'));
+const doneB = (await D('buttons')).done; await tapL(page, doneB.x, doneB.y); await sleep(1800); await settleTalk(); await shot(page,'bedroom_lamp'); await F('lamp');
 console.log('unlocked after chapter:', (await unlocked()).length, JSON.stringify(await unlocked()));
-const plan = [['slot_bed','canopy_bed'],['slot_plush_a','bunny_pillow'],['slot_plush_b','unicorn_plush'],['slot_rug','rainbow_rug'],['slot_wall_a','shell_mirror'],['slot_wall_b','mermaid_art'],['slot_wall_c','butterfly_painting'],['slot_window','moon_curtain'],['slot_shelf','flower_pot'],['slot_accent','crystal_nightstand'],['slot_accent_b','treasure_chest']];
-for (const [slot, item] of plan) console.log(slot.padEnd(14), item.padEnd(20), await placeItem(page, slot, item, 'picker_'+slot));
-console.log('placed:', JSON.stringify((await ptr(page,'state')).bedroom));
+await openDeco();
+for (const item of (await unlocked()).filter((x) => x !== 'star_lamp')) console.log(item.padEnd(20), await placeAnywhere(item));
+{ const d2 = (await D('buttons')).done; await tapL(page, d2.x, d2.y); await sleep(1800); await waitIdle(page); }
+console.log('placed:', JSON.stringify((await ptr(page,'state')).bedroomLayout.map((q) => q.item)));
 await shot(page,'bedroom_decorated');
 const plays = await page.evaluate(() => window.__plays);
 const uniq = [...new Set(plays.map((p) => p.replace(/\.(m4a|ogg)$/, '')))];
 console.log('audio plays', plays.length, 'unique clips', uniq.length);
 console.log('clips never played:', (await import('node:fs')).readFileSync(process.env.KEYS||'/tmp/keys.txt','utf8').split('\n').filter(k=>k&&!uniq.includes(k)).join(' '));
 console.log(logs.filter(l=>!l.includes('narration')&&!l.includes('404')).join('\n') || 'no non-audio console errors');
-const placed = (await ptr(page,'state')).bedroom; const st = await ptr(page,'state');
-console.log('decor items unlocked', st.unlockedDecor.length, 'placed', Object.keys(placed).length);
-const done = !!(await flags(page)).LAMP_PLACED && st.unlockedDecor.length >= 12 && Object.keys(placed).length >= 12;
+const st = await ptr(page,'state'); const placedItems = new Set(st.bedroomLayout.map((q) => q.item));
+console.log('decor items unlocked', st.unlockedDecor.length, 'placed of those', st.unlockedDecor.filter((x) => placedItems.has(x)).length);
+const done = !!(await flags(page)).LAMP_PLACED && st.unlockedDecor.length >= 12 && st.unlockedDecor.every((x) => placedItems.has(x));
 console.log(done ? 'CHAPTER 1 COMPLETE (LAMP_PLACED)' : 'CHAPTER 1 NOT COMPLETE');
 await browser.close();
 process.exit(done ? 0 : 1);

@@ -1,3 +1,4 @@
+import { stickFromOffset, knobOffset, NEUTRAL, type Stick } from '../input/joystick';
 import Phaser from 'phaser';
 import type { Form, PuzzleDef } from '../types/game';
 import { newProgress } from '../systems/puzzleEngine';
@@ -9,8 +10,8 @@ import { burst, makeButton, pic, roundedPanel, type Btn } from '../ui/touchTarge
 import { DialoguePanel } from '../ui/dialoguePanel';
 import { PuzzlePanel, type PuzzleResult } from '../ui/puzzlePanel';
 import type { Line } from '../content/dialogue';
-import { DecorPicker, DecorReveal } from '../ui/decorUi';
-import { slotById, unplacedCount } from '../content/decorCatalog';
+import { DecorReveal } from '../ui/decorUi';
+import { unplacedEarned } from '../content/furniture';
 import { UI, type UiName } from '../content/frameIndex';
 
 export interface UIHandlers {
@@ -18,9 +19,10 @@ export interface UIHandlers {
   home?: () => void;
   hint?: () => void;
   book?: () => void;
+  /** The furniture button (bedroom only). */
+  decorate?: () => void;
   settings?: () => void;
-  dpad?: (dx: number, dy: number) => void;
-  /** The big A button: talk / open / plant / collect, or walk to the highlighted friend first. */
+    /** The big A button: talk / open / plant / collect, or walk to the highlighted friend first. */
   action?: () => void;
   /** The magic button: the form's spell (wand sparkles / rainbow bloom / bubbles). */
   magic?: () => void;
@@ -38,9 +40,9 @@ export class UIScene extends Phaser.Scene {
   private modalDepth = 0;
   private dialogue!: DialoguePanel;
   private puzzle!: PuzzlePanel;
-  private picker!: DecorPicker;
   private reveal!: DecorReveal;
   private homeBtn!: Btn;
+  private decorBtn!: Btn;
   private hud: Btn[] = [];
   private wandBtn!: Btn;
   private formBtns = new Map<Form, Btn>();
@@ -50,19 +52,24 @@ export class UIScene extends Phaser.Scene {
   private starsTxt!: Phaser.GameObjects.Text;
   private countTray!: Phaser.GameObjects.Container;
   private seenForms = 1;
-  private held: { dx: number; dy: number } | null = null;
   private heldId = -1;
-  private padArrows = new Map<string, Phaser.GameObjects.Image>();
+  private chrome: { setVisible(v: boolean): unknown }[] = [];
+  private knob!: Phaser.GameObjects.Image;
+  private knobGlow!: Phaser.GameObjects.Graphics;
+  /** Current steering vector (neutral when no finger is on the base). WorldScene reads this every frame. */
+  stick: Stick = NEUTRAL;
+  /** Test-only override so drivers can set an exact vector without a finger. */
+  debugStick: Stick | null = null;
   private aBtn!: Btn;
   private magicBtn!: Btn;
   private gearBtn!: Btn;
   /** Where the permanent d-pad sits (logical px). Exposed for the browser test drivers. */
-  readonly pad = { x: 62, y: 322, r: 66 };
+  readonly pad = { x: 64, y: 316, r: 58 };
 
   constructor() { super('UI'); }
 
   get modal() { return this.modalDepth > 0; }
-  get panel(): 'dialogue' | 'puzzle' | 'decor' | 'reveal' | null { return this.dialogue?.isOpen ? 'dialogue' : this.puzzle?.isOpen ? 'puzzle' : this.picker?.isOpen ? 'decor' : this.reveal?.isOpen ? 'reveal' : null; }
+  get panel(): 'dialogue' | 'puzzle' | 'reveal' | null { return this.dialogue?.isOpen ? 'dialogue' : this.puzzle?.isOpen ? 'puzzle' : this.reveal?.isOpen ? 'reveal' : null; }
 
   create() {
     const setModal = (on: boolean) => {
@@ -72,7 +79,6 @@ export class UIScene extends Phaser.Scene {
     };
     this.dialogue = new DialoguePanel(this, setModal);
     this.puzzle = new PuzzlePanel(this, setModal);
-    this.picker = new DecorPicker(this, setModal);
     this.reveal = new DecorReveal(this, setModal);
 
     const tap = (fn?: () => void) => () => { if (!this.modal) fn?.(); };
@@ -81,9 +87,10 @@ export class UIScene extends Phaser.Scene {
     const home = makeButton(this, 36, 30, 'icon_home', 1, tap(() => this.handlers.home?.()));
     const book = makeButton(this, 96, 30, 'icon_book', 1, tap(() => this.handlers.book?.()));
     this.homeBtn = home;
+    this.decorBtn = makeButton(this, 156, 30, 'icon_decorate', 1, tap(() => this.handlers.decorate?.()));
     this.hintBtn = makeButton(this, 476, 30, 'icon_hint', 1, tap(() => this.handlers.hint?.()));
     this.objBubble = this.add.container(416, 30);
-    this.add.image(222, 26, 'crown_hud').setScale(1);
+    const crownImg = this.add.image(222, 26, 'crown_hud').setScale(1);
     this.starsTxt = this.add.text(244, 16, '', { fontFamily: 'Trebuchet MS, Arial, sans-serif', fontSize: '20px', color: '#fff2a8', stroke: '#40255a', strokeThickness: 4 });
     // ---- bottom centre: the wand opens a small tray of forms (never overlaps the pad or the two big buttons)
     this.wandBtn = makeButton(this, 256, 352, 'icon_wand', 1.1, tap(() => this.toggleTray()));
@@ -95,20 +102,21 @@ export class UIScene extends Phaser.Scene {
     this.gearBtn = makeButton(this, 176, 362, 'icon_parent', 0.7, tap(() => this.handlers.settings?.()));
     this.gearBtn.container.setAlpha(0.5);
 
-    // ---- bottom left: the permanent four-way pad. Press and hold; slide the thumb to change direction.
+    // ---- bottom left: the analog joystick. Touch the base and drag; the knob follows the thumb and springs back on release.
     const { x: px, y: py, r } = this.pad;
     const base = this.add.graphics().setDepth(5);
-    base.fillStyle(0x40255a, 0.28).fillCircle(px, py, r);
-    base.lineStyle(3, 0xffffff, 0.35).strokeCircle(px, py, r);
-    const arrows: [UiName, number, number, string][] = [['icon_up', 0, -1, 'up'], ['icon_down', 0, 1, 'down'], ['icon_left', -1, 0, 'left'], ['icon_right', 1, 0, 'right']];
-    for (const [icon, dx, dy, name] of arrows) {
-      const im = this.add.image(px + dx * 40, py + dy * 40, 'ui', UI[icon]).setScale(1.25).setAlpha(0.92).setDepth(6);
-      this.padArrows.set(name, im);
-    }
-    this.input.on('pointerdown', (p: Phaser.Input.Pointer) => { if (!this.modal && this.inPad(p.x, p.y) && this.heldId < 0) { this.heldId = p.id; this.setHeld(p); } });
-    this.input.on('pointermove', (p: Phaser.Input.Pointer) => { if (p.id === this.heldId) this.setHeld(p); });
+    base.fillStyle(0x40255a, 0.32).fillCircle(px, py, r);
+    base.fillStyle(0xffffff, 0.08).fillCircle(px, py, r * 0.62);
+    base.lineStyle(3, 0xffffff, 0.4).strokeCircle(px, py, r);
+    base.lineStyle(2, 0xffffff, 0.18).strokeCircle(px, py, r * 0.62);
+    for (let i = 0; i < 8; i++) { const a = (i * Math.PI) / 4; base.fillStyle(0xffffff, 0.45).fillCircle(px + Math.cos(a) * (r - 7), py + Math.sin(a) * (r - 7), 2); }
+    this.knobGlow = this.add.graphics().setDepth(5.5);
+    this.knob = this.add.image(px, py, 'ui', UI.icon_knob).setScale(1.55).setAlpha(0.88).setDepth(6);
+    this.input.on('pointerdown', (p: Phaser.Input.Pointer) => { if (!this.modal && this.heldId < 0 && this.inPad(p.x, p.y)) { this.heldId = p.id; this.moveStick(p); } });
+    this.input.on('pointermove', (p: Phaser.Input.Pointer) => { if (p.id === this.heldId) this.moveStick(p); });
     const up = (p: Phaser.Input.Pointer) => { if (p.id === this.heldId) this.releasePad(); };
     this.input.on('pointerup', up); this.input.on('pointerupoutside', up);
+    this.input.on('pointercancel', up);
     this.input.on('gameout', () => this.releasePad());
     this.game.events.on(Phaser.Core.Events.BLUR, () => this.releasePad());
     this.game.events.on(Phaser.Core.Events.HIDDEN, () => this.releasePad());
@@ -119,33 +127,36 @@ export class UIScene extends Phaser.Scene {
     this.aBtn.container.setDepth(6); this.magicBtn.container.setDepth(6);
 
     this.countTray = this.add.container(256, 70).setVisible(false);
-    this.hud = [book, home, this.hintBtn, this.wandBtn, this.gearBtn, this.aBtn, this.magicBtn];
+    this.chrome = [base, this.knob, this.knobGlow, this.objBubble, crownImg, this.starsTxt];
+    this.hud = [book, home, this.decorBtn, this.hintBtn, this.wandBtn, this.gearBtn, this.aBtn, this.magicBtn];
     this.refresh();
   }
 
   // ------------------------------------------------------------------ HUD state
   update() {
-    // While a direction is held, ask the world for the next tile every frame (it ignores the call mid-step), so walking is smooth.
-    if (this.held && !this.modal) this.handlers.dpad?.(this.held.dx, this.held.dy);
+    if (this.modal && (this.heldId >= 0 || this.stick.mag > 0)) this.releasePad();
   }
 
-  private inPad(x: number, y: number) { return Math.hypot(x - this.pad.x, y - this.pad.y) <= this.pad.r + 6; }
+  private inPad(x: number, y: number) { return Math.hypot(x - this.pad.x, y - this.pad.y) <= this.pad.r + 14; }
 
-  private setHeld(p: Phaser.Input.Pointer) {
+  private moveStick(p: Phaser.Input.Pointer) {
     const dx = p.x - this.pad.x, dy = p.y - this.pad.y;
-    let dir: { dx: number; dy: number } | null = null, name = '';
-    if (Math.hypot(dx, dy) >= 10) {
-      if (Math.abs(dx) >= Math.abs(dy)) { dir = { dx: Math.sign(dx), dy: 0 }; name = dx > 0 ? 'right' : 'left'; }
-      else { dir = { dx: 0, dy: Math.sign(dy) }; name = dy > 0 ? 'down' : 'up'; }
-    }
-    this.held = dir;
-    this.padArrows.forEach((im, k) => im.setScale(k === name ? 1.5 : 1.25).setAlpha(k === name ? 1 : 0.92));
+    this.stick = stickFromOffset(dx, dy, this.pad.r);
+    const k = knobOffset(dx, dy, this.pad.r * 0.78);
+    this.knob.setPosition(this.pad.x + k.x, this.pad.y + k.y).setAlpha(1);
+    this.knobGlow.clear();
+    if (this.stick.mag > 0) this.knobGlow.fillStyle(0xffffff, 0.12 + 0.18 * this.stick.mag).fillCircle(this.pad.x + k.x, this.pad.y + k.y, 30);
   }
 
-  private releasePad() {
-    this.held = null; this.heldId = -1;
-    this.padArrows.forEach((im) => im.setScale(1.25).setAlpha(0.92));
+  releasePad() {
+    this.heldId = -1;
+    this.stick = NEUTRAL;
+    this.knobGlow?.clear();
+    if (this.knob) { this.tweens.killTweensOf(this.knob); this.tweens.add({ targets: this.knob, x: this.pad.x, y: this.pad.y, alpha: 0.88, duration: dur(90) }); }
   }
+
+  /** What the world should steer with this frame (a test override wins). */
+  get steering(): Stick { return this.debugStick ?? this.stick; }
 
   /** WorldScene tells the A button whether something is in reach (glow) or merely highlighted (walk there first). */
   setAction(state: 'none' | 'near' | 'far') {
@@ -168,7 +179,10 @@ export class UIScene extends Phaser.Scene {
       b.container.setAlpha(f === st.form ? 1 : 0.85);
     });
     // something new to place? the Home button glows until the child has put it in the room (not while already there)
-    this.homeBtn.pulse(unplacedCount(st.unlockedDecor, st.bedroom) > 0 && st.scene !== 'bedroom');
+    const waiting = unplacedEarned(st.unlockedDecor, st.bedroomLayout).length > 0;
+    this.homeBtn.pulse(waiting && st.scene !== 'bedroom');
+    this.decorBtn.setVisible(st.scene === 'bedroom' && !this.editing);
+    this.decorBtn.pulse(waiting && st.scene === 'bedroom');
     this.objBubble.removeAll(true);
     const step = chapterComplete(st) ? null : nextObjective(st);
     if (step) {
@@ -179,10 +193,25 @@ export class UIScene extends Phaser.Scene {
   }
 
   get dialogueText() { return this.dialogue.current; }
-  get pickerCards() { return this.picker.cards; }
   get puzzleCards() { return this.puzzle.cardPos; }
 
   pulseHint(on: boolean) { this.hintBtn.pulse(on); }
+  pulseDecorate(on: boolean) { this.decorBtn?.pulse(on); }
+
+  editing = false;
+  /** Decorate mode owns the screen: hide the adventure controls, stop steering, block world taps. */
+  setEditing(on: boolean) {
+    if (on === this.editing) return;
+    this.editing = on;
+    this.modalDepth = Math.max(0, this.modalDepth + (on ? 1 : -1));
+    this.releasePad();
+    this.toggleTray(false);
+    const vis = !on;
+    for (const o of this.chrome) o.setVisible(vis);
+    this.hud.forEach((b) => b.setVisible(vis));
+    this.hud.forEach((b) => b.container.setAlpha(this.modal ? 0.45 : 1));
+    if (vis) this.refresh();
+  }
 
   private toggleTray(open = !this.trayOpen) {
     this.trayOpen = open;
@@ -230,12 +259,6 @@ export class UIScene extends Phaser.Scene {
   }
 
   // ------------------------------------------------------------------ bedroom decorating
-  /** Open the picker for one hotspot. Resolves with item id / null (empty it) / undefined (closed). */
-  pickDecor(slotId: string, current: string | undefined) {
-    const slot = slotById(slotId);
-    return slot ? this.picker.pick(slot, services.save.state.unlockedDecor, current) : Promise.resolve(undefined);
-  }
-
   /** The "new thing earned!" moment. */
   revealDecor(id: string) { return this.reveal.show(id); }
 

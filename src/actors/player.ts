@@ -3,6 +3,9 @@ import type { Form } from '../types/game';
 import type { Tile } from '../world/types';
 import { FORM_SPEED } from './transformations';
 import { lookKey } from '../art/looks';
+import type { NavGrid } from '../world/navigation';
+import { steerMove, footFree, tileOfFoot } from '../world/steer';
+import { facingFor, stickVelocity, type Stick } from '../input/joystick';
 
 export type Dir = 'down' | 'up' | 'left' | 'right';
 
@@ -23,6 +26,8 @@ export class Player {
   private onDone?: () => void;
   private gallop = false;
   private lastKey = '';
+  /** True while the joystick is driving (continuous movement, no tile path). */
+  steering = false;
 
   constructor(private scene: Phaser.Scene, public form: Form, tile: Tile) {
     this.tile = { ...tile };
@@ -59,7 +64,46 @@ export class Player {
     if (!this.moving) { this.idle(); onDone?.(); }
   }
 
+  /** Sprite y minus feet y: the collision point is the princess's feet, not her sprite anchor. */
+  private get footLift() { return this.form === 'mermaid' ? 8 : 6; }
+  get foot() { return { x: this.sprite.x, y: this.sprite.y - this.footLift }; }
+
+  /**
+   * Joystick movement for one frame. Slides along walls using the tile grid as the authority, normalised so diagonals are not
+   * faster, and reports each new tile entered so warps and story steps fire exactly once per tile.
+   */
+  steer(stick: Stick, dtMs: number, grid: NavGrid, onStep?: (t: Tile) => void) {
+    if (stick.mag <= 0) { this.endSteer(); return; }
+    if (this.path.length) { this.path = []; this.onStep = undefined; this.onDone = undefined; } // a tapped route is cancelled: no stale callbacks
+    this.steering = true; this.moving = true;
+    let f = this.foot;
+    if (!footFree(grid, f.x, f.y)) { // never stay wedged in something that appeared under her feet
+      const c = tilePos(this.tile, this.form);
+      this.sprite.setPosition(c.x, c.y); f = this.foot;
+    }
+    const speed = FORM_SPEED[this.form];
+    const { vx, vy } = stickVelocity(stick, speed);
+    const dt = Math.min(dtMs, 50) / 1000;
+    const r = steerMove(grid, f.x, f.y, vx * dt, vy * dt);
+    this.sprite.setPosition(r.x, r.y + this.footLift);
+    const nd = facingFor(stick, this.dir);
+    this.gallop = this.form === 'unicorn' && stick.mag > 0.7;
+    const blockedAll = (r.blockedX && Math.abs(vx) > 0.01 && Math.abs(vy) < 0.01) || (r.blockedY && Math.abs(vy) > 0.01 && Math.abs(vx) < 0.01);
+    this.dir = nd;
+    if (blockedAll) this.idle(); else this.moveAnim();
+    const nt = tileOfFoot(r.x, r.y);
+    if (nt.x !== this.tile.x || nt.y !== this.tile.y) { this.tile = nt; onStep?.(nt); }
+  }
+
+  /** Called when the thumb lifts: stand still facing where she was walking. */
+  endSteer() {
+    if (!this.steering) return;
+    this.steering = false; this.moving = false; this.gallop = false;
+    this.idle();
+  }
+
   stop() {
+    this.steering = false;
     this.path = [];
     this.moving = false;
     this.onStep = undefined;
@@ -91,7 +135,7 @@ export class Player {
   cast(): Promise<void> {
     return new Promise((resolve) => {
       let done = false;
-      const end = () => { if (done) return; done = true; this.lastKey = ''; this.idle(); resolve(); };
+      const end = () => { if (done) return; done = true; if (!this.moving && !this.steering) { this.lastKey = ''; this.idle(); } resolve(); };
       this.lastKey = '';
       this.sprite.play(`${this.form}_${CAST[this.form]}_${this.dir}`);
       this.sprite.once('animationcomplete', end);
@@ -101,7 +145,7 @@ export class Player {
 
   update(dtMs: number) {
     this.sprite.setDepth(this.sprite.y);
-    if (!this.moving) return;
+    if (!this.moving || this.steering || !this.path.length) return;
     const target = this.path[this.idx];
     const tp = tilePos(target, this.form);
     const dx = tp.x - this.sprite.x, dy = tp.y - this.sprite.y;

@@ -6,16 +6,17 @@ import type { MapDef, ObjDef, PropDef, Tile } from '../world/types';
 import type { Line } from '../content/dialogue';
 import { getMap } from '../world/maps';
 import {
-  approachTile, effectiveTile, findPath, makeGrid, nearestPassable, safeSpawn, visibleObjects, withinRadius, type NavGrid
+  approachTile, blockKey, effectiveTile, findPath, makeGrid, nearestPassable, safeSpawn, visibleObjects, withinRadius, type NavGrid
 } from '../world/navigation';
 import { guideTarget, OBJECTIVE_NARRATION } from '../world/guide';
-import { interact, onArrive, session, type StoryCtx } from '../world/story';
+import { interact, lampPlaced, onArrive, session, type StoryCtx } from '../world/story';
 import { Player, tilePos } from '../actors/player';
 import { narrationForPlan, planFormChange } from '../actors/transformations';
 import { completeFlag, nextObjective } from '../systems/questEngine';
 import { services, applySettingsToAudio } from '../systems/services';
 import { reducedEffects, sparkleCount, dur } from '../systems/accessibility';
-import { decorById, SLOTS, slotById, slotHasNewOption } from '../content/decorCatalog';
+import { COOLDOWN_MS, DIRS, Effects, REACTIONS, SHOT_TILES_PER_SEC, aim, fly, ready, targetsOf, type SpellTarget } from '../world/spells';
+import { FURNITURE, LayoutEditor, furnitureBlockedTiles, hasItem, spot, tableUnder, type PlacedItem } from '../content/furniture';
 import { ITEM, TILE, UI } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
 
@@ -37,7 +38,9 @@ export class WorldScene extends Phaser.Scene {
   private objPos = new Map<string, Tile>();
   private props: { def: PropDef; sprite: Phaser.GameObjects.Sprite }[] = [];
   private decorSprites: Phaser.GameObjects.GameObject[] = [];
-  private slotMarks: Phaser.GameObjects.Sprite[] = [];
+  /** Tiles blocked by big furniture (rebuilt whenever the layout changes). */
+  private furnBlocked = new Set<number>();
+  editor?: LayoutEditor;
   private waterCells: { x: number; y: number; phase: number }[] = [];
   private waterTick = 0;
   private treeSprite?: Phaser.GameObjects.Sprite;
@@ -57,7 +60,7 @@ export class WorldScene extends Phaser.Scene {
     this.leaving = false;
     this.busy = false;
     this.idleMs = 0;
-    this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.slotMarks = []; this.revealQueue = []; this.waterCells = [];
+    this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.furnBlocked = new Set(); this.revealQueue = []; this.waterCells = [];
     this.treeSprite = undefined;
     this.waterTick = 0;
 
@@ -71,7 +74,8 @@ export class WorldScene extends Phaser.Scene {
     this.buildProps();
     this.buildObjects();
 
-    this.grid = makeGrid(this.map, st.flags, st.form);
+    this.refreshFurnBlocked();
+    this.grid = makeGrid(this.map, st.flags, st.form, this.furnBlocked);
     const wanted = this.init0.resume && st.tile ? st.tile : this.map.spawns[this.init0.spawn ?? st.spawn];
     const start = safeSpawn(this.grid, wanted);
     this.player = new Player(this, st.form, start);
@@ -103,8 +107,8 @@ export class WorldScene extends Phaser.Scene {
         home: () => this.goHome(),
         hint: () => void this.hint(true),
         book: () => this.openOverlay('Stickerbook'),
+        decorate: () => this.beginDecorate(),
         settings: () => this.openOverlay('ParentSettings'),
-        dpad: (dx, dy) => this.dpadStep(dx, dy),
         action: () => this.actionPress(),
         magic: () => void this.magicPress()
       };
@@ -234,45 +238,85 @@ export class WorldScene extends Phaser.Scene {
       if (animated) this.tweens.add({ targets: this.treeSprite, x: tx, duration: dur(900), ease: 'Sine.InOut' });
       else this.treeSprite.x = tx;
     }
-    this.grid = makeGrid(this.map, flags, st.form);
-    this.renderSlotMarks();
+    this.grid = makeGrid(this.map, flags, st.form, this.furnBlocked);
   }
 
   // ------------------------------------------------------------------ bedroom decorating
-  /** Draw every placed item at its hotspot. `popSlot` (the item just placed) gets a little bounce-in. */
-  private renderDecor(popSlot?: string) {
+  private refreshFurnBlocked() {
+    this.furnBlocked = new Set();
+    if (this.map.id !== 'bedroom') return;
+    for (const t of furnitureBlockedTiles(this.state.bedroomLayout)) this.furnBlocked.add(blockKey(t.x, t.y));
+  }
+
+  /** Draws every placed piece. `pop` (an instance id) gets a little bounce-in. */
+  private renderDecor(pop?: string) {
     this.decorSprites.forEach((d) => d.destroy());
     this.decorSprites = [];
     if (this.map.id !== 'bedroom') return;
-    for (const [slotId, decorId] of Object.entries(this.state.bedroom)) {
-      const d = decorById(decorId);
-      const sl = slotById(slotId);
-      if (!d || !sl) continue;
-      const x = sl.x * T + T / 2 + (d.ox ?? 0);
-      const bottom = (sl.y + 1) * T + (d.dy ?? 0);
-      const s = this.makeSprite(d.sprite.key, x, bottom, d.sprite.frame);
-      s.setDepth(d.layer === 'floor' ? 1 : d.layer === 'wall' ? 50 : bottom + (decorId === 'canopy_bed' ? 1 : 0));
+    const layout = this.editor?.layout ?? this.state.bedroomLayout;
+    for (const p of layout) {
+      const d = FURNITURE[p.item];
+      if (!d) continue;
+      const table = tableUnder(layout, p);
+      const at = spot(d, p.x, p.y, table ? FURNITURE[table.item] : undefined);
+      const s = this.makeSprite(d.key, at.x + (d.ox ?? 0), at.y + (d.dy ?? 0), d.frame).setDepth(at.depth);
+      if (p.flip) s.setFlipX(true);
       this.decorSprites.push(s);
-      if (slotId === popSlot) {
+      if (p.id === pop) {
         this.tweens.add({ targets: s, scale: { from: 0.4, to: 1 }, duration: dur(300), ease: 'Back.Out' });
-        this.sparkleAt(sl.x, sl.y, 8);
+        this.sparkleAt(p.x + Math.floor(d.w / 2), p.y + d.h - 1, 8);
       }
     }
-    this.renderSlotMarks();
   }
 
-  /** Gentle sparkles on hotspots where something unlocked can still be placed. */
-  private renderSlotMarks() {
-    this.slotMarks.forEach((s) => s.destroy());
-    this.slotMarks = [];
-    if (this.map.id !== 'bedroom') return;
-    for (const sl of SLOTS) {
-      if (!slotHasNewOption(sl.id, this.state.unlockedDecor, this.state.bedroom)) continue;
-      const m = this.makeSprite('items', sl.x * T + T / 2, (sl.y + 1) * T - 4, undefined, 'sparkle').setDepth(9500).setScale(1.3);
-      this.tweens.add({ targets: m, y: m.y - 4, yoyo: true, repeat: -1, duration: 700 });
-      this.slotMarks.push(m);
-    }
+  /** The layout changed (placed, moved, put away, undone): redraw, rebuild walking, save. */
+  layoutChanged(layout: PlacedItem[], pop?: string) {
+    this.state.bedroomLayout = layout.map((p) => ({ ...p }));
+    this.refreshFurnBlocked();
+    this.grid = makeGrid(this.map, this.state.flags, this.player.form, this.furnBlocked);
+    this.renderDecor(pop);
+    services.save.save();
   }
+
+  /** Never leave her standing inside a new piece of furniture. */
+  private freeThePrincess() {
+    if (this.grid.passable(this.player.tile.x, this.player.tile.y)) return;
+    const t = safeSpawn(this.grid, this.player.tile);
+    this.player.teleport(t);
+    this.state.tile = { ...t };
+  }
+
+  // ------------------------------------------------------------------ decorate mode
+  beginDecorate() {
+    if (this.map.id !== 'bedroom' || this.editing || this.busy || this.leaving || this.ui.modal) return;
+    this.editing = true;
+    this.player.endSteer(); this.player.stop();
+    this.editor = new LayoutEditor(this.state.bedroomLayout, () => this.state.unlockedDecor);
+    this.ui.setEditing(true);
+    const cam = this.cameras.main;
+    cam.stopFollow(); cam.setZoom(1); cam.setScroll(-64, -4);
+    this.scene.launch('Decorate', { world: this });
+  }
+
+  /** Called by the Decorate scene when the child is done. */
+  async endDecorate() {
+    const layout = this.editor?.layout ?? this.state.bedroomLayout;
+    this.editor = undefined;
+    this.scene.stop('Decorate');
+    this.layoutChanged(layout);
+    this.freeThePrincess();
+    this.editing = false;
+    const cam = this.cameras.main;
+    cam.startFollow(this.player.sprite, true, 0.12, 0.12);
+    this.setupCamera();
+    this.ui.setEditing(false);
+    this.buttonsLockedUntil = performance.now() + 600;
+    if (hasItem(layout, 'star_lamp')) { this.busy = true; try { await lampPlaced(this.ctx); } finally { this.busy = false; this.afterAction(); } }
+  }
+
+  /** Screen position of a room pixel while decorating (camera is fixed at zoom 1). */
+  toScreen(wx: number, wy: number) { const c = this.cameras.main; return { x: (wx - c.scrollX) * c.zoom, y: (wy - c.scrollY) * c.zoom }; }
+  tileAtScreen(px: number, py: number): Tile { const w = this.cameras.main.getWorldPoint(px, py); return { x: Math.floor(w.x / T), y: Math.floor(w.y / T) }; }
 
   // ------------------------------------------------------------------ "new item" reveals
   private revealQueue: string[] = [];
@@ -328,8 +372,6 @@ export class WorldScene extends Phaser.Scene {
         self.ui.refresh();
         return true;
       },
-      renderDecor: (slot?: string) => self.renderDecor(slot),
-      pickDecor: (slot: string, cur: string | undefined) => self.ui.pickDecor(slot, cur),
       sparkle: (t: Tile) => self.sparkleAt(t.x, t.y, 8)
     };
   }
@@ -472,19 +514,12 @@ export class WorldScene extends Phaser.Scene {
     services.save.save();
   }
 
-  /** One tile in a direction (on-screen arrows). Walking into a friend or object interacts with it. */
-  private dpadStep(dx: number, dy: number) {
-    if (this.busy || this.leaving || this.player.moving) return;
-    this.idleMs = 0;
-    const from = this.player.tile, to = { x: from.x + dx, y: from.y + dy };
-    this.player.face(to.x, to.y);
-    if (this.grid.passable(to.x, to.y)) {
-      this.player.walk([from, to], (t) => this.onStep(t), () => this.afterWalk());
-      return;
-    }
-    const obj = this.pick(to);
-    if (obj && obj.kind !== 'warp') void this.goTo(obj);
-    else this.bonk();
+  /** Joystick: smooth analog walking. A tapped route or a stale callback never survives the thumb touching the stick. */
+  private driveStick(dt: number) {
+    const st = this.ui?.steering;
+    const can = !!st && st.mag > 0 && !this.busy && !this.leaving && !this.ui.modal && !this.editing;
+    if (can) { this.idleMs = 0; this.player.steer(st!, dt, this.grid, (t) => this.onStep(t)); }
+    else if (this.player.steering) { this.player.endSteer(); this.afterWalk(); }
   }
 
   // ------------------------------------------------------------------ A button + magic button
@@ -493,6 +528,8 @@ export class WorldScene extends Phaser.Scene {
   private cueMs = 0;
   /** After a room screen closes, a second tap meant for its "done" button must not land on A / magic and reopen it. */
   private buttonsLockedUntil = 0;
+  /** True while the furniture editor owns the screen (set by the decorate mode). */
+  editing = false;
   private cueTarget: { obj: ObjDef; near: boolean } | null = null;
 
   /** The friend / thing the A button would act on: the nearest one in reach, else the nearest one on screen (A walks there first). */
@@ -505,7 +542,7 @@ export class WorldScene extends Phaser.Scene {
       const d = Math.hypot(me.x - p.x, me.y - p.y);
       const near = withinRadius(me, p);
       if (!near && d > 10) continue;
-      const score = d + (o.kind === 'slot' ? 1.5 : 0) + (near ? 0 : 20);
+      const score = d + (near ? 0 : 20);
       if (!best || score < best.score) best = { obj: o, near, score };
     }
     return best;
@@ -535,7 +572,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** A: act on the highlighted thing. In reach -> do it. Highlighted but far -> walk there, then do it. Nothing -> a gentle nudge. */
   private actionPress() {
-    if (this.busy || this.leaving || this.ui?.modal || performance.now() < this.buttonsLockedUntil) return;
+    if (this.busy || this.leaving || this.editing || this.ui?.modal || performance.now() < this.buttonsLockedUntil) return;
     this.idleMs = 0;
     const t = this.contextTarget();
     if (!t) { this.bonk(); void this.hint(false); return; }
@@ -551,13 +588,117 @@ export class WorldScene extends Phaser.Scene {
       const bloom = visibleObjects(this.map, this.state.flags).find((o) => o.id.startsWith('bloom_') && withinRadius(me, this.live(o)));
       if (bloom) { void this.goTo(bloom); return; }
     }
+    if (this.player.form === 'princess') {
+      if (!ready(performance.now(), this.lastShot)) return;
+      this.shootWand();
+      // she keeps walking while she zaps with the other thumb; standing still she waves the wand (not blocking, so zaps stay snappy)
+      if (!this.player.steering && !this.player.moving) void this.player.cast();
+      return;
+    } else { services.audio.sfx(this.player.form === 'mermaid' ? 'splash' : 'sparkle'); this.sparkleAt(me.x, me.y - 1, 10); }
     this.busy = true;
-    try {
-      services.audio.sfx(this.player.form === 'mermaid' ? 'splash' : 'sparkle');
-      this.sparkleAt(me.x, me.y - 1, 10);
-      await this.player.cast();
-    } finally { this.busy = false; }
+    try { await this.player.cast(); } finally { this.busy = false; }
   }
+
+  // ------------------------------------------------------------------ princess wand projectile
+  private lastShot = -1e9;
+  private shots: { id?: string; kind?: string; dist: number; blocked: boolean }[] = [];
+  private readonly spellFx = new Effects();
+  private fountainSpray?: Phaser.Time.TimerEvent;
+
+  private shootWand() {
+    this.lastShot = performance.now();
+    const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T };
+    const targets = targetsOf(this.map);
+    const a = aim(from, DIRS[this.player.dir], targets);
+    const f = fly(from, a.dir, targets, (x, y) => !this.grid.passable(x, y));
+    this.shots.push({ id: f.hit?.id, kind: f.hit?.kind, dist: f.dist, blocked: f.blocked });
+    if (this.shots.length > 40) this.shots.shift();
+    services.audio.sfx('wand');
+    const sx = foot.x + a.dir.x * 8, sy = foot.y - 10 + a.dir.y * 4;
+    const ex = f.end.x * T, ey = f.end.y * T - 10;
+    const bolt = this.add.image(sx, sy, 'fx_bolt').setDepth(9999);
+    const flight = Math.max(80, (f.dist / SHOT_TILES_PER_SEC) * 1000);
+    if (!reducedEffects()) {
+      this.tweens.add({ targets: bolt, angle: 360, duration: 500, repeat: -1 });
+      this.tweens.add({ targets: bolt, scale: { from: 0.8, to: 1.15 }, duration: 120, yoyo: true, repeat: -1 });
+    }
+    let last = 0;
+    this.tweens.add({
+      targets: bolt, x: ex, y: ey, duration: flight, ease: 'Sine.Out',
+      onUpdate: () => {
+        if (reducedEffects() || performance.now() - last < 38) return;
+        last = performance.now();
+        const t = this.add.image(bolt.x + Phaser.Math.Between(-2, 2), bolt.y + Phaser.Math.Between(-2, 2), 'fx_trail').setDepth(9998).setAlpha(0.9);
+        this.tweens.add({ targets: t, alpha: 0, scale: 0.2, y: t.y + 6, duration: 380, onComplete: () => t.destroy() });
+      },
+      onComplete: () => {
+        bolt.destroy();
+        if (f.hit) this.spellReact(f.hit); else this.sparkleAt(Math.floor(f.end.x), Math.floor(f.end.y), 5);
+      }
+    });
+  }
+
+  private propSpriteFor(t: SpellTarget): Phaser.GameObjects.Sprite | undefined {
+    const m = /#(\d+)$/.exec(t.id); return m ? this.props[Number(m[1])]?.sprite : undefined;
+  }
+
+  private puff(x: number, y: number, key: string, n: number, spread: number, rise: number, ms: number, fall = false) {
+    for (let i = 0; i < sparkleCount(n); i++) {
+      const sp = this.add.image(x + Phaser.Math.Between(-spread, spread), y + Phaser.Math.Between(-6, 6), key).setDepth(9999).setAngle(Phaser.Math.Between(0, 360));
+      this.tweens.add({ targets: sp, x: sp.x + Phaser.Math.Between(-spread, spread), y: sp.y + (fall ? Phaser.Math.Between(18, 34) : -rise), alpha: 0, angle: sp.angle + Phaser.Math.Between(-120, 120), duration: dur(ms + Phaser.Math.Between(0, 400)), delay: fall ? i * 30 : 0, onComplete: () => sp.destroy() });
+    }
+  }
+
+  private spellReact(t: SpellTarget) {
+    const r = REACTIONS[t.kind], now = performance.now();
+    const fresh = this.spellFx.start(t.id, r.ms, now);
+    services.audio.sfx(r.sfx);
+    const tx = t.x * T, ty = t.y * T;
+    const spr = this.propSpriteFor(t);
+    if (spr && !reducedEffects()) this.tweens.add({ targets: spr, angle: { from: -3, to: 3 }, duration: 90, yoyo: true, repeat: 3, onComplete: () => spr.setAngle(0) });
+    if (t.kind === 'tree') {
+      this.puff(tx, ty - 34, 'fx_petal', 16, 22, 6, 1400, true);
+      if (fresh) { const apples = 2 + (Math.abs(Math.round(t.x * 7 + t.y * 3)) % 3); for (let i = 0; i < apples; i++) { const a = this.add.image(tx + Phaser.Math.Between(-14, 14), ty - 30 - i * 4, 'fx_apple').setDepth(9999); this.tweens.add({ targets: a, y: ty + 10 + i * 3, duration: dur(450 + i * 120), ease: 'Bounce.Out', onComplete: () => this.tweens.add({ targets: a, alpha: 0, delay: dur(r.ms - 900), duration: dur(600), onComplete: () => a.destroy() }) }); } }
+      this.sparkleAt(Math.round(t.x - 0.5), Math.round(t.y - 1), 8);
+    } else if (t.kind === 'fountain') {
+      this.startSpray(tx, ty, r.ms);
+    } else if (t.kind === 'flower') {
+      this.puff(tx, ty - 4, 'fx_petal', 12, 14, 26, 900);
+      const g = this.add.image(tx, ty, 'fx_glow').setDepth(9990).setAlpha(0.8).setScale(0.8);
+      this.tweens.add({ targets: g, alpha: 0, scale: 1.6, duration: dur(900), onComplete: () => g.destroy() });
+    } else if (t.kind === 'glow') {
+      const g = this.add.image(tx, ty - 4, 'fx_glow').setDepth(5).setAlpha(0.9).setScale(1.1);
+      if (!reducedEffects()) this.tweens.add({ targets: g, alpha: 0.45, scale: 1.5, duration: 500, yoyo: true, repeat: Math.max(1, Math.floor(r.ms / 1000)) });
+      this.tweens.add({ targets: g, alpha: 0, delay: dur(r.ms), duration: dur(500), onComplete: () => g.destroy() });
+      this.sparkleAt(Math.round(t.x - 0.5), Math.round(t.y - 0.5), 8);
+    } else {
+      this.puff(tx, ty - 10, 'fx_glow', 6, 30, 14, 800);
+      for (let i = 0; i < sparkleCount(3); i++) { const b = this.add.image(tx + (i - 1) * 16, ty - 8, 'fx_flutter').setDepth(9999); this.tweens.add({ targets: b, x: b.x + Phaser.Math.Between(-50, 50), y: b.y - Phaser.Math.Between(40, 70), alpha: 0, scaleY: { from: 1, to: 0.5 }, duration: dur(1800), yoyo: false, onComplete: () => b.destroy() }); }
+      this.sparkleAt(Math.round(t.x - 0.5), Math.round(t.y - 0.5), 10);
+    }
+
+  }
+
+  /** Taller fountain spray for a few seconds; shooting it again just keeps it going. */
+  private startSpray(x: number, y: number, ms: number) {
+    this.sprayUntil = performance.now() + ms;
+    if (this.fountainSpray) return;
+    const jet = this.add.image(x, y - 8, 'fx_jet').setOrigin(0.5, 1).setDepth(9999).setScale(1, 0.2);
+    this.tweens.add({ targets: jet, scaleY: reducedEffects() ? 1.1 : 1.7, duration: dur(280), ease: 'Back.Out' });
+    this.fountainSpray = this.time.addEvent({
+      delay: reducedEffects() ? 220 : 90, loop: true,
+      callback: () => {
+        if (performance.now() > this.sprayUntil) {
+          this.fountainSpray?.remove(); this.fountainSpray = undefined;
+          this.tweens.add({ targets: jet, scaleY: 0.1, alpha: 0, duration: dur(300), onComplete: () => jet.destroy() });
+          return;
+        }
+        const d = this.add.image(x + Phaser.Math.Between(-4, 4), y - 8 - 40, 'fx_drop').setDepth(9999);
+        this.tweens.add({ targets: d, x: d.x + Phaser.Math.Between(-26, 26), y: y + 2, alpha: 0.2, duration: dur(560), ease: 'Quad.In', onComplete: () => d.destroy() });
+      }
+    });
+  }
+  private sprayUntil = 0;
 
   // ------------------------------------------------------------------ scene travel
   private travel(scene: SceneId, spawn: string) {
@@ -655,7 +796,7 @@ export class WorldScene extends Phaser.Scene {
     this.sparkleAt(this.player.tile.x, this.player.tile.y, 14);
     this.player.setForm(target);
     st.form = target;
-    this.grid = makeGrid(this.map, st.flags, target);
+    this.grid = makeGrid(this.map, st.flags, target, this.furnBlocked);
     this.cameras.main.flash(dur(200), 255, 255, 255);
     this.ui.refresh();
   }
@@ -672,6 +813,7 @@ export class WorldScene extends Phaser.Scene {
     this.ui.pulseHint(false);
     const g = guideTarget(st, this.map.id, this.player.form);
     if (g.type === 'home') { this.drawBounce(this.player.tile); return; }
+    if (g.type === 'decorate') { this.ui.pulseDecorate(true); this.time.delayedCall(4000, () => this.ui?.pulseDecorate(false)); return; }
     if (g.type !== 'object') return;
     const obj = this.map.objects.find((o) => o.id === g.obj);
     if (!obj) return;
@@ -704,6 +846,7 @@ export class WorldScene extends Phaser.Scene {
   // ------------------------------------------------------------------ per-frame
   update(_t: number, dt: number) {
     if (!this.player) return;
+    this.driveStick(dt);
     this.player.update(dt);
     if (!reducedEffects() && this.waterCells.length) {
       this.waterTick += dt;
@@ -738,11 +881,19 @@ export class WorldScene extends Phaser.Scene {
       busy: () => this.busy,
       modal: () => !!this.ui?.modal,
       setNarration: (on: boolean) => { this.state.settings.narration = on; applySettingsToAudio(); },
-      pickerCards: () => this.ui.pickerCards.map((c) => ({ ...c })),
+      layout: () => (this.editor?.layout ?? this.state.bedroomLayout).map((p) => ({ ...p })),
+      editing: () => this.editing,
       puzzleCards: () => this.ui.puzzleCards.map((c) => ({ ...c })),
       moving: () => this.player.moving,
+      steering: () => this.player.steering,
+      foot: () => this.player.foot,
+      stick: (x: number, y: number, mag: number) => { this.ui.debugStick = mag > 0 ? { x, y, mag } : null; },
       action: () => this.actionPress(),
       magic: () => void this.magicPress(),
+      shots: () => this.shots.map((q) => ({ ...q })),
+      sprayOn: () => !!this.fountainSpray,
+      effectsOn: () => this.spellFx.count(performance.now()),
+      cooldown: COOLDOWN_MS,
       cue: () => (this.cueTarget ? { id: this.cueTarget.obj.id, near: this.cueTarget.near } : null),
       uiButtons: () => this.ui.buttonPos,
       dialogueText: () => this.ui.dialogueText,

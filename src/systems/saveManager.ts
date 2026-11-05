@@ -1,5 +1,6 @@
+import { defaultLayout, migrateLegacy, sanitizeLayout, type PlacedItem } from '../content/furniture';
 import type { GameState, SceneId } from '../types/game';
-import { sanitizeDecor, STARTER_ROOM } from '../content/decorCatalog';
+import { sanitizeDecor } from '../content/decorCatalog';
 import { defaultRoomTheme, sanitizeRoomTheme } from '../content/roomThemes';
 import { defaultAppearance, defaultWardrobe, sanitizeWardrobe } from '../content/appearance';
 
@@ -23,7 +24,8 @@ export function defaultState(): GameState {
     stars: 0,
     stickers: [],
     unlockedDecor: [],
-    bedroom: { ...STARTER_ROOM },
+    bedroom: {},
+    bedroomLayout: defaultLayout(),
     roomTheme: defaultRoomTheme(),
     appearance: defaultAppearance(),
     wardrobe: defaultWardrobe(),
@@ -52,8 +54,12 @@ export function sanitize(raw: unknown): GameState {
   // Form must be valid for the scene: water-only scene needs mermaid, land scenes can't be mermaid.
   const safeForm = scene === 'grotto' ? 'mermaid' : form === 'mermaid' && scene !== 'shore' ? 'princess' : form;
   const decor = sanitizeDecor(r.unlockedDecor, r.bedroom);
-  // A save from before v0.4a with an empty room gets the starter furniture; one with placements keeps them exactly.
-  if (r.roomTheme === undefined && Object.keys(decor.bedroom).length === 0) Object.assign(decor.bedroom, STARTER_ROOM);
+  // v0.4a.1: furniture is free-placed. A layout in the save is validated; an older slot layout is migrated to the nearest valid spots
+  // (nothing is lost: what does not fit simply waits in the toy box); a pre-v0.4a empty room gets the starter furniture.
+  let bedroomLayout: PlacedItem[];
+  if (Array.isArray((r as { bedroomLayout?: unknown }).bedroomLayout)) bedroomLayout = sanitizeLayout((r as { bedroomLayout?: unknown }).bedroomLayout, decor.unlockedDecor);
+  else if (r.roomTheme === undefined && Object.keys(decor.bedroom).length === 0) bedroomLayout = defaultLayout();
+  else bedroomLayout = migrateLegacy(decor.bedroom, decor.unlockedDecor);
   const flags = { ...(typeof r.flags === 'object' && r.flags ? r.flags : {}) };
   const look = sanitizeWardrobe(r.appearance, r.wardrobe, flags);
   return {
@@ -66,7 +72,8 @@ export function sanitize(raw: unknown): GameState {
     stars: Number.isFinite(r.stars) ? Math.max(0, Math.min(6, r.stars as number)) : 0,
     stickers: Array.isArray(r.stickers) ? r.stickers.filter((s) => typeof s === 'string') : [],
     unlockedDecor: decor.unlockedDecor,
-    bedroom: decor.bedroom,
+    bedroom: {},
+    bedroomLayout,
     roomTheme: sanitizeRoomTheme(r.roomTheme),
     appearance: look.appearance,
     wardrobe: look.wardrobe,

@@ -5,7 +5,7 @@ import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from pxlib import Px, C, sheet, upscale, Image, rgb, mix
-import art_tiles, art_chars as AC, art_props as AP, art_overworld as AO, art_wardrobe as AW, art_home as AH
+import art_tiles, art_chars as AC, art_props as AP, art_overworld as AO, art_wardrobe as AW, art_home as AH, art_decor as AD, art_fx as AFX
 
 ROOT = os.path.dirname(HERE)
 PUB = os.path.join(ROOT, 'public', 'assets')
@@ -161,7 +161,7 @@ for nm, px in (('tree_a', AP.tree('a')), ('tree_b', AP.tree('b')), ('bush', AP.b
                ('canopy_bed', AP.canopy_bed()), ('moon_curtain', AP.moon_curtain()), ('crystal_nightstand', AP.crystal_nightstand()),
                ('decor_chest', AP.decor_chest()), ('shelf', AP.shelf()), ('crown_hud', AP.crown_hud()), ('sign_arch', AP.sign_arch()), ('hand', AP.hand())):
     save_image(nm, px)
-for nm, fn in AH.FURNITURE:
+for nm, fn in AH.FURNITURE + AD.DECOR2 + AFX.FX:
     save_image(nm, fn())
 save_sheet('props/fountain.png', [AP.fountain(i) for i in range(2)], 2, 'fountain'); anim('fountain_flow', 'fountain', [0, 1], 4)
 save_sheet('props/lamp.png', [AP.lamp(False), AP.lamp(True)], 2, 'lamp')

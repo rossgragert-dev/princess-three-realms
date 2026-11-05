@@ -19,7 +19,7 @@ export async function startGame(page: Page) {
 
 /** Recorded narration is not present yet, so dialogue waits for the arrow; tap it until the panel closes. */
 export async function finishTalking(page: Page) {
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 40; i++) {
     if (!(await ptr<boolean>(page, 'modal'))) return;
     await tapLogical(page, 468, 328);
     await page.waitForTimeout(450);

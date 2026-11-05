@@ -110,7 +110,7 @@ describe('save integration', () => {
   it('v0.1/v0.2 saves (no appearance fields) load with defaults and keep every other field', () => {
     const old = { version: 1, scene: 'bedroom', spawn: 'from_courtyard', form: 'princess', flags: { PIP_CARROTS_DONE: true, STAR_1_FOUND: true, LAMP_PLACED: true }, stars: 1, stickers: ['sticker_pip'], unlockedDecor: ['star_lamp', 'bunny_pillow'], bedroom: { slot_lamp: 'star_lamp' }, puzzles: {}, settings: { musicVolume: 0.2 } };
     const s = sanitize(old);
-    assert.equal(s.scene, 'bedroom'); assert.equal(s.stars, 1); assert.deepEqual(s.bedroom, { slot_lamp: 'star_lamp' });
+    assert.equal(s.scene, 'bedroom'); assert.equal(s.stars, 1); assert.ok(s.bedroomLayout.some((p) => p.item === 'star_lamp'), 'the lamp keeps a place in the room'); assert.deepEqual(s.bedroom, {});
     assert.ok(s.unlockedDecor.includes('star_lamp')); assert.equal(s.settings.musicVolume, 0.2);
     assert.deepEqual(s.appearance, defaultAppearance());
     assert.ok(s.wardrobe.unlocked.includes('star_tiara') && s.wardrobe.unlocked.includes('bunny_ribbon'));

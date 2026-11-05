@@ -1,3 +1,4 @@
+import { LayoutEditor } from '../content/furniture';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -44,10 +45,10 @@ describe('bedroom decor catalog', () => {
     for (const sc of ['courtyard', 'woods', 'shore', 'grotto', 'bedroom'] as const) for (const o of getMap(sc).objects) if (ids.has(o.id)) found.add(o.id);
     assert.deepEqual([...found].sort(), [...ids].sort());
   });
-  it('bedroom has all hotspots, at least 8 slots, unique ids and tiles', () => {
+  it('legacy hotspot table (kept to migrate old saves): at least 8 slots, unique ids and tiles', () => {
     assert.ok(SLOTS.length >= 8);
-    const objs = getMap('bedroom').objects.filter((o) => o.kind === 'slot');
-    assert.deepEqual(objs.map((o) => o.id).sort(), SLOTS.map((s) => s.id).sort());
+    // v0.4a.1: the hotspot objects are gone from the room (furniture is free-placed); SLOTS survive only to migrate old saves
+    assert.equal(getMap('bedroom').objects.filter((o) => o.kind === 'slot').length, 0);
     assert.equal(new Set(SLOTS.map((s) => `${s.x},${s.y}`)).size, SLOTS.length);
     assert.ok(new Set(SLOTS.map((s) => s.category)).size >= 8, 'eight categories');
   });
@@ -125,19 +126,21 @@ describe('placing items', () => {
 describe('saved bedroom state', () => {
   it('round-trips unlocked + placed items through storage', () => {
     const store = memStore(); const a = new SaveManager(store);
-    a.state.unlockedDecor = ['star_lamp', 'unicorn_plush', 'moon_curtain']; a.state.bedroom = {};
-    placeDecor(a.state, 'slot_lamp', 'star_lamp'); placeDecor(a.state, 'slot_plush_b', 'unicorn_plush'); placeDecor(a.state, 'slot_window', 'moon_curtain');
-    a.save();
+    a.state.unlockedDecor = ['star_lamp', 'unicorn_plush', 'moon_curtain'];
+    const ed = new LayoutEditor(a.state.bedroomLayout, () => a.state.unlockedDecor);
+    for (const [item, x, y] of [['star_lamp', 17, 8], ['unicorn_plush', 8, 12], ['moon_curtain', 6, 2]] as const) assert.ok('id' in ed.place(item, x, y), item);
+    a.state.bedroomLayout = ed.layout; a.save();
     const b = new SaveManager(store);
-    assert.deepEqual(b.state.bedroom, { slot_lamp: 'star_lamp', slot_plush_b: 'unicorn_plush', slot_window: 'moon_curtain' });
+    const byId = (l: { id: string }[]) => [...l].sort((x, y) => x.id.localeCompare(y.id));
+    assert.deepEqual(byId(b.state.bedroomLayout), byId(ed.layout));
+    for (const i of ['star_lamp', 'unicorn_plush', 'moon_curtain']) assert.ok(b.state.bedroomLayout.some((p) => p.item === i), i);
     assert.deepEqual(b.state.unlockedDecor, ['star_lamp', 'unicorn_plush', 'moon_curtain']);
     assert.ok(store.m.get(SAVE_KEY));
   });
   it('v0.1 saves migrate (old item and slot ids)', () => {
     const s = sanitize({ unlockedDecor: ['lamp', 'rug', 'vase', 'shell_mobile'], bedroom: { slot_table: 'lamp', slot_floor: 'rug', slot_shelf: 'vase', slot_ceiling: 'shell_mobile' } });
     assert.deepEqual([...s.unlockedDecor].sort(), ['flower_pot', 'rainbow_rug', 'shell_mirror', 'star_lamp']);
-    assert.equal(s.bedroom.slot_lamp, 'star_lamp'); assert.equal(s.bedroom.slot_rug, 'rainbow_rug'); assert.equal(s.bedroom.slot_shelf, 'flower_pot');
-    assert.equal(s.bedroom.slot_window, undefined, 'a mirror cannot be a curtain; it stays owned, unplaced');
+    for (const i of ['star_lamp', 'rainbow_rug', 'flower_pot']) assert.ok(s.bedroomLayout.some((p) => p.item === i), `${i} kept its place in the room`);
     assert.ok(s.unlockedDecor.includes('shell_mirror'));
   });
   it('hostile data is cleaned: unknown ids, wrong slots, duplicates, non-strings', () => {

@@ -51,7 +51,9 @@ export interface NavGrid {
   passable(x: number, y: number): boolean;
 }
 
-export function makeGrid(map: MapDef, flags: Flags, form: Form): NavGrid {
+/** `extra` = tiles blocked by movable furniture (keys from `blockKey`). */
+export const blockKey = key;
+export function makeGrid(map: MapDef, flags: Flags, form: Form, extra?: ReadonlySet<number>): NavGrid {
   const stat = staticBlocked(map);
   const dyn = objectBlocked(map, flags);
   const closed = gateClosedAt(map, flags);
@@ -61,7 +63,7 @@ export function makeGrid(map: MapDef, flags: Flags, form: Form): NavGrid {
     passable(x, y) {
       if (x < 0 || y < 0 || x >= map.w || y >= map.h) return false;
       const k = key(x, y);
-      if (stat.has(k) || dyn.has(k) || closed.has(k)) return false;
+      if (stat.has(k) || dyn.has(k) || closed.has(k) || extra?.has(k)) return false;
       const terr = terrainOf(effectiveTile(map, flags, x, y));
       if (map.medium === 'water') return form === 'mermaid' && terr !== 'solid';
       switch (form) {

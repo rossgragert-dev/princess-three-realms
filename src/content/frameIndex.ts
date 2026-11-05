@@ -160,7 +160,13 @@ export const UI = {
   icon_wall: 42,
   icon_floor: 43,
   icon_a: 44,
-  icon_magic: 45
+  icon_magic: 45,
+  icon_knob: 46,
+  icon_decorate: 47,
+  icon_cross: 48,
+  icon_undo: 49,
+  icon_flip: 50,
+  icon_trash: 51
 } as const;
 export type TileName = keyof typeof TILE;
 export type ItemName = keyof typeof ITEM;

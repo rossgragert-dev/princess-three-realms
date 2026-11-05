@@ -12,7 +12,7 @@ export interface Btn {
 }
 
 /** Minimum touch size in logical px (512x384 canvas; ~2x on an iPad = 112 CSS px, comfortably above 56). */
-export const MIN_HIT = 56;
+export const MIN_HIT = 60;
 
 /** A picture-only round button. `scale` multiplies the 32px icon; the hit area is never smaller than MIN_HIT. */
 export function makeButton(scene: Phaser.Scene, x: number, y: number, icon: UiName, scale: number, onTap: () => void): Btn {

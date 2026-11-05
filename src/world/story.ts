@@ -4,7 +4,6 @@ import type { ObjDef, Tile } from './types';
 import type { Line } from '../content/dialogue';
 import { SCRIPT } from '../content/dialogue';
 import { puzzleById } from '../content/puzzleBank';
-import { placeDecor } from '../content/decorCatalog';
 import { newProgress, countTap } from '../systems/puzzleEngine';
 import { nextObjective } from '../systems/questEngine';
 import { services } from '../systems/services';
@@ -33,9 +32,6 @@ export interface StoryCtx {
   moveObject(id: string, to: Tile): Promise<void>;
   requestForm(f: Form): Promise<void>;
   addSticker(id: string): boolean;
-  renderDecor(newSlot?: string): void;
-  /** Opens the bedroom picker for one hotspot: item id, null (empty it) or undefined (closed). */
-  pickDecor(slot: string, current: string | undefined): Promise<string | null | undefined>;
   sparkle(tile: Tile): void;
   /** v0.3: open the full-screen Royal Wardrobe or Enchanted Vanity; resolves when she comes back to the room. */
   openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner'): Promise<void>;
@@ -96,8 +92,6 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
   // ---------------------------------------------------------------- blooms (unicorn only)
   if (id.startsWith('bloom_')) return bloom(ctx, obj);
 
-  // ---------------------------------------------------------------- slots in the bedroom
-  if (obj.kind === 'slot') return decorate(ctx, id);
   if (obj.kind === 'station') return ctx.openStation(id === 'wardrobe_station' ? 'Wardrobe' : id === 'paint_station' ? 'RoomDesigner' : 'Vanity');
 
   // ---------------------------------------------------------------- chests and hidden finds
@@ -305,18 +299,14 @@ async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
   await ctx.say(SCRIPT.pearlPushed);
 }
 
-/** Tap a bedroom hotspot: a picture picker opens; tapping an item puts it in the room (tap it again to take it away). */
-async function decorate(ctx: StoryCtx, slot: string) {
-  const s = ctx.state;
-  const choice = await ctx.pickDecor(slot, s.bedroom[slot]);
-  if (choice === undefined || !placeDecor(s, slot, choice)) return;
-  services.save.save();
-  ctx.renderDecor(choice === null ? undefined : slot);
-  services.audio.sfx('pop');
-  if (choice === 'star_lamp' && ctx.complete('LAMP_PLACED')) {
-    ctx.celebrate('icon_lamp');
-    await ctx.say(SCRIPT.lampPlaced); // Nana's gift (the canopy bed) is revealed right after this
-  }
+/**
+ * The Star Lamp quest: the lamp counts as placed once it is anywhere in the bedroom (free placement, v0.4a.1).
+ * Called after the child leaves decorate mode with the lamp in the room; idempotent.
+ */
+export async function lampPlaced(ctx: StoryCtx) {
+  if (!ctx.complete('LAMP_PLACED')) return;
+  ctx.celebrate('icon_lamp');
+  await ctx.say(SCRIPT.lampPlaced); // Nana's gift (the canopy bed) is revealed right after this
 }
 
 /** A sparkling hidden spot: found once, gives a room item. */

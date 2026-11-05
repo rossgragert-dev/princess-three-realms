@@ -136,11 +136,11 @@ describe('quest engine', () => {
 describe('save / resume (T13)', () => {
   it('round-trips state', () => {
     const st = memStore(); const a = new SaveManager(st);
-    completeFlag(a.state, 'INTRO_DONE'); a.state.unlockedDecor = ['star_lamp']; a.state.bedroom = { slot_lamp: 'star_lamp' }; a.state.scene = 'woods'; a.state.form = 'unicorn';
+    completeFlag(a.state, 'INTRO_DONE'); a.state.unlockedDecor = ['star_lamp']; a.state.bedroomLayout = [{ id: 'star_lamp#1', item: 'star_lamp', x: 17, y: 8 }]; a.state.scene = 'woods'; a.state.form = 'unicorn';
     a.save();
     const b = new SaveManager(st);
     assert.equal(b.state.flags.INTRO_DONE, true);
-    assert.equal(b.state.bedroom.slot_lamp, 'star_lamp');
+    assert.ok(b.state.bedroomLayout.some((p) => p.item === 'star_lamp'));
     assert.equal(b.state.form, 'unicorn');
   });
   it('corrupt or hostile data falls back safely', () => {

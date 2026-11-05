@@ -1,7 +1,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { SaveManager, defaultState, sanitize } from '../systems/saveManager';
-import { DECOR_IDS, SLOTS, STARTERS, STARTER_IDS, STARTER_ROOM, decorForSlot, optionsForSlot, placeDecor, unplacedCount, slotHasNewOption } from '../content/decorCatalog';
+import { defaultState, sanitize } from '../systems/saveManager';
+import { FURNITURE } from '../content/furniture';
+import { SLOTS, STARTERS, STARTER_IDS, decorForSlot } from '../content/decorCatalog';
 import { FLOORS, WALLS, defaultRoomTheme, sanitizeRoomTheme, themedTile } from '../content/roomThemes';
 import { FORM_SPEED } from '../actors/transformations';
 import { SCRIPT } from '../content/dialogue';
@@ -41,49 +42,14 @@ describe('starter furniture', () => {
     assert.deepEqual(s.unlockedDecor, []);
     for (const id of STARTER_IDS) assert.ok(decorForSlot(SLOTS.find((x) => x.category === STARTERS[id].category)!.id, []).some((d) => d.id === id), id);
   });
-  it('every starter fits a real slot and can be shown at the same time as every other', () => {
-    for (const id of STARTER_IDS) assert.ok(SLOTS.some((s) => s.category === STARTERS[id].category), `${id} has no slot`);
-    for (const cat of new Set(STARTER_IDS.map((i) => STARTERS[i].category))) {
-      const items = [...STARTER_IDS.filter((i) => STARTERS[i].category === cat), ...DECOR_IDS.filter((i) => (i in STARTERS ? false : true) && false)];
-      assert.ok(SLOTS.filter((s) => s.category === cat).length >= 1 && items.length >= 1);
-    }
+  it('every starter is part of the free-placement catalog', () => {
+    for (const id of STARTER_IDS) assert.ok(FURNITURE[id], `${id} is placeable`);
   });
-  it('a new save starts partly furnished but the Star Lamp spot is empty and the quest is not done', () => {
+  it('a new save starts partly furnished but the Star Lamp is not in the room and the quest is not done', () => {
     const s = defaultState();
-    assert.ok(Object.keys(s.bedroom).length >= 4);
-    assert.equal(s.bedroom.slot_lamp, undefined);
+    assert.ok(s.bedroomLayout.length >= 5);
+    assert.ok(!s.bedroomLayout.some((p) => p.item === 'star_lamp'));
     assert.ok(!s.flags.LAMP_PLACED);
-    assert.deepEqual(s.bedroom, STARTER_ROOM);
-  });
-  it('starter pieces swap freely and never make Home glow or slots sparkle', () => {
-    const s = defaultState();
-    assert.equal(s.bedroom.slot_seat_a, 'pink_chair');
-    assert.ok(placeDecor(s, 'slot_seat_b', 'pink_chair'), 'moving a piece lifts it from where it was');
-    assert.equal(s.bedroom.slot_seat_a, undefined);
-    assert.equal(unplacedCount(s.unlockedDecor, s.bedroom), 0);
-    assert.equal(slotHasNewOption('slot_seat_c', s.unlockedDecor, s.bedroom), false);
-    assert.ok(placeDecor(s, 'slot_seat_a', 'wooden_chair'));
-    assert.equal(placeDecor(s, 'slot_seat_a', 'dresser'), false, 'a dresser is not a chair');
-    assert.equal(placeDecor(s, 'slot_lamp', 'star_lamp'), false, 'earned items stay locked until earned');
-  });
-  it('earned items still work beside the starters (lamp slot offers the small lamp and the Star Lamp)', () => {
-    assert.deepEqual(optionsForSlot('slot_lamp').map((d) => d.id).sort(), ['small_lamp', 'star_lamp']);
-  });
-  it('existing saves keep every placement exactly; an empty old room gets the starter furniture', () => {
-    const old = sanitize({ unlockedDecor: ['star_lamp', 'rainbow_rug'], bedroom: { slot_lamp: 'star_lamp', slot_rug: 'rainbow_rug' }, flags: { LAMP_PLACED: true } });
-    assert.deepEqual(old.bedroom, { slot_lamp: 'star_lamp', slot_rug: 'rainbow_rug' });
-    assert.deepEqual(old.unlockedDecor.sort(), ['rainbow_rug', 'star_lamp']);
-    const empty = sanitize({ unlockedDecor: [], bedroom: {} });
-    assert.deepEqual(empty.bedroom, STARTER_ROOM);
-    const sv = sanitize({ roomTheme: defaultRoomTheme(), bedroom: {} });
-    assert.deepEqual(sv.bedroom, {}, 'a v0.4 save with an emptied room stays empty');
-  });
-  it('placed starters survive a save and reload', () => {
-    const store = new Map<string, string>();
-    const kv = { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v), removeItem: (k: string) => void store.delete(k) };
-    const a = new SaveManager(kv); placeDecor(a.state, 'slot_desk', 'desk'); a.state.roomTheme = { wallId: 'starry', floorId: 'royal_rug' }; a.save();
-    const b = new SaveManager(kv);
-    assert.equal(b.state.bedroom.slot_desk, 'desk'); assert.deepEqual(b.state.roomTheme, { wallId: 'starry', floorId: 'royal_rug' });
   });
 });
 
@@ -118,27 +84,19 @@ describe('room themes', () => {
   });
 });
 
-describe('bedroom layout with the new furniture', () => {
+describe('bedroom layout and the on-screen controls', () => {
   const room = getMap('bedroom');
-  it('every slot and the paint station are on walkable, reachable floor', () => {
+  it('every station and the easel are on walkable floor', () => {
     const grid = makeGrid(room, {}, 'princess');
-    for (const s of SLOTS) if (s.category !== 'wall' && s.category !== 'window') assert.ok(grid.passable(s.x, s.y) || true);
-    const p = room.objects.find((o) => o.id === 'paint_station')!;
-    assert.ok(p && grid.passable(p.x, p.y));
+    for (const o of room.objects.filter((q) => q.kind === 'station')) assert.ok(grid.passable(o.x, o.y), o.id);
   });
-  it('slots do not share a tile with each other or with a blocking prop', () => {
-    const blocked = new Set<string>();
-    for (const p of room.props) for (const [dx, dy] of p.blocks ?? []) blocked.add(`${p.x + dx},${p.y + dy}`);
-    const seen = new Set<string>();
-    for (const s of SLOTS) { const k = `${s.x},${s.y}`; assert.ok(!seen.has(k), `duplicate slot tile ${k}`); seen.add(k); if (!['wall', 'window', 'bed'].includes(s.category)) assert.ok(!blocked.has(k), `${s.id} sits under a blocking prop`); }
-  });
-  it('no slot sits where the d-pad or the A/magic buttons are drawn', () => {
-    // the room is drawn at x 64..448, y 48..336 (zoom 1). Controls: pad circle (62,322) r66; A (458,318) r38; magic (386,344) r34.
+  it('no interactive object sits behind the joystick or the A / magic buttons', () => {
+    // the room is drawn at x 64..448, y 48..336 (zoom 1). Controls: joystick (64,316) r58+14; A (458,318) r38; magic (386,344) r34.
     const pos = (x: number, y: number) => ({ px: 64 + x * 16 + 8, py: 48 + y * 16 + 8 });
     for (const o of room.objects) {
-      if (o.kind === 'warp' || o.kind === 'npc') continue;
+      if (o.kind === 'warp') continue;
       const { px, py } = pos(o.x, o.y);
-      for (const [cx, cy, r] of [[62, 322, 66], [458, 318, 38], [386, 344, 34]] as const) assert.ok(Math.hypot(px - cx, py - cy) > r, `${o.id} is hidden behind a control`);
+      for (const [cx, cy, r] of [[64, 316, 72], [458, 318, 38], [386, 344, 34]] as const) assert.ok(Math.hypot(px - cx, py - cy) > r, `${o.id} is hidden behind a control`);
     }
   });
 });

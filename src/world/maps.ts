@@ -1,5 +1,4 @@
 import type { SceneId } from '../types/game';
-import { SLOTS } from '../content/decorCatalog';
 import { ITEM, TILE, type TileName } from '../content/frameIndex';
 import type { Gate, MapDef, ObjDef, PropDef, Tile } from './types';
 
@@ -290,23 +289,22 @@ function bedroom(): MapDef {
   g.rect(11, 17, 2, 1, 'wood_floor1');
   const props: PropDef[] = [
     { key: 'window_night', x: 6, y: 2, ox: 8, depthBias: -2 }, { key: 'window_night', x: 15, y: 2, ox: 8, depthBias: -2 },
-    { key: 'bed', x: 4, y: 7, blocks: [[-1, -1], [0, -1], [1, -1], [-1, 0], [0, 0], [1, 0]] },
     { key: 'door_small', x: 11, y: 17, ox: 8, depthBias: -2 },
     { key: 'crown_hud', x: 11, y: 2, ox: 8, depthBias: -2 },
     { key: 'shelf', x: 20, y: 2, ox: 8, depthBias: -1 },
     { key: 'items', frame: ITEM.star, x: 11, y: 1, ox: 8, showWhen: 'STAR_1_FOUND', depthBias: -2 },
     // v0.3: the two customization stations. Tall ornate armoire on the west wall, lit vanity on the east wall.
-    { key: 'wardrobe_prop', anim: 'wardrobe_glow', x: 1, y: 10, ox: 8, blocks: [[0, 0], [1, 0]] },
-    { key: 'vanity_prop', anim: 'vanity_glow', x: 21, y: 13, ox: 8, blocks: [[0, 0], [1, 0]] },
+    // v0.4a.1: both stations are fixed in the back corners (wardrobe back-left, vanity back-right) with open floor in front
+    { key: 'wardrobe_prop', anim: 'wardrobe_glow', x: 2, y: 5, ox: 8, blocks: [[-1, -1], [0, -1], [1, -1], [2, -1], [-1, 0], [0, 0], [1, 0], [2, 0]] },
+    { key: 'vanity_prop', anim: 'vanity_glow', x: 20, y: 5, ox: 8, blocks: [[-1, -1], [0, -1], [1, -1], [2, -1], [-1, 0], [0, 0], [1, 0], [2, 0]] },
     // v0.4a: the paintbrush easel opens the room designer (wallpaper + floor)
     { key: 'paint_prop', anim: 'paint_glow', x: 6, y: 15, blocks: [[0, 0]] },
   ];
   const objects: ObjDef[] = [
     { id: 'nana', kind: 'npc', x: 10, y: 9, sprite: npc('nana'), blocks: true, radius: 1.8 },
-    ...SLOTS.map((sl): ObjDef => ({ id: sl.id, kind: 'slot', x: sl.x, y: sl.y, radius: 3.2 })),
     // stations sit mid-furniture (so taps anywhere on the tall prop find them); the player walks up to the free floor in front
-    { id: 'wardrobe_station', kind: 'station', x: 1, y: 11, radius: 2.2 },
-    { id: 'vanity_station', kind: 'station', x: 21, y: 14, radius: 2.2 },
+    { id: 'wardrobe_station', kind: 'station', x: 2, y: 6, radius: 2.2 },
+    { id: 'vanity_station', kind: 'station', x: 21, y: 6, radius: 2.2 },
     { id: 'paint_station', kind: 'station', x: 6, y: 16, radius: 2.2 },
     { id: 'door_exit', kind: 'warp', x: 11, y: 17, tiles: [tile(11, 17), tile(12, 17)], to: { scene: 'courtyard', spawn: 'from_bedroom' }, radius: 1.5 },
   ];

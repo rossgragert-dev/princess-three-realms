@@ -22,3 +22,13 @@ Device: iPad (Safari, landscape and portrait), installed to Home Screen. Build: 
 5. Place all 12 items, close the app from the Home Screen, reopen: is the room unchanged?
 6. Parent settings -> Spoken narration On: do voices play after the first tap (Safari audio unlock)? Does the speaker button appear in puzzles and dialogue?
 7. Silent switch / volume: sound effects only when narration is off.
+
+
+## v0.4a.1 - Free to Play & Sparkle (check on a real iPad, preview URL)
+1. Joystick: hold the knob with the left thumb and drag slowly, then fully; she should walk slowly then quickly, in diagonals too, and slide along walls and furniture without sticking or going through. Let go: she stops.
+2. Two thumbs: hold the stick with the left thumb and tap the purple wand with the right. She keeps walking and zaps. Do the same with the orange A button next to a friend.
+3. Decorate: in the bedroom tap the yellow bed icon (top). Pick a category tab, pick a picture, tap the floor, tap the green check. Put things on a table. Move, flip, put away, undo. A red X means "not there"; try covering the door or the wardrobe.
+4. The wardrobe stays in the back-left corner and the mirror table in the back-right corner; both still open.
+5. Close and reopen the app: the room is as you left it.
+6. Wand (princess form): zap a tree (blossoms and apples), the courtyard fountain (tall spray a few seconds), flowers, mushrooms in the woods, the castle door. Mash the button: it should not spam. Unicorn and mermaid magic still work.
+7. Portrait and landscape: every button should be easy for a 5-year-old thumb; nothing hidden behind the controls.

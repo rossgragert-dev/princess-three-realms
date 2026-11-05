@@ -1,3 +1,4 @@
+import type { PlacedItem } from '../content/furniture';
 import type { RoomTheme } from '../content/roomThemes';
 import type { PrincessAppearance, WardrobeState } from '../content/appearance';
 
@@ -73,8 +74,10 @@ export interface GameState {
   stars: number;
   stickers: string[];
   unlockedDecor: string[];
-  /** slotId -> decorId */
+  /** Legacy v0.1-v0.4a hotspot layout (slotId -> decorId). Read once to migrate; always {} afterwards. */
   bedroom: Record<string, string>;
+  /** v0.4a.1: free-placed furniture instances. The only layout the game uses. */
+  bedroomLayout: PlacedItem[];
   /** v0.3: what the princess is wearing right now (separate from what she owns). */
   appearance: PrincessAppearance;
   /** v0.3: earned wearables. */

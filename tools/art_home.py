@@ -295,4 +295,27 @@ def home_icons():
     out.append(_ui('icon_a', '#ffb347', hand_icon))
     out.append(_ui('icon_magic', '#b06bff', lambda p: (p.line(8, 25, 20, 12, W), p.line(9, 25, 21, 12, C['cream_sh']), _star_poly(p, 21, 10, 7.5, 3.2, C['gold']), _star_poly(p, 21, 10, 5, 2, C['gold_hi']),
                                              sparkle(p, 7, 8, 'pink_hi'), sparkle(p, 26, 22, 'blue_hi'), sparkle(p, 11, 18, 'gold_hi'))))
+    # v0.4a.1: joystick thumb knob (glossy lavender gem) and a decorate-mode armchair icon
+    def knob(p):
+        p.ell(16, 16, 12.5, 12.5, rgb('#6f48c9')); p.ell(16, 15, 11.5, 11.5, rgb('#9a74ee')); p.ell(15, 13, 8.5, 8.5, rgb('#b79cf7'))
+        p.ell(12, 10, 3.6, 2.4, rgb('#efe5ff')); p.set(10, 12, W); p.set(21, 21, rgb('#7d57d8'))
+    out.append(_ui('icon_knob', '#9a74ee', knob))
+    def sofa_icon(p):
+        p.rect(7, 12, 18, 9, rgb('#ff8fc5')); p.rect(5, 15, 4, 10, rgb('#e8629f')); p.rect(23, 15, 4, 10, rgb('#e8629f')); p.rect(9, 17, 14, 8, rgb('#ffb3d9'))
+        p.rect(7, 12, 18, 2, rgb('#ffd1ea')); p.rect(8, 25, 2, 3, rgb('#7a4a2b')); p.rect(22, 25, 2, 3, rgb('#7a4a2b')); sparkle(p, 25, 8, 'gold_hi')
+    out.append(_ui('icon_decorate', '#ffd93d', sofa_icon))
+    def cross_icon(p):
+        p.line(9, 9, 22, 22, W); p.line(10, 9, 23, 22, W); p.line(9, 10, 22, 23, W); p.line(22, 9, 9, 22, W); p.line(23, 9, 10, 22, W); p.line(22, 10, 9, 23, W)
+    out.append(_ui('icon_cross', '#ff6b7e', cross_icon))
+    def undo_icon(p):
+        p.ell(16, 17, 8.5, 7.5, W); p.ell(16, 18, 5.6, 4.8, rgb('#7f9cff')); p.rect(8, 17, 17, 9, rgb('#7f9cff'))
+        p.poly([(5, 14), (14, 5), (14, 15)], W); p.rect(15, 10, 8, 1, None) if False else None
+    out.append(_ui('icon_undo', '#7f9cff', undo_icon))
+    def flip_icon(p):
+        p.rect(15, 6, 2, 20, W); p.poly([(13, 9), (13, 23), (4, 16)], W); p.poly([(19, 9), (19, 23), (28, 16)], rgb('#e0f6ff'))
+    out.append(_ui('icon_flip', '#3ec6d8', flip_icon))
+    def trash_icon(p):
+        p.rect(9, 11, 14, 14, W); p.rect(8, 8, 16, 3, W); p.rect(13, 5, 6, 3, W)
+        for x in (12, 15, 18): p.rect(x, 13, 2, 10, rgb('#9a74ee'))
+    out.append(_ui('icon_trash', '#b79cf7', trash_icon))
     return out

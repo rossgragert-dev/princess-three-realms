@@ -183,20 +183,23 @@ export class AudioManager {
   }
 
   /** Short synthesized SFX (originals, no files needed). */
-  sfx(kind: 'chime' | 'pop' | 'sparkle' | 'bloom' | 'splash'): void {
+  sfx(kind: 'chime' | 'pop' | 'sparkle' | 'bloom' | 'splash' | 'wand' | 'shimmer' | 'spray'): void {
     if (!this.ctx || this.settings.sfxVolume <= 0) return;
     const notes: Record<string, number[]> = {
       chime: [784, 988, 1175],
       pop: [520],
       sparkle: [1319, 1568, 2093],
       bloom: [523, 659, 784],
-      splash: [330, 247]
+      splash: [330, 247],
+      wand: [880, 1175, 1568],
+      shimmer: [1568, 2093, 2637, 3136],
+      spray: [392, 523, 659, 784]
     };
     const t0 = this.ctx.currentTime;
     notes[kind].forEach((f, i) => {
       const o = this.ctx!.createOscillator();
       const g = this.ctx!.createGain();
-      o.type = kind === 'splash' ? 'triangle' : 'sine';
+      o.type = kind === 'splash' || kind === 'spray' ? 'triangle' : 'sine';
       o.frequency.value = f;
       g.gain.setValueAtTime(0.0001, t0 + i * 0.09);
       g.gain.exponentialRampToValueAtTime(0.18 * this.settings.sfxVolume, t0 + i * 0.09 + 0.02);

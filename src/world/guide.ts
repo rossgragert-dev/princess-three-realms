@@ -19,7 +19,7 @@ export const OBJECTIVE_TARGET: Record<string, { scene: SceneId; obj: string }> =
   MARINA_HELPED: { scene: 'grotto', obj: 'marina' },
   PEARL_PLACED: { scene: 'grotto', obj: 'pearl' },
   STAR_1_FOUND: { scene: 'grotto', obj: 'star_pedestal' },
-  LAMP_PLACED: { scene: 'bedroom', obj: 'slot_lamp' }
+  LAMP_PLACED: { scene: 'bedroom', obj: 'nana' }
 };
 
 export const OBJECTIVE_NARRATION: Record<string, string> = {
@@ -57,6 +57,8 @@ export function sceneRoute(from: SceneId, to: SceneId): SceneId[] | null {
 export type GuideTarget =
   | { type: 'object'; obj: string; why: QuestFlag | 'transform' | 'dive' }
   | { type: 'home' }
+  /** In the bedroom: point at the decorate button (the Star Lamp goes in the room). */
+  | { type: 'decorate' }
   | { type: 'none' };
 
 /**
@@ -70,6 +72,7 @@ export function guideTarget(state: GameState, scene: SceneId, form: Form): Guide
   if (!target) return { type: 'none' };
   // Walking home after the star is found: the HUD house button is the shortcut.
   if (step.flag === 'LAMP_PLACED' && scene !== 'courtyard' && scene !== 'bedroom') return { type: 'home' };
+  if (step.flag === 'LAMP_PLACED' && scene === 'bedroom') return { type: 'decorate' };
   if (scene === target.scene) {
     if (scene === 'grotto' || scene === 'woods' || scene === 'courtyard' || scene === 'bedroom') return { type: 'object', obj: target.obj, why: step.flag };
   }
