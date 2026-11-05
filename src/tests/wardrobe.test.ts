@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   CATALOG, SLOTS_ALL, FIELD, ALL_WEARABLES, defaultAppearance, defaultWardrobe, sanitizeWardrobe, selectOption, isOwned, grantForFlag,
-  wearableForFlag, DRESSES, DRESS_COLORS, HAIRSTYLES, HAIR_COLORS, SHOES, TIARAS, EARRINGS, NECKLACES, FACE_ACCENTS, ACCESSORIES, WARDROBE_TABS, VANITY_TABS, type PrincessAppearance
+  wearableForFlag, DRESSES, DRESS_COLORS, HAIRSTYLES, HAIR_COLORS, SHOES, TIARAS, EARRINGS, NECKLACES, FACE_ACCENTS, ACCESSORIES, WARDROBE_TABS, VANITY_TABS
 } from '../content/appearance';
 import { ATLAS, MARKERS, OW_STYLES, OW_CROWNS } from '../content/wardrobeIndex';
-import { buildRemap, layerStack, composePrincess, blitCell, hexToRgb, THUMB_CROP, type AtlasPixels } from '../art/compose';
+import { buildRemap, layerStack, composePrincess, hexToRgb, THUMB_CROP, type AtlasPixels } from '../art/compose';
 import { defaultState, sanitize, SaveManager, SAVE_KEY, type KV } from '../systems/saveManager';
 import { completeFlag, MAIN_PATH } from '../systems/questEngine';
 import { getMap } from '../world/maps';

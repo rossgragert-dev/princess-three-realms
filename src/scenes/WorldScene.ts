@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { applyOverworldLook } from '../art/looks';
-import { slotOfWearable } from '../content/appearance';
 import type { Form, GameState, PuzzleDef, QuestFlag, SceneId } from '../types/game';
 import type { MapDef, ObjDef, PropDef, Tile } from '../world/types';
 import type { Line } from '../content/dialogue';
