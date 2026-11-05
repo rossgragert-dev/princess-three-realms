@@ -15,7 +15,9 @@ import { narrationForPlan, planFormChange } from '../actors/transformations';
 import { completeFlag, nextObjective } from '../systems/questEngine';
 import { services, applySettingsToAudio } from '../systems/services';
 import { reducedEffects, sparkleCount, dur } from '../systems/accessibility';
-import { COOLDOWN_MS, DIRS, Effects, REACTIONS, SHOT_TILES_PER_SEC, aim, fly, ready, targetsOf, type SpellTarget } from '../world/spells';
+import { ACTIVITY_REWARD, TAG_SESSION_STARS, WAND_TINT, grantDecor, syncWandUnlocks } from '../content/family';
+import { newTag, stepTag, type TagState } from '../world/tag';
+import { COOLDOWN_MS, Effects, REACTIONS, SHOT_TILES_PER_SEC, facingVector, fly, ready, targetsOf, type SpellTarget } from '../world/spells';
 import { FURNITURE, LayoutEditor, furnitureBlockedTiles, hasItem, spot, tableUnder, type PlacedItem } from '../content/furniture';
 import { ITEM, TILE, UI } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
@@ -356,7 +358,8 @@ export class WorldScene extends Phaser.Scene {
         }
         return fresh;
       },
-      openStation: (which: 'Wardrobe' | 'Vanity' | 'RoomDesigner') => self.openStation(which),
+      openStation: (which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop') => self.openStation(which),
+      startTag: () => self.startTag(),
       cast: () => self.player.cast(),
       face: (o: ObjDef) => { const p = self.objPos.get(o.id) ?? o; self.player.face(p.x, p.y); },
       react: (id: string) => self.react(id),
@@ -424,7 +427,7 @@ export class WorldScene extends Phaser.Scene {
 
   // ------------------------------------------------------------------ input
   private onTap(p: Phaser.Input.Pointer) {
-    if (this.leaving || !this.ui) return;
+    if (this.leaving || !this.ui || this.tagGame) return;
     this.idleMs = 0;
     if (this.ui.blocksPointer(p.x, p.y)) return;
     if (this.busy) return;
@@ -501,6 +504,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private onStep(t: Tile) {
+    if (this.tagGame) return; // no accidental warps while playing tag; the exit button is the way out
     for (const o of visibleObjects(this.map, this.state.flags)) {
       if (o.kind !== 'warp' || !o.to || !o.tiles?.some((w) => w.x === t.x && w.y === t.y)) continue;
       if (o.forms && !o.forms.includes(this.player.form)) continue;
@@ -601,7 +605,7 @@ export class WorldScene extends Phaser.Scene {
 
   // ------------------------------------------------------------------ princess wand projectile
   private lastShot = -1e9;
-  private shots: { id?: string; kind?: string; dist: number; blocked: boolean }[] = [];
+  private shots: { id?: string; kind?: string; dist: number; blocked: boolean; wand?: string; dir?: string }[] = [];
   private readonly spellFx = new Effects();
   private fountainSpray?: Phaser.Time.TimerEvent;
 
@@ -609,14 +613,18 @@ export class WorldScene extends Phaser.Scene {
     this.lastShot = performance.now();
     const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T };
     const targets = targetsOf(this.map);
-    const a = aim(from, DIRS[this.player.dir], targets);
+    const a = { dir: facingVector(this.player.dir) };
     const f = fly(from, a.dir, targets, (x, y) => !this.grid.passable(x, y));
-    this.shots.push({ id: f.hit?.id, kind: f.hit?.kind, dist: f.dist, blocked: f.blocked });
+    const wandNow = this.state.equippedWand;
+    this.shots.push({ id: f.hit?.id, kind: f.hit?.kind, dist: f.dist, blocked: f.blocked, wand: `${wandNow.headId}/${wandNow.colorId}/${wandNow.trailId}`, dir: this.player.dir });
     if (this.shots.length > 40) this.shots.shift();
     services.audio.sfx('wand');
     const sx = foot.x + a.dir.x * 8, sy = foot.y - 10 + a.dir.y * 4;
     const ex = f.end.x * T, ey = f.end.y * T - 10;
-    const bolt = this.add.image(sx, sy, 'fx_bolt').setDepth(9999);
+    const wand = this.state.equippedWand;
+    const bolt = this.add.image(sx, sy, this.textures.exists(`bolt_${wand.colorId}`) ? `bolt_${wand.colorId}` : 'fx_bolt').setDepth(9999);
+    const trailKey = this.textures.exists(`trail_${wand.trailId}`) ? `trail_${wand.trailId}` : 'fx_trail';
+    const tints = WAND_TINT[wand.colorId]; let ti = 0;
     const flight = Math.max(80, (f.dist / SHOT_TILES_PER_SEC) * 1000);
     if (!reducedEffects()) {
       this.tweens.add({ targets: bolt, angle: 360, duration: 500, repeat: -1 });
@@ -628,8 +636,9 @@ export class WorldScene extends Phaser.Scene {
       onUpdate: () => {
         if (reducedEffects() || performance.now() - last < 38) return;
         last = performance.now();
-        const t = this.add.image(bolt.x + Phaser.Math.Between(-2, 2), bolt.y + Phaser.Math.Between(-2, 2), 'fx_trail').setDepth(9998).setAlpha(0.9);
-        this.tweens.add({ targets: t, alpha: 0, scale: 0.2, y: t.y + 6, duration: 380, onComplete: () => t.destroy() });
+        const t = this.add.image(bolt.x + Phaser.Math.Between(-2, 2), bolt.y + Phaser.Math.Between(-2, 2), trailKey).setDepth(9998).setAlpha(0.9);
+        if (wand.colorId === 'rainbow') t.setTint(tints[ti++ % tints.length]);
+        this.tweens.add({ targets: t, alpha: 0, scale: 0.2, y: t.y + (wand.trailId === 'bubble' ? -8 : 6), duration: 380, onComplete: () => t.destroy() });
       },
       onComplete: () => {
         bolt.destroy();
@@ -723,7 +732,7 @@ export class WorldScene extends Phaser.Scene {
 
   private stationOpen = false;
   /** Opens the full-screen Wardrobe/Vanity; resolves when she finishes (the look is refreshed first). */
-  private openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner'): Promise<void> {
+  private openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop'): Promise<void> {
     if (this.stationOpen) return Promise.resolve();
     this.stationOpen = true;
     return new Promise<void>((resolve) => {
@@ -838,6 +847,77 @@ export class WorldScene extends Phaser.Scene {
     });
   }
 
+  // ------------------------------------------------------------------ Unicorn Tag (meadow)
+  private tagGame?: { s: TagState; spr: Phaser.GameObjects.Sprite; mark: Phaser.GameObjects.Image; end: () => void; stars: number; ended: boolean };
+
+  /** Starts a session of tag with Dapple. Resolves when the child finishes three rounds or taps the exit button. */
+  private startTag(): Promise<void> {
+    const spr = this.objSprites.get('dapple');
+    if (this.tagGame || !spr || this.map.id !== 'meadow' || this.player.form !== 'unicorn') return Promise.resolve();
+    return new Promise<void>((resolve) => {
+      const pal = { x: spr.x, y: spr.y - 6 };
+      const mark = this.add.image(spr.x, spr.y - 40, 'items', ITEM.star).setDepth(9999).setVisible(false);
+      this.tweens.add({ targets: mark, y: '-=4', duration: dur(420), yoyo: true, repeat: -1 });
+      const game = { s: newTag(pal, this.player.foot), spr, mark, stars: 0, ended: false, end: () => {} };
+      game.end = () => this.endTag(game, resolve);
+      this.tagGame = game;
+      this.busy = false; // the joystick works as usual while the game runs
+      this.ui.setTagMode(true, () => this.endTagEarly());
+      this.ui.setTally(0);
+      this.hearts(spr.x, spr.y - 26, 4);
+      services.audio.sfx('sparkle');
+    });
+  }
+
+  private endTagEarly() { this.tagGame?.end(); }
+
+  private hearts(x: number, y: number, n: number) {
+    for (let i = 0; i < sparkleCount(n); i++) {
+      const h = this.add.image(x + (i - n / 2) * 8, y, 'fx_heart').setDepth(9999).setScale(1.2);
+      this.tweens.add({ targets: h, y: y - 26 - (i % 3) * 8, x: h.x + Phaser.Math.Between(-10, 10), alpha: 0, duration: dur(900), delay: i * 70, onComplete: () => h.destroy() });
+    }
+  }
+
+  private tagTick(dt: number) {
+    const g = this.tagGame;
+    if (!g || g.ended) return;
+    const r = stepTag(g.s, dt, this.player.foot, this.grid);
+    const s = g.s;
+    g.spr.setPosition(s.pal.x, s.pal.y + 6).setDepth(s.pal.y + 6);
+    const anim = `dapple_${s.moving ? (s.phase === 'companionIt' ? 'gallop' : 'walk') : 'idle'}_${s.facing}`;
+    if (g.spr.anims.currentAnim?.key !== anim && this.anims.exists(anim)) g.spr.play(anim, true);
+    // who is "it": a gold star over Dapple means "tag her!", a heart over the princess means "Dapple is chasing you"
+    g.mark.setVisible(s.phase === 'playerIt').setPosition(g.spr.x, g.spr.y - 40);
+    for (const ev of r.events) {
+      if (ev === 'tagged') { g.stars = s.stars; this.ui.setTally(s.stars); services.audio.sfx('chime'); this.hearts(g.spr.x, g.spr.y - 24, 6); this.sparkleAt(Math.floor(s.pal.x / T), Math.floor(s.pal.y / T), 8); }
+      else if (ev === 'caught') { services.audio.sfx('pop'); this.hearts(this.player.sprite.x, this.player.sprite.y - 24, 3); }
+      else if (ev === 'invite' || ev === 'roundStart') { services.audio.sfx('sparkle'); this.hop('dapple'); }
+      else if (ev === 'celebrate') { services.audio.sfx('bloom'); this.sparkleAt(Math.floor(s.pal.x / T), Math.floor(s.pal.y / T), 14); this.ui.celebrate('icon_star', 4); }
+      else if (ev === 'done') g.end();
+    }
+  }
+
+  private endTag(g: NonNullable<WorldScene['tagGame']>, resolve: () => void) {
+    if (g.ended) return;
+    g.ended = true;
+    const done = g.s.stars >= TAG_SESSION_STARS;
+    const st = this.state, a = st.activities.tag;
+    a.tags += g.s.stars;
+    if (done) {
+      a.sessions++;
+      if (grantDecor(st, ACTIVITY_REWARD.tag)) this.revealQueue.push(ACTIVITY_REWARD.tag);
+      syncWandUnlocks(st);
+    }
+    g.mark.destroy();
+    const tile = { x: Math.floor(g.s.pal.x / T), y: Math.floor(g.s.pal.y / T) };
+    this.objPos.set('dapple', tile);
+    g.spr.play('dapple_idle_down', true);
+    this.tagGame = undefined;
+    this.ui.setTagMode(false);
+    this.afterAction();
+    resolve();
+  }
+
   private drawBounce(t: Tile) {
     const s = this.add.sprite(t.x * T + T / 2, t.y * T - 6, 'items', ITEM.star).setDepth(9999);
     this.tweens.add({ targets: s, y: s.y - 6, yoyo: true, repeat: 4, duration: dur(300), onComplete: () => s.destroy() });
@@ -855,8 +935,9 @@ export class WorldScene extends Phaser.Scene {
         for (const c of this.waterCells) { c.phase = (c.phase + 1) % 4; this.layer.putTileAt(TILE[`water${c.phase}` as 'water0'], c.x, c.y); }
       }
     }
+    if (this.tagGame) this.tagTick(dt);
     this.updateCue(dt);
-    const idle = !this.busy && !this.player.moving && !(this.ui && this.ui.modal);
+    const idle = !this.busy && !this.tagGame && !this.player.moving && !(this.ui && this.ui.modal);
     this.idleMs = idle ? this.idleMs + dt : 0;
     if (this.idleMs > 12000 && this.idleMs - dt <= 12000) { void this.hint(false); this.ui?.pulseHint(true); }
     if (this.idleMs > 24000) { this.idleMs = -20000; void this.hint(true); }
@@ -891,6 +972,7 @@ export class WorldScene extends Phaser.Scene {
       action: () => this.actionPress(),
       magic: () => void this.magicPress(),
       shots: () => this.shots.map((q) => ({ ...q })),
+      tag: () => (this.tagGame ? { phase: this.tagGame.s.phase, stars: this.tagGame.s.stars, pal: { ...this.tagGame.s.pal }, t: this.tagGame.s.t, ended: this.tagGame.ended, tally: this.ui.tallyState, exit: this.ui.exitPos } : null),
       sprayOn: () => !!this.fountainSpray,
       effectsOn: () => this.spellFx.count(performance.now()),
       cooldown: COOLDOWN_MS,
@@ -901,7 +983,7 @@ export class WorldScene extends Phaser.Scene {
       panel: () => this.ui?.panel ?? null,
       playerXY: () => { const c = this.cameras.main; return { x: this.player.sprite.x - c.scrollX, y: this.player.sprite.y - c.scrollY }; },
       tilePos,
-      openStation: (w: 'Wardrobe' | 'Vanity' | 'RoomDesigner') => this.openStation(w),
+      openStation: (w: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop') => this.openStation(w),
       refreshLook: () => this.refreshLook(),
       dumpTexture: (k: string) => (this.textures.get(k).getSourceImage() as HTMLCanvasElement).toDataURL(),
       playerSprite: () => ({ tex: this.player.sprite.texture.key, frame: this.player.sprite.frame.name })

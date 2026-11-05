@@ -1,5 +1,6 @@
 import { decorById, DECOR, LEGACY_DECOR, LEGACY_SLOTS, STARTERS, slotById } from './decorCatalog';
 import { getMap } from '../world/maps';
+import { EXTRA_DECOR } from './family';
 import { makeGrid } from '../world/navigation';
 
 /**
@@ -104,13 +105,16 @@ export const FURNITURE: Record<string, FurnitureDef> = Object.fromEntries([
   F('mermaid_art', 'Mermaid Art', 'wall', 'wall', 2, 1, 'mermaid_art', 1),
   F('butterfly_painting', 'Butterfly Painting', 'wall', 'wall', 2, 1, 'butterfly_painting', 1),
   F('pink_curtain', 'Pink Curtain', 'wall', 'window', 1, 1, 'pink_curtain', 2),
-  F('moon_curtain', 'Moon Curtain', 'wall', 'window', 1, 1, 'moon_curtain', 2)
+  F('moon_curtain', 'Moon Curtain', 'wall', 'window', 1, 1, 'moon_curtain', 2),
+  // v0.4b rewards: a garland from the King's fireworks, a flower cushion from Dapple's meadow
+  F('festival_garland', 'Festival Garland', 'wall', 'wall', 2, 1, 'festival_garland', 1),
+  F('meadow_cushion', 'Meadow Cushion', 'toys', 'small', 1, 1, 'meadow_cushion', 1)
 ].map((d) => [d.id, d]));
 export const FURNITURE_IDS = Object.keys(FURNITURE);
 export const furnitureById = (id: string): FurnitureDef | undefined => FURNITURE[id];
 
 /** Earned rewards (need an unlock); everything else is free from the first minute. */
-export const EARNED_IDS: readonly string[] = Object.keys(DECOR);
+export const EARNED_IDS: readonly string[] = [...Object.keys(DECOR), ...EXTRA_DECOR];
 const EARNED = new Set<string>(EARNED_IDS);
 export const isEarned = (id: string) => EARNED.has(id);
 export const ownsFurniture = (id: string, unlocked: readonly string[]) => !!FURNITURE[id] && (!EARNED.has(id) || unlocked.includes(id));

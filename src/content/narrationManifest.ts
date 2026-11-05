@@ -1,4 +1,4 @@
-export type Speaker = 'narrator' | 'pip' | 'willa' | 'tree' | 'bramble' | 'marina' | 'nana' | 'shell' | 'coralie';
+export type Speaker = 'narrator' | 'pip' | 'willa' | 'tree' | 'bramble' | 'marina' | 'nana' | 'shell' | 'coralie' | 'king' | 'queen' | 'dapple';
 
 export interface NarrationClip {
   key: string;
@@ -54,6 +54,16 @@ export const NARRATION: NarrationClip[] = [
   clip('transform_mermaid', 'narrator', 'You are a mermaid! You can swim anywhere in the water.'),
   clip('transform_princess', 'narrator', 'You are a princess again.'),
   clip('form_wrong_terrain', 'willa', 'Let us go to the glowing spot first. Follow the sparkles!'),
+
+  // --- v0.4b family magic and Unicorn Meadow
+  clip('king_hello', 'king', 'Hello, Princess! Shall we light up the night sky? Tap the launch pad!', undefined, false),
+  clip('king_again', 'king', 'Ooh, so pretty! Let us make more fireworks!', undefined, false),
+  clip('queen_hello', 'queen', 'Welcome to my wand workshop! Come and make your very own wand.', undefined, false),
+  clip('queen_again', 'queen', 'What a lovely wand! Would you like to change it?', undefined, false),
+  clip('dapple_hello', 'dapple', 'Let us play tag! Run, run, run!', undefined, false),
+  clip('dapple_again', 'dapple', 'Tag again? Yay!', undefined, false),
+  clip('dapple_form', 'dapple', 'Tag is more fun as a unicorn! Tap the magic wand to become one.', undefined, false),
+  clip('willa_meadow', 'willa', 'Follow the path north. A friend is waiting in the meadow!', undefined, false),
 
   // --- Bramble and the rainbow bridge
   clip('bramble_pattern', 'bramble', 'The rainbow bridge is broken! Finish the pattern. Red, blue, red, blue.', 'Say the colors slowly, like a song.'),

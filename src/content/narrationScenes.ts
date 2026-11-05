@@ -27,5 +27,8 @@ export const VOICE_CAST: Record<Speaker, { role: string; voice: string }> = {
   marina: { role: 'Marina the sea turtle', voice: 'Soft, slow and wise; watery calm.' },
   nana: { role: 'Nana Bluebird', voice: 'Cozy, loving grandmother tone; slightly warbly.' },
   shell: { role: 'The Singing Shell', voice: 'Playful sing-song; gentle echo is fine.' },
-  coralie: { role: 'Coralie the seahorse', voice: 'Sweet and bubbly; medium-high pitch.' }
+  coralie: { role: 'Coralie the seahorse', voice: 'Sweet and bubbly; medium-high pitch.' },
+  king: { role: 'The King', voice: 'Warm, jolly and booming but gentle; a proud-parent tone.' },
+  queen: { role: 'The Queen', voice: 'Calm, kind and graceful; a soft storyteller tone.' },
+  dapple: { role: 'Dapple the unicorn', voice: 'Playful and giggly; quick and friendly.' }
 };

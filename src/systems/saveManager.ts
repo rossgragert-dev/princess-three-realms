@@ -1,5 +1,6 @@
 import { defaultLayout, migrateLegacy, sanitizeLayout, type PlacedItem } from '../content/furniture';
 import type { GameState, SceneId } from '../types/game';
+import { DEFAULT_WAND, defaultActivities, sanitizeActivities, sanitizeUnlockedWand, sanitizeWand, START_OPTIONS, syncWandUnlocks } from '../content/family';
 import { sanitizeDecor } from '../content/decorCatalog';
 import { defaultRoomTheme, sanitizeRoomTheme } from '../content/roomThemes';
 import { defaultAppearance, defaultWardrobe, sanitizeWardrobe } from '../content/appearance';
@@ -11,7 +12,10 @@ export const SAFE_SPAWN: Record<SceneId, string> = {
   woods: 'from_courtyard',
   shore: 'from_woods',
   grotto: 'from_shore',
-  bedroom: 'from_courtyard'
+  bedroom: 'from_courtyard',
+  festival: 'from_courtyard',
+  conservatory: 'from_courtyard',
+  meadow: 'from_woods'
 };
 
 export function defaultState(): GameState {
@@ -24,6 +28,9 @@ export function defaultState(): GameState {
     stars: 0,
     stickers: [],
     unlockedDecor: [],
+    equippedWand: { ...DEFAULT_WAND },
+    unlockedWand: [...START_OPTIONS],
+    activities: defaultActivities(),
     bedroom: {},
     bedroomLayout: defaultLayout(),
     roomTheme: defaultRoomTheme(),
@@ -42,7 +49,7 @@ export function defaultState(): GameState {
   };
 }
 
-const SCENES: SceneId[] = ['courtyard', 'woods', 'shore', 'grotto', 'bedroom'];
+const SCENES: SceneId[] = ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'festival', 'conservatory', 'meadow'];
 
 /** Merge arbitrary parsed JSON onto safe defaults; never throws, never strands the player. */
 export function sanitize(raw: unknown): GameState {
@@ -62,6 +69,10 @@ export function sanitize(raw: unknown): GameState {
   else bedroomLayout = migrateLegacy(decor.bedroom, decor.unlockedDecor);
   const flags = { ...(typeof r.flags === 'object' && r.flags ? r.flags : {}) };
   const look = sanitizeWardrobe(r.appearance, r.wardrobe, flags);
+  const activities = sanitizeActivities((r as { activities?: unknown }).activities);
+  const unlockedWand = sanitizeUnlockedWand((r as { unlockedWand?: unknown }).unlockedWand);
+  syncWandUnlocks({ flags, activities, unlockedWand });
+  const wand = sanitizeWand((r as { equippedWand?: unknown }).equippedWand, unlockedWand);
   return {
     version: 1,
     scene,
@@ -77,6 +88,9 @@ export function sanitize(raw: unknown): GameState {
     roomTheme: sanitizeRoomTheme(r.roomTheme),
     appearance: look.appearance,
     wardrobe: look.wardrobe,
+    equippedWand: wand,
+    unlockedWand,
+    activities,
     puzzles: typeof r.puzzles === 'object' && r.puzzles ? { ...r.puzzles } : {},
     // the on-screen arrows are permanent since v0.4a, whatever an older save said
     settings: { ...d.settings, ...(typeof r.settings === 'object' && r.settings ? r.settings : {}), dpad: true }

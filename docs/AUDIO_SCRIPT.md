@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 81 (80 required)
+- Total lines: 89 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -21,6 +21,9 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | pip | Pip the bunny | Bright, bouncy and a little squeaky; quick and eager. |
 | tree | The Talking Tree | Slow, deep, kindly and rumbly; long vowels. |
 | willa | Willa the woodland fairy | Light, gentle and musical; slightly higher pitch. |
+| king | The King | Warm, jolly and booming but gentle; a proud-parent tone. |
+| queen | The Queen | Calm, kind and graceful; a soft storyteller tone. |
+| dapple | Dapple the unicorn | Playful and giggly; quick and friendly. |
 | bramble | Bramble the squirrel | Quick, cheerful and chatty; mid-high pitch. |
 | marina | Marina the sea turtle | Soft, slow and wise; watery calm. |
 | coralie | Coralie the seahorse | Sweet and bubbly; medium-high pitch. |
@@ -108,6 +111,29 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | woods | `need_unicorn` | Only a unicorn can fix this. Tap the magic wand and choose the unicorn! |  | yes |
 | shore | `form_wrong_terrain` | Let us go to the glowing spot first. Follow the sparkles! |  | yes |
 | shore | `shore_intro` | Look! Sparkly water. Tap it to become a mermaid! |  | yes |
+| anywhere | `willa_meadow` | Follow the path north. A friend is waiting in the meadow! |  | no |
+
+## The King (`king`)
+
+| Scene | Key | Line | Direction | Req |
+|---|---|---|---|---|
+| anywhere | `king_hello` | Hello, Princess! Shall we light up the night sky? Tap the launch pad! |  | no |
+| anywhere | `king_again` | Ooh, so pretty! Let us make more fireworks! |  | no |
+
+## The Queen (`queen`)
+
+| Scene | Key | Line | Direction | Req |
+|---|---|---|---|---|
+| anywhere | `queen_hello` | Welcome to my wand workshop! Come and make your very own wand. |  | no |
+| anywhere | `queen_again` | What a lovely wand! Would you like to change it? |  | no |
+
+## Dapple the unicorn (`dapple`)
+
+| Scene | Key | Line | Direction | Req |
+|---|---|---|---|---|
+| anywhere | `dapple_hello` | Let us play tag! Run, run, run! |  | no |
+| anywhere | `dapple_again` | Tag again? Yay! |  | no |
+| anywhere | `dapple_form` | Tag is more fun as a unicorn! Tap the magic wand to become one. |  | no |
 
 ## Bramble the squirrel (`bramble`)
 
@@ -248,7 +274,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (15)
+## anywhere (23)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -256,6 +282,14 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `controls_tap` | Tap the ground and the princess will walk there. |
 | narrator | `quest_replay` | Tap the picture at the top to hear what to do next. |
 | narrator | `transform_princess` | You are a princess again. |
+| king | `king_hello` | Hello, Princess! Shall we light up the night sky? Tap the launch pad! |
+| king | `king_again` | Ooh, so pretty! Let us make more fireworks! |
+| queen | `queen_hello` | Welcome to my wand workshop! Come and make your very own wand. |
+| queen | `queen_again` | What a lovely wand! Would you like to change it? |
+| dapple | `dapple_hello` | Let us play tag! Run, run, run! |
+| dapple | `dapple_again` | Tag again? Yay! |
+| dapple | `dapple_form` | Tag is more fun as a unicorn! Tap the magic wand to become one. |
+| willa | `willa_meadow` | Follow the path north. A friend is waiting in the meadow! |
 | narrator | `sticker_pip` | You helped Pip the bunny count carrots! |
 | narrator | `sticker_rainbow` | You fixed the rainbow bridge! |
 | narrator | `sticker_marina` | You helped Marina the turtle! |

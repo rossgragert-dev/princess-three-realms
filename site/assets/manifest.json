@@ -326,6 +326,142 @@
     0,
     1
    ],
+   "key": "dapple_idle_down",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "key": "dapple_walk_down",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    6,
+    7,
+    8,
+    9
+   ],
+   "key": "dapple_gallop_down",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    12,
+    13
+   ],
+   "key": "dapple_idle_up",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    14,
+    15,
+    16,
+    17
+   ],
+   "key": "dapple_walk_up",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    18,
+    19,
+    20,
+    21
+   ],
+   "key": "dapple_gallop_up",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    24,
+    25
+   ],
+   "key": "dapple_idle_left",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    26,
+    27,
+    28,
+    29
+   ],
+   "key": "dapple_walk_left",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    30,
+    31,
+    32,
+    33
+   ],
+   "key": "dapple_gallop_left",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    36,
+    37
+   ],
+   "key": "dapple_idle_right",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 9,
+   "frames": [
+    38,
+    39,
+    40,
+    41
+   ],
+   "key": "dapple_walk_right",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 12,
+   "frames": [
+    42,
+    43,
+    44,
+    45
+   ],
+   "key": "dapple_gallop_right",
+   "repeat": -1,
+   "sheet": "dapple"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
    "key": "mermaid_idle_down",
    "repeat": -1,
    "sheet": "mermaid"
@@ -609,6 +745,50 @@
    "key": "tree_react",
    "repeat": 0,
    "sheet": "npc_tree"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "king_idle",
+   "repeat": -1,
+   "sheet": "npc_king"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "king_react",
+   "repeat": 0,
+   "sheet": "npc_king"
+  },
+  {
+   "frameRate": 2,
+   "frames": [
+    0,
+    1
+   ],
+   "key": "queen_idle",
+   "repeat": -1,
+   "sheet": "npc_queen"
+  },
+  {
+   "frameRate": 6,
+   "frames": [
+    2,
+    2,
+    1,
+    2
+   ],
+   "key": "queen_react",
+   "repeat": 0,
+   "sheet": "npc_queen"
   },
   {
    "frameRate": 8,
@@ -1125,6 +1305,468 @@
    "height": 8,
    "key": "fx_flutter",
    "width": 10
+  },
+  {
+   "file": "assets/props/fw_spark.png",
+   "height": 5,
+   "key": "fw_spark",
+   "width": 5
+  },
+  {
+   "file": "assets/props/fw_rocket.png",
+   "height": 14,
+   "key": "fw_rocket",
+   "width": 6
+  },
+  {
+   "file": "assets/props/fw_dais.png",
+   "height": 28,
+   "key": "fw_dais",
+   "width": 48
+  },
+  {
+   "file": "assets/props/fw_castle.png",
+   "height": 72,
+   "key": "fw_castle",
+   "width": 160
+  },
+  {
+   "file": "assets/props/wand_bench.png",
+   "height": 32,
+   "key": "wand_bench",
+   "width": 32
+  },
+  {
+   "file": "assets/props/festival_garland.png",
+   "height": 16,
+   "key": "festival_garland",
+   "width": 32
+  },
+  {
+   "file": "assets/props/meadow_cushion.png",
+   "height": 16,
+   "key": "meadow_cushion",
+   "width": 16
+  },
+  {
+   "file": "assets/props/fx_heart.png",
+   "height": 11,
+   "key": "fx_heart",
+   "width": 12
+  },
+  {
+   "file": "assets/props/wand_shaft.png",
+   "height": 40,
+   "key": "wand_shaft",
+   "width": 8
+  },
+  {
+   "file": "assets/props/trail_star.png",
+   "height": 7,
+   "key": "trail_star",
+   "width": 7
+  },
+  {
+   "file": "assets/props/trail_butterfly.png",
+   "height": 7,
+   "key": "trail_butterfly",
+   "width": 9
+  },
+  {
+   "file": "assets/props/trail_petal.png",
+   "height": 7,
+   "key": "trail_petal",
+   "width": 7
+  },
+  {
+   "file": "assets/props/trail_bubble.png",
+   "height": 8,
+   "key": "trail_bubble",
+   "width": 8
+  },
+  {
+   "file": "assets/props/fw_shape_star.png",
+   "height": 24,
+   "key": "fw_shape_star",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_heart.png",
+   "height": 24,
+   "key": "fw_shape_heart",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_flower.png",
+   "height": 24,
+   "key": "fw_shape_flower",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_spiral.png",
+   "height": 24,
+   "key": "fw_shape_spiral",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_shape_rainbow.png",
+   "height": 24,
+   "key": "fw_shape_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/fw_mode_1.png",
+   "height": 24,
+   "key": "fw_mode_1",
+   "width": 36
+  },
+  {
+   "file": "assets/props/fw_mode_2.png",
+   "height": 24,
+   "key": "fw_mode_2",
+   "width": 36
+  },
+  {
+   "file": "assets/props/fw_mode_3.png",
+   "height": 24,
+   "key": "fw_mode_3",
+   "width": 36
+  },
+  {
+   "file": "assets/props/wand_star_pink.png",
+   "height": 24,
+   "key": "wand_star_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_gold.png",
+   "height": 24,
+   "key": "wand_star_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_blue.png",
+   "height": 24,
+   "key": "wand_star_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_mint.png",
+   "height": 24,
+   "key": "wand_star_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_lavender.png",
+   "height": 24,
+   "key": "wand_star_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_red.png",
+   "height": 24,
+   "key": "wand_star_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_pearl.png",
+   "height": 24,
+   "key": "wand_star_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_star_rainbow.png",
+   "height": 24,
+   "key": "wand_star_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_pink.png",
+   "height": 24,
+   "key": "wand_moon_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_gold.png",
+   "height": 24,
+   "key": "wand_moon_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_blue.png",
+   "height": 24,
+   "key": "wand_moon_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_mint.png",
+   "height": 24,
+   "key": "wand_moon_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_lavender.png",
+   "height": 24,
+   "key": "wand_moon_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_red.png",
+   "height": 24,
+   "key": "wand_moon_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_pearl.png",
+   "height": 24,
+   "key": "wand_moon_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_moon_rainbow.png",
+   "height": 24,
+   "key": "wand_moon_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_pink.png",
+   "height": 24,
+   "key": "wand_flower_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_gold.png",
+   "height": 24,
+   "key": "wand_flower_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_blue.png",
+   "height": 24,
+   "key": "wand_flower_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_mint.png",
+   "height": 24,
+   "key": "wand_flower_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_lavender.png",
+   "height": 24,
+   "key": "wand_flower_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_red.png",
+   "height": 24,
+   "key": "wand_flower_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_pearl.png",
+   "height": 24,
+   "key": "wand_flower_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_flower_rainbow.png",
+   "height": 24,
+   "key": "wand_flower_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_pink.png",
+   "height": 24,
+   "key": "wand_heart_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_gold.png",
+   "height": 24,
+   "key": "wand_heart_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_blue.png",
+   "height": 24,
+   "key": "wand_heart_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_mint.png",
+   "height": 24,
+   "key": "wand_heart_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_lavender.png",
+   "height": 24,
+   "key": "wand_heart_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_red.png",
+   "height": 24,
+   "key": "wand_heart_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_pearl.png",
+   "height": 24,
+   "key": "wand_heart_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_heart_rainbow.png",
+   "height": 24,
+   "key": "wand_heart_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_pink.png",
+   "height": 24,
+   "key": "wand_crystal_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_gold.png",
+   "height": 24,
+   "key": "wand_crystal_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_blue.png",
+   "height": 24,
+   "key": "wand_crystal_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_mint.png",
+   "height": 24,
+   "key": "wand_crystal_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_lavender.png",
+   "height": 24,
+   "key": "wand_crystal_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_red.png",
+   "height": 24,
+   "key": "wand_crystal_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_pearl.png",
+   "height": 24,
+   "key": "wand_crystal_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_crystal_rainbow.png",
+   "height": 24,
+   "key": "wand_crystal_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_pink.png",
+   "height": 24,
+   "key": "wand_seashell_pink",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_gold.png",
+   "height": 24,
+   "key": "wand_seashell_gold",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_blue.png",
+   "height": 24,
+   "key": "wand_seashell_blue",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_mint.png",
+   "height": 24,
+   "key": "wand_seashell_mint",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_lavender.png",
+   "height": 24,
+   "key": "wand_seashell_lavender",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_red.png",
+   "height": 24,
+   "key": "wand_seashell_red",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_pearl.png",
+   "height": 24,
+   "key": "wand_seashell_pearl",
+   "width": 24
+  },
+  {
+   "file": "assets/props/wand_seashell_rainbow.png",
+   "height": 24,
+   "key": "wand_seashell_rainbow",
+   "width": 24
+  },
+  {
+   "file": "assets/props/bolt_pink.png",
+   "height": 14,
+   "key": "bolt_pink",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_gold.png",
+   "height": 14,
+   "key": "bolt_gold",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_blue.png",
+   "height": 14,
+   "key": "bolt_blue",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_mint.png",
+   "height": 14,
+   "key": "bolt_mint",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_lavender.png",
+   "height": 14,
+   "key": "bolt_lavender",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_red.png",
+   "height": 14,
+   "key": "bolt_red",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_pearl.png",
+   "height": 14,
+   "key": "bolt_pearl",
+   "width": 14
+  },
+  {
+   "file": "assets/props/bolt_rainbow.png",
+   "height": 14,
+   "key": "bolt_rainbow",
+   "width": 14
   }
  ],
  "index": {
@@ -1405,6 +2047,13 @@
    "key": "unicorn"
   },
   {
+   "file": "assets/characters/dapple.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 48,
+   "key": "dapple"
+  },
+  {
    "file": "assets/characters/mermaid.png",
    "frameHeight": 32,
    "frameWidth": 32,
@@ -1466,6 +2115,20 @@
    "frameWidth": 48,
    "frames": 3,
    "key": "npc_tree"
+  },
+  {
+   "file": "assets/characters/npc_king.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_king"
+  },
+  {
+   "file": "assets/characters/npc_queen.png",
+   "frameHeight": 32,
+   "frameWidth": 32,
+   "frames": 3,
+   "key": "npc_queen"
   },
   {
    "file": "assets/items/items.png",

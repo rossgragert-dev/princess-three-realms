@@ -255,6 +255,94 @@
     ]
   },
   {
+    "key": "king_hello",
+    "speaker": "king",
+    "text": "Hello, Princess! Shall we light up the night sky? Tap the launch pad!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/king_hello.m4a",
+      "assets/audio/narration/king_hello.ogg"
+    ]
+  },
+  {
+    "key": "king_again",
+    "speaker": "king",
+    "text": "Ooh, so pretty! Let us make more fireworks!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/king_again.m4a",
+      "assets/audio/narration/king_again.ogg"
+    ]
+  },
+  {
+    "key": "queen_hello",
+    "speaker": "queen",
+    "text": "Welcome to my wand workshop! Come and make your very own wand.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/queen_hello.m4a",
+      "assets/audio/narration/queen_hello.ogg"
+    ]
+  },
+  {
+    "key": "queen_again",
+    "speaker": "queen",
+    "text": "What a lovely wand! Would you like to change it?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/queen_again.m4a",
+      "assets/audio/narration/queen_again.ogg"
+    ]
+  },
+  {
+    "key": "dapple_hello",
+    "speaker": "dapple",
+    "text": "Let us play tag! Run, run, run!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/dapple_hello.m4a",
+      "assets/audio/narration/dapple_hello.ogg"
+    ]
+  },
+  {
+    "key": "dapple_again",
+    "speaker": "dapple",
+    "text": "Tag again? Yay!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/dapple_again.m4a",
+      "assets/audio/narration/dapple_again.ogg"
+    ]
+  },
+  {
+    "key": "dapple_form",
+    "speaker": "dapple",
+    "text": "Tag is more fun as a unicorn! Tap the magic wand to become one.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/dapple_form.m4a",
+      "assets/audio/narration/dapple_form.ogg"
+    ]
+  },
+  {
+    "key": "willa_meadow",
+    "speaker": "willa",
+    "text": "Follow the path north. A friend is waiting in the meadow!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/willa_meadow.m4a",
+      "assets/audio/narration/willa_meadow.ogg"
+    ]
+  },
+  {
     "key": "bramble_pattern",
     "speaker": "bramble",
     "text": "The rainbow bridge is broken! Finish the pattern. Red, blue, red, blue.",

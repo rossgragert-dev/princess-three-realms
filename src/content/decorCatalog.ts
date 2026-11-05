@@ -1,4 +1,5 @@
 import type { QuestFlag } from '../types/game';
+import { EXTRA_DECOR } from './family';
 
 /**
  * Princess bedroom: slots (hotspots), the 12 unlockable items, and the rules that tie them together.
@@ -161,7 +162,7 @@ export function sanitizeDecor(unlocked: unknown, bedroom: unknown): { unlockedDe
   for (const raw of Array.isArray(unlocked) ? unlocked : []) {
     if (typeof raw !== 'string') continue;
     const id = LEGACY_DECOR[raw] ?? raw;
-    if (DECOR[id] && !ids.includes(id)) ids.push(id);
+    if ((DECOR[id] || EXTRA_DECOR.includes(id)) && !ids.includes(id)) ids.push(id);
   }
   const out: Record<string, string> = {};
   const used = new Set<string>();

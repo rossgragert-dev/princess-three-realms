@@ -39,6 +39,12 @@ try {
   sh = await shots(); check('shot at the tree hits a tree', sh.length === b + 1 && sh.at(-1).kind === 'tree', JSON.stringify(sh.at(-1)));
   await shot(page, 'v04a1_09_tree_blossom');
   await sleep(1200);
+  // --- v0.4b: NO auto-aim. Stand one tile beside the tree's column, face straight up: the shot passes the off-axis tree untouched.
+  await sleep(cd); await goto(36, 24); { const tx = 35.5 * 16, ty = 24.5 * 16; for (let i = 0; i < 60; i++) { const f = await ptr(page, 'foot'); const dx = tx - f.x, dy = ty - f.y; if (Math.hypot(dx, dy) < 3) break; const m = Math.hypot(dx, dy); await ptr(page, 'stick', dx / m, dy / m, 0.35); await sleep(40); } await ptr(page, 'stick', 0, 0, 0); await sleep(200); console.log('  off-axis foot tile-x', ((await ptr(page, 'foot')).x / 16).toFixed(2)); } await ptr(page, 'stick', 0, -1, 0.35); await sleep(30); await ptr(page, 'stick', 0, 0, 0); await sleep(250); await sleep(450);
+  const q0 = (await shots()).length; await fire(); await sleep(230); await shot(page, 'v04b_16_straight_shot_past_tree'); await sleep(900);
+  const qs = await shots();
+  check('off-axis tree is NOT hit: shot flew straight past it', qs.length === q0 + 1 && qs.at(-1).kind !== 'tree' && qs.at(-1).dir === 'up', JSON.stringify(qs.at(-1)));
+  await sleep(cd);
   // --- shot into open space just flies and fizzles; shot into a wall stops short
   await goto(29, 18); await face(0, 1); await sleep(450);
   const c0 = (await shots()).length; await fire(); await sleep(700); const c1 = await shots();

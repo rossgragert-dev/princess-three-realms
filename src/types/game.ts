@@ -1,9 +1,10 @@
 import type { PlacedItem } from '../content/furniture';
 import type { RoomTheme } from '../content/roomThemes';
 import type { PrincessAppearance, WardrobeState } from '../content/appearance';
+import type { Activities, EquippedWand } from '../content/family';
 
 export type Form = 'princess' | 'unicorn' | 'mermaid';
-export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom';
+export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow';
 
 export type QuestFlag =
   | 'INTRO_DONE'
@@ -84,6 +85,12 @@ export interface GameState {
   wardrobe: WardrobeState;
   /** v0.4a: wallpaper + floor of the bedroom (cosmetic). */
   roomTheme: RoomTheme;
+  /** v0.4b: the wand she carries (what is equipped is separate from what is unlocked). */
+  equippedWand: EquippedWand;
+  /** v0.4b: stable ids like 'head:moon', 'color:gold', 'trail:petal'. Only ever grows. */
+  unlockedWand: string[];
+  /** v0.4b: optional-activity progress (fireworks, wand workshop, unicorn tag). Never gates Chapter 1. */
+  activities: Activities;
   puzzles: Record<string, PuzzleProgress>;
   settings: {
     musicVolume: number;

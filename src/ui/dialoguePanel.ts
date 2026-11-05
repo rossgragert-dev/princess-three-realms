@@ -7,7 +7,7 @@ import { glyphsFor } from '../content/lineGlyphs';
 import { services } from '../systems/services';
 import { makeButton, pic, type Btn } from './touchTargets';
 
-const NPC_SHEETS: Partial<Record<Speaker, string>> = { pip: 'npc_pip', willa: 'npc_willa', bramble: 'npc_bramble', marina: 'npc_marina', nana: 'npc_nana', coralie: 'npc_coralie' };
+const NPC_SHEETS: Partial<Record<Speaker, string>> = { pip: 'npc_pip', willa: 'npc_willa', bramble: 'npc_bramble', marina: 'npc_marina', nana: 'npc_nana', coralie: 'npc_coralie', king: 'npc_king', queen: 'npc_queen', dapple: 'dapple' };
 const FONT = 'Trebuchet MS, Arial, sans-serif';
 
 /**

@@ -5,7 +5,7 @@ import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from pxlib import Px, C, sheet, upscale, Image, rgb, mix
-import art_tiles, art_chars as AC, art_props as AP, art_overworld as AO, art_wardrobe as AW, art_home as AH, art_decor as AD, art_fx as AFX
+import art_tiles, art_chars as AC, art_props as AP, art_overworld as AO, art_wardrobe as AW, art_home as AH, art_decor as AD, art_fx as AFX, art_family as AFM
 
 ROOT = os.path.dirname(HERE)
 PUB = os.path.join(ROOT, 'public', 'assets')
@@ -116,6 +116,12 @@ for i, d in enumerate(DIRS):
     anim(f'unicorn_idle_{d}', 'unicorn', [b, b + 1], 2); anim(f'unicorn_walk_{d}', 'unicorn', [b + 2, b + 3, b + 4, b + 5], 9)
     anim(f'unicorn_gallop_{d}', 'unicorn', [b + 6, b + 7, b + 8, b + 9], 12); anim(f'unicorn_bloom_{d}', 'unicorn', [b + 10, b + 11, b + 11, b + 10], 6, 0)
 
+im_d, n_d = dir_sheet('dapple', 'characters/dapple.png', un_spec, AC.unicorn, None)
+AFM.dapple_recolor(im_d); im_d.save(os.path.join(PUB, 'characters', 'dapple.png'))
+for i, d in enumerate(DIRS):
+    b = i * n_d
+    anim(f'dapple_idle_{d}', 'dapple', [b, b + 1], 2); anim(f'dapple_walk_{d}', 'dapple', [b + 2, b + 3, b + 4, b + 5], 9); anim(f'dapple_gallop_{d}', 'dapple', [b + 6, b + 7, b + 8, b + 9], 12)
+
 me_spec = [('idle', 0), ('idle', 1), ('swim', 0), ('swim', 1), ('swim', 2), ('swim', 3), ('bubble', 0), ('bubble', 1)]
 im, n = dir_sheet('mermaid', 'characters/mermaid.png', me_spec, AC.mermaid, None)
 previews['mermaid'] = (im, 3, (70, 150, 230, 255))
@@ -131,7 +137,7 @@ dir_sheet('mermaid_m', 'characters/mermaid_m.png', me_spec, AC.mermaid, None)
 C.update(_sv)
 
 npc_frames = []
-for name, (w, h, fn) in AC.NPCS.items():
+for name, (w, h, fn) in {**AC.NPCS, **AFM.NPCS}.items():
     fr = [fn(0), fn(1), fn(2)]
     save_sheet(f'characters/npc_{name}.png', fr, 3, f'npc_{name}')
     anim(f'{name}_idle', f'npc_{name}', [0, 1], 2); anim(f'{name}_react', f'npc_{name}', [2, 2, 1, 2], 6, 0)
@@ -161,7 +167,7 @@ for nm, px in (('tree_a', AP.tree('a')), ('tree_b', AP.tree('b')), ('bush', AP.b
                ('canopy_bed', AP.canopy_bed()), ('moon_curtain', AP.moon_curtain()), ('crystal_nightstand', AP.crystal_nightstand()),
                ('decor_chest', AP.decor_chest()), ('shelf', AP.shelf()), ('crown_hud', AP.crown_hud()), ('sign_arch', AP.sign_arch()), ('hand', AP.hand())):
     save_image(nm, px)
-for nm, fn in AH.FURNITURE + AD.DECOR2 + AFX.FX:
+for nm, fn in AH.FURNITURE + AD.DECOR2 + AFX.FX + AFM.IMAGES:
     save_image(nm, fn())
 save_sheet('props/fountain.png', [AP.fountain(i) for i in range(2)], 2, 'fountain'); anim('fountain_flow', 'fountain', [0, 1], 4)
 save_sheet('props/lamp.png', [AP.lamp(False), AP.lamp(True)], 2, 'lamp')

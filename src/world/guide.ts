@@ -3,11 +3,14 @@ import { MAIN_PATH, nextObjective } from '../systems/questEngine';
 
 /** Scene graph exits: from -> to: the object id of the warp that leads there. */
 export const EXITS: Record<SceneId, Partial<Record<SceneId, string>>> = {
-  courtyard: { woods: 'warp_woods', bedroom: 'door_bedroom' },
-  woods: { courtyard: 'warp_courtyard', shore: 'warp_shore' },
+  courtyard: { woods: 'warp_woods', bedroom: 'door_bedroom', festival: 'warp_festival', conservatory: 'door_conservatory' },
+  woods: { courtyard: 'warp_courtyard', shore: 'warp_shore', meadow: 'warp_meadow' },
   shore: { woods: 'warp_woods', grotto: 'dive' },
   grotto: { shore: 'surface' },
-  bedroom: { courtyard: 'door_exit' }
+  bedroom: { courtyard: 'door_exit' },
+  festival: { courtyard: 'warp_courtyard' },
+  conservatory: { courtyard: 'door_exit' },
+  meadow: { woods: 'warp_woods' }
 };
 
 /** Where each main-path step is completed. */

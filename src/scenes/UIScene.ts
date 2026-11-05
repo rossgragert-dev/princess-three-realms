@@ -50,6 +50,7 @@ export class UIScene extends Phaser.Scene {
   private hintBtn!: Btn;
   private objBubble!: Phaser.GameObjects.Container;
   private starsTxt!: Phaser.GameObjects.Text;
+  private crown!: Phaser.GameObjects.Image;
   private countTray!: Phaser.GameObjects.Container;
   private seenForms = 1;
   private heldId = -1;
@@ -91,6 +92,7 @@ export class UIScene extends Phaser.Scene {
     this.hintBtn = makeButton(this, 476, 30, 'icon_hint', 1, tap(() => this.handlers.hint?.()));
     this.objBubble = this.add.container(416, 30);
     const crownImg = this.add.image(222, 26, 'crown_hud').setScale(1);
+    this.crown = crownImg;
     this.starsTxt = this.add.text(244, 16, '', { fontFamily: 'Trebuchet MS, Arial, sans-serif', fontSize: '20px', color: '#fff2a8', stroke: '#40255a', strokeThickness: 4 });
     // ---- bottom centre: the wand opens a small tray of forms (never overlaps the pad or the two big buttons)
     this.wandBtn = makeButton(this, 256, 352, 'icon_wand', 1.1, tap(() => this.toggleTray()));
@@ -170,6 +172,7 @@ export class UIScene extends Phaser.Scene {
   refresh() {
     const st = services.save.state;
     this.starsTxt.setText(st.stars > 0 ? `x${st.stars}` : '');
+    if (this.mg) return; // minigame: keep the stripped-down controls
     const forms = availableForms(st.flags);
     this.wandBtn.setVisible(forms.length > 1);
     if (forms.length > this.seenForms) { this.wandBtn.pulse(true); this.time.delayedCall(4000, () => this.wandBtn.pulse(false)); }
@@ -191,6 +194,35 @@ export class UIScene extends Phaser.Scene {
     }
     this.objBubble.setVisible(!!step);
   }
+
+  // ------------------------------------------------------------------ minigame mode (Unicorn Tag): only the stick, an exit and the tally
+  private mg?: { exit: Btn; stars: Phaser.GameObjects.Image[]; panel: Phaser.GameObjects.Graphics };
+  get inMinigame() { return !!this.mg; }
+  setTagMode(on: boolean, onExit?: () => void) {
+    if (on && !this.mg) {
+      const keep = this.gearBtn;
+      this.hud.forEach((b) => { if (b !== keep) b.setVisible(false); });
+      this.objBubble.setVisible(false); this.crown.setVisible(false); this.starsTxt.setVisible(false);
+      this.trayOpen = false; this.formBtns.forEach((b) => b.setVisible(false));
+      const panel = this.add.graphics().setDepth(7);
+      panel.fillStyle(0x40255a, 0.45).fillRoundedRect(256 - 78, 8, 156, 44, 22);
+      const stars = [0, 1, 2].map((i) => this.add.image(256 - 44 + i * 44, 30, 'ui', UI.icon_star).setScale(1.1).setAlpha(0.3).setDepth(8));
+      const exit = makeButton(this, 36, 32, 'icon_back', 1, () => onExit?.());
+      exit.container.setDepth(9);
+      this.mg = { exit, stars, panel };
+    } else if (!on && this.mg) {
+      this.mg.exit.container.destroy(); this.mg.stars.forEach((q) => q.destroy()); this.mg.panel.destroy();
+      this.mg = undefined; this.crown.setVisible(true); this.starsTxt.setVisible(true);
+      [this.homeBtn, this.hintBtn, this.aBtn, this.magicBtn, ...this.hud].forEach((b) => b.setVisible(true));
+      this.refresh();
+    }
+  }
+  /** Fills the gold stars in the tally (0..3). */
+  setTally(n: number) {
+    this.mg?.stars.forEach((q, i) => { const on = i < n; q.setAlpha(on ? 1 : 0.3); if (on) this.tweens.add({ targets: q, scale: 1.7, duration: dur(160), yoyo: true }); });
+  }
+  get tallyState() { return this.mg?.stars.map((q) => q.alpha > 0.9) ?? null; }
+  get exitPos() { return this.mg ? { x: this.mg.exit.container.x, y: this.mg.exit.container.y } : null; }
 
   get dialogueText() { return this.dialogue.current; }
   get puzzleCards() { return this.puzzle.cardPos; }

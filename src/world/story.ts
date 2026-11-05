@@ -25,6 +25,8 @@ export interface StoryCtx {
   /** Sets the flag (idempotent), saves, refreshes HUD and the visuals that depend on flags. */
   complete(flag: QuestFlag): boolean;
   cast(): Promise<void>;
+  /** v0.4b: play Unicorn Tag with Dapple; resolves when the session ends (three rounds done, or the exit button). */
+  startTag(): Promise<void>;
   face(obj: ObjDef): void;
   react(id: string): void;
   hop(id: string): void;
@@ -34,7 +36,7 @@ export interface StoryCtx {
   addSticker(id: string): boolean;
   sparkle(tile: Tile): void;
   /** v0.3: open the full-screen Royal Wardrobe or Enchanted Vanity; resolves when she comes back to the room. */
-  openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner'): Promise<void>;
+  openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop'): Promise<void>;
 }
 
 /** Progress that only matters during one play session (everything important is a quest flag). */
@@ -92,7 +94,11 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
   // ---------------------------------------------------------------- blooms (unicorn only)
   if (id.startsWith('bloom_')) return bloom(ctx, obj);
 
-  if (obj.kind === 'station') return ctx.openStation(id === 'wardrobe_station' ? 'Wardrobe' : id === 'paint_station' ? 'RoomDesigner' : 'Vanity');
+  if (obj.kind === 'station') {
+    if (id === 'dais') return ctx.openStation('Fireworks');
+    if (id === 'wand_station') return ctx.openStation('WandWorkshop');
+    return ctx.openStation(id === 'wardrobe_station' ? 'Wardrobe' : id === 'paint_station' ? 'RoomDesigner' : 'Vanity');
+  }
 
   // ---------------------------------------------------------------- chests and hidden finds
   if (obj.kind === 'chest') return chest(ctx, obj);
@@ -125,7 +131,28 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       ctx.react('willa');
       if (!f.WILLA_MET) ctx.complete('WILLA_MET');
       await ctx.say(f.RAINBOW_BRIDGE_OPEN ? SCRIPT.bloomCheer : SCRIPT.willaIntro);
+      if (f.RAINBOW_BRIDGE_OPEN) await ctx.say(SCRIPT.willaMeadow);
       return;
+
+    case 'king': {
+      ctx.react('king');
+      const again = ctx.state.activities.fireworks.sessions > 0;
+      await ctx.say(again ? SCRIPT.kingAgain : SCRIPT.kingHello);
+      return ctx.openStation('Fireworks');
+    }
+
+    case 'dapple': {
+      ctx.react('dapple');
+      if (ctx.form !== 'unicorn') { await ctx.say(SCRIPT.dappleForm); return; }
+      await ctx.say(ctx.state.activities.tag.sessions > 0 ? SCRIPT.dappleAgain : SCRIPT.dappleHello);
+      return ctx.startTag();
+    }
+
+    case 'queen': {
+      ctx.react('queen');
+      await ctx.say(ctx.state.activities.workshop.made > 0 ? SCRIPT.queenAgain : SCRIPT.queenHello);
+      return ctx.openStation('WandWorkshop');
+    }
 
     case 'willa_shore':
       ctx.react('willa_shore');

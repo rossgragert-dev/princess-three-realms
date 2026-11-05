@@ -32,3 +32,11 @@ Device: iPad (Safari, landscape and portrait), installed to Home Screen. Build: 
 5. Close and reopen the app: the room is as you left it.
 6. Wand (princess form): zap a tree (blossoms and apples), the courtyard fountain (tall spray a few seconds), flowers, mushrooms in the woods, the castle door. Mash the button: it should not spam. Unicorn and mermaid magic still work.
 7. Portrait and landscape: every button should be easy for a 5-year-old thumb; nothing hidden behind the controls.
+
+## v0.4b - Family Magic & Unicorn Meadow (check on a real iPad, preview URL; NOT yet verified on iPad Safari)
+1. Wand aim: face up, down, left and right and zap. The sparkle must go exactly the way she faces. Stand beside a tree (one tile off its line) and zap past it: nothing should happen to the tree. Zap straight at it: it blossoms.
+2. King: from the courtyard walk to the west path to the Festival Garden. Tap the King (or the little stage). Pick colours, shapes and 1/2/3 rockets, tap the sky. No flashing screen. With Reduced effects on in Parent settings, bursts should be smaller and slower. After three launches a garland is earned; check the bedroom Decorate list.
+3. Queen: door in the courtyard's top right. Tap the Queen. Try heads, colours and trails; locked ones show a padlock and a picture hint. Press the green check, then go zap: the sparkle and trail match the wand you chose.
+4. Dapple: after meeting Willa, take the new north path from the Whispering Woods to the meadow as a unicorn. Tap Dapple, play three rounds (gold star over Dapple means "tag her"). Try standing still: she should come over. Try the back arrow at any time. The cushion appears in Decorate after a full game.
+5. Close the app and reopen: wand, garland, cushion and progress are all still there. Turn on airplane mode and reload the preview: it still works.
+6. Portrait and landscape: all new buttons easy to hit with a thumb.
