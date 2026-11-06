@@ -23,3 +23,5 @@
 ## Known limits
 - Not verified on real iPad Safari or by a child. Chrome emulation only (see test results in the report).
 - Very wide windows show more world (capped at ~2.4:1 in the sizing helper only; CSS does not cap).
+
+_v0.4b.3 preview redeploy marker: docs only._
