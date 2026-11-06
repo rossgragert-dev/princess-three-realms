@@ -3,6 +3,7 @@ import { lookKey } from '../art/looks';
 import { services, applySettingsToAudio } from '../systems/services';
 import { makeButton, burst } from '../ui/touchTargets';
 import { UI } from '../content/frameIndex';
+import { useStage, fullBackdrop } from '../ui/stage';
 
 /** One giant picture button. The first tap also unlocks audio (required by iOS Safari). */
 export class TitleScene extends Phaser.Scene {
@@ -11,8 +12,8 @@ export class TitleScene extends Phaser.Scene {
   create() {
     const cam = this.cameras.main;
     cam.setBackgroundColor('#6ec6ff');
-    const g = this.add.graphics();
-    g.fillGradientStyle(0x8fd3ff, 0x8fd3ff, 0xffd6f0, 0xffd6f0, 1).fillRect(0, 0, 512, 384);
+    useStage(this);
+    fullBackdrop(this, 0x8fd3ff, 0xffd6f0);
     for (let i = 0; i < 24; i++) {
       const s = this.add.star(Phaser.Math.Between(10, 502), Phaser.Math.Between(10, 250), 4, 2, 5, 0xffffff, 0.9);
       this.tweens.add({ targets: s, alpha: 0.2, duration: Phaser.Math.Between(700, 1600), yoyo: true, repeat: -1 });

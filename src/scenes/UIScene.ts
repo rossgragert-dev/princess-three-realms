@@ -13,6 +13,7 @@ import type { Line } from '../content/dialogue';
 import { DecorReveal } from '../ui/decorUi';
 import { unplacedEarned } from '../content/furniture';
 import { UI, type UiName } from '../content/frameIndex';
+import { gameSize } from '../ui/stage';
 
 export interface UIHandlers {
   form?: (f: Form) => void;
@@ -66,6 +67,9 @@ export class UIScene extends Phaser.Scene {
   private gearBtn!: Btn;
   /** Where the permanent d-pad sits (logical px). Exposed for the browser test drivers. */
   readonly pad = { x: 64, y: 316, r: 58 };
+  /** Layout shifts for the current screen: extra width (bx), extra height (by), and the centred-stage offsets (ox, oy). */
+  L = { bx: 0, by: 0, ox: 0, oy: 0 };
+  private padBase!: Phaser.GameObjects.Graphics;
 
   constructor() { super('UI'); }
 
@@ -107,6 +111,7 @@ export class UIScene extends Phaser.Scene {
     // ---- bottom left: the analog joystick. Touch the base and drag; the knob follows the thumb and springs back on release.
     const { x: px, y: py, r } = this.pad;
     const base = this.add.graphics().setDepth(5);
+    this.padBase = base;
     base.fillStyle(0x40255a, 0.32).fillCircle(px, py, r);
     base.fillStyle(0xffffff, 0.08).fillCircle(px, py, r * 0.62);
     base.lineStyle(3, 0xffffff, 0.4).strokeCircle(px, py, r);
@@ -132,6 +137,39 @@ export class UIScene extends Phaser.Scene {
     this.chrome = [base, this.knob, this.knobGlow, this.objBubble, crownImg, this.starsTxt];
     this.hud = [book, home, this.decorBtn, this.hintBtn, this.wandBtn, this.gearBtn, this.aBtn, this.magicBtn];
     this.refresh();
+    // v0.4b.2: anchor everything to the real screen edges, now and whenever the screen changes (rotation, resize)
+    this.layoutHud();
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.layoutHud, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.layoutHud, this));
+  }
+
+  /**
+   * Places every control relative to the visible screen. The authored 512x384 numbers are kept as the reference:
+   * things authored on the left/top stay put, things authored on the right/bottom move with the real right/bottom edge,
+   * and centred things follow the middle. No gameplay coordinate is touched.
+   */
+  layoutHud() {
+    const { w, h } = gameSize(this);
+    const bx = Math.max(0, w - 512), by = Math.max(0, h - 384), ox = Math.floor(bx / 2), oy = Math.floor(by / 2);
+    this.L = { bx, by, ox, oy };
+    this.hintBtn.container.setPosition(476 + bx, 30);
+    this.objBubble.setPosition(416 + bx, 30);
+    this.crown.setPosition(222 + ox, 26);
+    this.starsTxt.setPosition(244 + ox, 16);
+    this.wandBtn.container.setPosition(256 + ox, 352 + by);
+    this.gearBtn.container.setPosition(176, 362 + by);
+    this.pad.y = 316 + by;
+    this.padBase.setPosition(0, by);
+    this.knobGlow.clear();
+    this.knob.setPosition(this.pad.x, this.pad.y);
+    this.aBtn.container.setPosition(458 + bx, 318 + by);
+    this.magicBtn.container.setPosition(386 + bx, 344 + by);
+    this.countTray.setPosition(256 + ox, 70);
+    if (this.trayOpen) this.placeTray(false);
+    this.dialogue.setOffset(ox, by);
+    this.puzzle.setOffset(ox, oy);
+    this.reveal.setOffset(ox, oy);
+    if (this.mg) { this.mg.panel.setPosition(ox, 0); this.mg.stars.forEach((q, i) => q.setPosition(256 - 44 + i * 44 + ox, 30)); }
   }
 
   // ------------------------------------------------------------------ HUD state
@@ -205,8 +243,8 @@ export class UIScene extends Phaser.Scene {
       this.objBubble.setVisible(false); this.crown.setVisible(false); this.starsTxt.setVisible(false);
       this.trayOpen = false; this.formBtns.forEach((b) => b.setVisible(false));
       const panel = this.add.graphics().setDepth(7);
-      panel.fillStyle(0x40255a, 0.45).fillRoundedRect(256 - 78, 8, 156, 44, 22);
-      const stars = [0, 1, 2].map((i) => this.add.image(256 - 44 + i * 44, 30, 'ui', UI.icon_star).setScale(1.1).setAlpha(0.3).setDepth(8));
+      panel.fillStyle(0x40255a, 0.45).fillRoundedRect(256 - 78, 8, 156, 44, 22).setPosition(this.L.ox, 0);
+      const stars = [0, 1, 2].map((i) => this.add.image(256 - 44 + i * 44 + this.L.ox, 30, 'ui', UI.icon_star).setScale(1.1).setAlpha(0.3).setDepth(8));
       const exit = makeButton(this, 36, 32, 'icon_back', 1, () => onExit?.());
       exit.container.setDepth(9);
       this.mg = { exit, stars, panel };
@@ -250,15 +288,21 @@ export class UIScene extends Phaser.Scene {
     const forms: Form[] = ['princess', 'unicorn', 'mermaid'];
     const avail = availableForms(services.save.state.flags);
     const shown = forms.filter((f) => avail.includes(f));
+    shown.forEach((f) => this.formBtns.get(f)!.setVisible(open));
+    if (open) this.placeTray(true);
+    forms.filter((f) => !shown.includes(f)).forEach((f) => this.formBtns.get(f)!.setVisible(false));
+  }
+
+  /** Lines the open form tray up above the wand button (centred, bottom-anchored). */
+  private placeTray(animate: boolean) {
+    const forms: Form[] = ['princess', 'unicorn', 'mermaid'];
+    const shown = forms.filter((f) => availableForms(services.save.state.flags).includes(f));
+    const y = 296 + this.L.by;
     shown.forEach((f, i) => {
       const b = this.formBtns.get(f)!;
-      b.setVisible(open);
-      if (open) {
-        b.container.setPosition(256 + (i - (shown.length - 1) / 2) * 66, 296);
-        this.tweens.add({ targets: b.container, y: { from: 330, to: 296 }, duration: dur(160) });
-      }
+      b.container.setPosition(256 + this.L.ox + (i - (shown.length - 1) / 2) * 66, y);
+      if (animate) this.tweens.add({ targets: b.container, y: { from: y + 34, to: y }, duration: dur(160) });
     });
-    forms.filter((f) => !shown.includes(f)).forEach((f) => this.formBtns.get(f)!.setVisible(false));
   }
 
   // ------------------------------------------------------------------ pointer arbitration
@@ -314,11 +358,12 @@ export class UIScene extends Phaser.Scene {
   // ------------------------------------------------------------------ reward moment
   celebrate(picture: string, scale = 4) {
     services.audio.sfx('sparkle');
-    const p = pic(this, picture, 256, 200, scale).setDepth(70).setScale(0.1);
-    burst(this, 256, 200, 20, 69);
+    const cx = 256 + this.L.ox, cy = 200 + this.L.oy;
+    const p = pic(this, picture, cx, cy, scale).setDepth(70).setScale(0.1);
+    burst(this, cx, cy, 20, 69);
     this.tweens.add({
       targets: p, scale, duration: dur(450), ease: 'Back.Out',
-      onComplete: () => this.tweens.add({ targets: p, alpha: 0, y: 150, delay: dur(900), duration: dur(500), onComplete: () => p.destroy() })
+      onComplete: () => this.tweens.add({ targets: p, alpha: 0, y: cy - 50, delay: dur(900), duration: dur(500), onComplete: () => p.destroy() })
     });
     this.refresh();
   }

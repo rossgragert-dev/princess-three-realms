@@ -9,6 +9,11 @@ const game = new Phaser.Game(makeConfig('game'));
 document.addEventListener('gesturestart', (e) => e.preventDefault());
 document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
 
+// iPad Safari reports the new size late after a rotation; nudge the scale manager so the canvas never keeps the old shape.
+const refit = () => { game.scale.refresh(); };
+window.addEventListener('orientationchange', () => { setTimeout(refit, 120); setTimeout(refit, 450); });
+window.visualViewport?.addEventListener('resize', refit);
+
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => { void navigator.serviceWorker.register('./sw.js'); });
 }

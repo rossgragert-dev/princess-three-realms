@@ -29,6 +29,9 @@ export class DialoguePanel {
   /** Current line, for browser tests. */
   current = '';
 
+  /** Shift for the current screen: ox centres it horizontally, by pins it to the real bottom edge. */
+  setOffset(ox: number, by: number) { this.root.setPosition(ox, by); }
+
   constructor(private scene: Phaser.Scene, private setModal: (on: boolean) => void) {
     this.root = scene.add.container(0, 0).setDepth(50).setVisible(false);
     const frame = scene.add.graphics();

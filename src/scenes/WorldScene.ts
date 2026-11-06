@@ -85,6 +85,8 @@ export class WorldScene extends Phaser.Scene {
     this.state.tile = { ...start };
 
     this.setupCamera();
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.onResize);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.onResize));
     if (this.map.medium === 'water') this.addUnderwater();
     this.applyFlags(false);
     this.renderDecor();
@@ -200,7 +202,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private setupCamera() {
-    const cam = this.cameras.main, w = this.map.w * T, h = this.map.h * T, vw = 512, vh = 384;
+    const cam = this.cameras.main, w = this.map.w * T, h = this.map.h * T, vw = cam.width, vh = cam.height;
     cam.setBounds(w < vw ? -(vw - w) / 2 : 0, h < vh ? -(vh - h) / 2 : 0, Math.max(w, vw), Math.max(h, vh));
     cam.startFollow(this.player.sprite, true, 0.12, 0.12);
     cam.centerOn(this.player.sprite.x, this.player.sprite.y);
@@ -296,9 +298,24 @@ export class WorldScene extends Phaser.Scene {
     this.editor = new LayoutEditor(this.state.bedroomLayout, () => this.state.unlockedDecor);
     this.ui.setEditing(true);
     const cam = this.cameras.main;
-    cam.stopFollow(); cam.setZoom(1); cam.setScroll(-64, -4);
+    cam.stopFollow(); cam.setZoom(1); this.decorScroll();
     this.scene.launch('Decorate', { world: this });
   }
+
+  /** Centres the 384x288 bedroom above the bottom sheet, whatever the screen shape. */
+  private decorScroll() {
+    const cam = this.cameras.main, roomW = this.map.w * T, roomH = this.map.h * T;
+    const top = Math.max(4, Math.floor((cam.height - 86 - roomH) / 2));
+    cam.setBounds(-100000, -100000, 200000, 200000);
+    cam.setScroll(-Math.floor((cam.width - roomW) / 2), -top);
+  }
+
+  /** Rotation / window resize: keep the view valid without restarting or moving the player. */
+  private onResize = () => {
+    if (!this.player || !this.map) return;
+    if (this.editing) this.decorScroll();
+    else { this.setupCamera(); }
+  };
 
   /** Called by the Decorate scene when the child is done. */
   async endDecorate() {

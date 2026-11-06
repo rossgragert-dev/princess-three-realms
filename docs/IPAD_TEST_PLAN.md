@@ -40,3 +40,10 @@ Device: iPad (Safari, landscape and portrait), installed to Home Screen. Build: 
 4. Dapple: after meeting Willa, take the new north path from the Whispering Woods to the meadow as a unicorn. Tap Dapple, play three rounds (gold star over Dapple means "tag her"). Try standing still: she should come over. Try the back arrow at any time. The cushion appears in Decorate after a full game.
 5. Close the app and reopen: wand, garland, cushion and progress are all still there. Turn on airplane mode and reload the preview: it still works.
 6. Portrait and landscape: all new buttons easy to hit with a thumb.
+
+## v0.4b.2 additions (full-screen)
+- Landscape and portrait: canvas fills the screen, no side bars; rotate mid-game and confirm nothing restarts or jumps.
+- Joystick (bottom-left) and A/magic (bottom-right) reachable at screen edges; hold the stick and tap A and magic.
+- Home/Book/Decorate (top-left), hint (top-right) visible; nothing under the notch/home bar.
+- Open Wardrobe, Vanity, Fireworks, Wand Workshop, Unicorn Tag, bedroom Decorate: taps land where drawn.
+- Home Screen install: Share → Add to Home Screen, launch, no Safari chrome.

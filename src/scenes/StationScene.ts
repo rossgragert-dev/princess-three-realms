@@ -5,6 +5,7 @@ import { PrincessPreview, ThumbPool } from '../art/looks';
 import { services } from '../systems/services';
 import { dur, reducedEffects } from '../systems/accessibility';
 import { burst, makeButton, pic, roundedPanel, type Btn } from '../ui/touchTargets';
+import { stagePoint, useStage } from '../ui/stage';
 
 type GO = Phaser.GameObjects.GameObject;
 
@@ -64,6 +65,7 @@ export abstract class StationScene extends Phaser.Scene {
     this.pageObjs = []; this.tabObjs = []; this.cards = []; this.pagerBtns = []; this.pageDots = []; this.btnPos = {};
     const full = this.cfg.kind === 'full';
 
+    useStage(this);
     this.drawBackdrop();
     // preview ---------------------------------------------------------
     this.preview = new PrincessPreview(this, this.cfg.kind, full ? 'wd_preview_full' : 'wd_preview_port');
@@ -222,11 +224,13 @@ export abstract class StationScene extends Phaser.Scene {
   private cardAt(x: number, y: number) {
     return this.cards.find((c) => Math.abs(x - c.x) <= c.w / 2 && Math.abs(y - c.y) <= c.h / 2) ?? null;
   }
-  private onDown(p: Phaser.Input.Pointer) {
+  private onDown(ptr: Phaser.Input.Pointer) {
+    const p = stagePoint(this, ptr);
     const inGrid = p.x >= 296 && p.y < 276 && p.y > 10;
     this.down = { x: p.x, y: p.y, id: inGrid ? (this.cardAt(p.x, p.y)?.id ?? null) : null, inGrid };
   }
-  private onUp(p: Phaser.Input.Pointer) {
+  private onUp(ptr: Phaser.Input.Pointer) {
+    const p = stagePoint(this, ptr);
     const d = this.down; this.down = null;
     if (!d || !d.inGrid || this.closing) return;
     const dx = p.x - d.x, dy = p.y - d.y;

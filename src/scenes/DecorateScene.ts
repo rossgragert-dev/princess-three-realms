@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { FURNITURE, GROUPS, anchorFor, checkPlacement, lockedIn, nearestValid, ownedIn, spot, tableUnder, tilesOf, type Check, type FGroup, type FurnitureDef, type LayoutEditor, type PlacedItem, type Tile } from '../content/furniture';
 import { services } from '../systems/services';
 import { dur } from '../systems/accessibility';
+import { stagePoint as sp, useStage, stageOf } from '../ui/stage';
 import { burst, makeButton, pic, roundedPanel, type Btn } from '../ui/touchTargets';
 
 /** What the world gives the editor. */
@@ -50,12 +51,16 @@ export class DecorateScene extends Phaser.Scene {
   private get editor() { return this.host.editor!; }
   private get unlocked() { return services.save.state.unlockedDecor; }
 
+  /** A room pixel as a position in this scene's (stage-centred) coordinates. */
+  private ts(wx: number, wy: number) { const s = this.host.toScreen(wx, wy), o = stageOf(this, 'bottom'); return { x: s.x - o.x, y: s.y - o.y }; }
+
   create() {
+    useStage(this, 'bottom');
     this.cameras.main.fadeIn(dur(160));
     // the room area listens for taps and drags; everything on the panel and the button column is a normal button
     this.marks = this.add.graphics().setDepth(5);
-    this.input.on('pointerdown', (p: Phaser.Input.Pointer, over: unknown[]) => { if (!over.length && p.y < PANEL_Y - 2 && p.x < 452) { this.dragging = true; this.tapRoom(p); } });
-    this.input.on('pointermove', (p: Phaser.Input.Pointer) => { if (this.dragging && this.sel && p.y < PANEL_Y - 2) this.aim(this.host.tileAtScreen(p.x, p.y)); });
+    this.input.on('pointerdown', (p: Phaser.Input.Pointer, over: unknown[]) => { if (!over.length && sp(this, p).y < PANEL_Y - 2 && sp(this, p).x < 452) { this.dragging = true; this.tapRoom(p); } });
+    this.input.on('pointermove', (p: Phaser.Input.Pointer) => { if (this.dragging && this.sel && sp(this, p).y < PANEL_Y - 2) this.aim(this.host.tileAtScreen(p.x, p.y)); });
     const up = () => { this.dragging = false; };
     this.input.on('pointerup', up); this.input.on('pointerupoutside', up); this.input.on('pointercancel', up);
 
@@ -200,11 +205,11 @@ export class DecorateScene extends Phaser.Scene {
     const ok = this.status.ok;
     const table = d.kind === 'small' ? this.editor.layout.map((p) => ({ p, d: FURNITURE[p.item] })).find((q) => q.d.surface && tilesOf(q.d, q.p.x, q.p.y).some((t) => t.x === this.ghost!.x && t.y === this.ghost!.y))?.d : undefined;
     const at = spot(d, this.ghost.x, this.ghost.y, table);
-    const sp = this.host.toScreen(at.x + (d.ox ?? 0), at.y + (d.dy ?? 0));
+    const sp = this.ts(at.x + (d.ox ?? 0), at.y + (d.dy ?? 0));
     this.ghostImg = this.add.image(sp.x, sp.y, d.key, d.frame).setOrigin(0.5, 1).setDepth(8).setAlpha(ok ? 0.85 : 0.5).setFlipX(this.ghost.flip);
     this.ghostImg.setTint(ok ? 0xc8ffc8 : 0xff9a9a);
     this.outline(d, this.ghost.x, this.ghost.y, ok ? 0x45d96a : 0xff5a6e, 0.95, 3);
-    const c = this.host.toScreen((this.ghost.x + d.w / 2) * 16, (this.ghost.y - (d.kind === 'wall' || d.kind === 'window' ? 0 : 1)) * 16 - 14);
+    const c = this.ts((this.ghost.x + d.w / 2) * 16, (this.ghost.y - (d.kind === 'wall' || d.kind === 'window' ? 0 : 1)) * 16 - 14);
     this.statusIcon = pic(this, ok ? 'icon_check' : 'icon_cross', c.x, c.y, 0.5).setDepth(9);
     if (!ok && this.suggest) {
       this.outline(d, this.suggest.x, this.suggest.y, 0x45d96a, 0.8, 2, true);
@@ -215,7 +220,7 @@ export class DecorateScene extends Phaser.Scene {
     const tiles = d.kind === 'wall' || d.kind === 'window' ? [{ x: x - (d.kind === 'window' ? 1 : 0), y: 1 }, ...Array.from({ length: d.kind === 'window' ? 2 : d.w }, (_, i) => ({ x: x - (d.kind === 'window' ? 1 : 0) + i, y: 1 }))] : tilesOf(d, x, y);
     const xs = tiles.map((t) => t.x), ys = tiles.map((t) => t.y);
     const x0 = Math.min(...xs), x1 = Math.max(...xs) + 1, y0 = d.kind === 'wall' || d.kind === 'window' ? 1 : Math.min(...ys), y1 = d.kind === 'wall' || d.kind === 'window' ? 3 : Math.max(...ys) + 1;
-    const a = this.host.toScreen(x0 * 16, y0 * 16), b = this.host.toScreen(x1 * 16, y1 * 16);
+    const a = this.ts(x0 * 16, y0 * 16), b = this.ts(x1 * 16, y1 * 16);
     this.marks.lineStyle(w, color, alpha);
     this.marks.fillStyle(color, dashed ? 0.1 : 0.18).fillRect(a.x, a.y, b.x - a.x, b.y - a.y);
     if (dashed) {
@@ -252,7 +257,7 @@ export class DecorateScene extends Phaser.Scene {
     }
     services.audio.sfx('chime');
     const d = FURNITURE[this.sel.item];
-    const c = this.host.toScreen((g.x + d.w / 2) * 16, (g.y + d.h / 2) * 16);
+    const c = this.ts((g.x + d.w / 2) * 16, (g.y + d.h / 2) * 16);
     burst(this, c.x, c.y, 10, 20);
     this.host.layoutChanged(this.editor.layout, popId);
     if (this.sel.mode === 'move') this.sel = null; else this.ghost = null; // keep a new piece selected so flowers can be planted again and again
@@ -288,9 +293,9 @@ export class DecorateScene extends Phaser.Scene {
   private debugHook() {
     return {
       group: () => this.group,
-      groups: () => GROUPS.map((g, i) => ({ id: g, x: 30 + i * 53, y: 314 })),
-      cards: () => this.cardPos.map((c) => ({ ...c })),
-      buttons: () => Object.fromEntries(Object.entries(this.btn).map(([k, b]) => [k, { x: b.container.x, y: b.container.y, visible: b.container.visible }])),
+      groups: () => GROUPS.map((g, i) => ({ id: g, x: 30 + i * 53 + stageOf(this, 'bottom').x, y: 314 + stageOf(this, 'bottom').y })),
+      cards: () => this.cardPos.map((c) => ({ ...c, x: c.x + stageOf(this, 'bottom').x, y: c.y + stageOf(this, 'bottom').y })),
+      buttons: () => Object.fromEntries(Object.entries(this.btn).map(([k, b]) => [k, { x: b.container.x + stageOf(this, 'bottom').x, y: b.container.y + stageOf(this, 'bottom').y, visible: b.container.visible }])),
       sel: () => this.sel,
       ghost: () => (this.ghost ? { ...this.ghost } : null),
       status: () => ({ ...this.status }),

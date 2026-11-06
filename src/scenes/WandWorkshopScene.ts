@@ -6,6 +6,7 @@ import { UI, type UiName } from '../content/frameIndex';
 import { services } from '../systems/services';
 import { dur, reducedEffects } from '../systems/accessibility';
 import { burst, makeButton, roundedPanel } from '../ui/touchTargets';
+import { fullBackdrop, useStage } from '../ui/stage';
 
 type Kind = 'head' | 'color' | 'trail';
 const KINDS: Kind[] = ['head', 'color', 'trail'];
@@ -43,8 +44,8 @@ export class WandWorkshopScene extends Phaser.Scene {
     st.activities.workshop.visits++;
     syncWandUnlocks(st);
     services.save.save();
-    const g = this.add.graphics().setDepth(0);
-    g.fillGradientStyle(0xffe3f1, 0xffe3f1, 0xd8c8ff, 0xd8c8ff, 1).fillRect(0, 0, 512, 384);
+    useStage(this);
+    fullBackdrop(this, 0xffe3f1, 0xd8c8ff);
     this.add.existing(roundedPanel(this, 8, 56, 222, 320, 0x6a4fb0, 0xe2a53a).setDepth(1));
     this.add.existing(roundedPanel(this, 238, 8, 266, 368).setDepth(1));
     this.add.image(119, 316, 'wand_bench').setScale(3).setDepth(2).setAlpha(0.9);

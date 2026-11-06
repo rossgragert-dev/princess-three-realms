@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { services, applySettingsToAudio } from '../systems/services';
 import { resetSession } from '../world/story';
 import { makeButton, roundedPanel } from '../ui/touchTargets';
+import { dimmer, useStage } from '../ui/stage';
 
 const FONT = 'Trebuchet MS, Arial, sans-serif';
 
@@ -14,7 +15,8 @@ export class ParentSettingsScene extends Phaser.Scene {
   init(d: { from?: 'Title' | 'World' }) { this.from = d?.from ?? 'World'; }
 
   create() {
-    this.add.rectangle(256, 192, 512, 384, 0x1a1033, 0.85).setInteractive();
+    useStage(this);
+    dimmer(this, 0x1a1033, 0.85);
     makeButton(this, 28, 30, 'icon_back', 0.9, () => this.close());
     this.gate();
   }

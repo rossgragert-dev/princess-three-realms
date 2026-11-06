@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { useStage } from '../ui/stage';
 import { initLooks, applyOverworldLook, lookKey } from '../art/looks';
 import { services } from '../systems/services';
 
@@ -12,6 +13,7 @@ export class BootScene extends Phaser.Scene {
   constructor() { super('Boot'); }
 
   preload() {
+    useStage(this);
     const bar = this.add.rectangle(256, 200, 4, 14, 0xffc800).setOrigin(0, 0.5);
     this.add.rectangle(256, 200, 200, 18, 0x000000, 0).setStrokeStyle(3, 0xffffff);
     bar.x = 156;

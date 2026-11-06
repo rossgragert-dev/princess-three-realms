@@ -1,4 +1,5 @@
 import { StationScene } from './StationScene';
+import { fullBackdrop } from '../ui/stage';
 
 /** The Enchanted Vanity: large portrait in a golden lit mirror; hair, hair colour, tiara, jewellery, face sparkles, skin tone. */
 export class VanityScene extends StationScene {
@@ -12,7 +13,7 @@ export class VanityScene extends StationScene {
 
   protected drawBackdrop() {
     const g = this.add.graphics().setDepth(0);
-    g.fillGradientStyle(0xffe3f1, 0xffe3f1, 0xffc1dd, 0xffc1dd, 1).fillRect(0, 0, 512, 384);
+    fullBackdrop(this, 0xffe3f1, 0xffc1dd);
     // mirror: gold frame, pale glass, bulbs
     g.fillStyle(0xe2a53a, 1).fillRoundedRect(4, 14, 244, 340, 54);
     g.fillStyle(0xffd75a, 1).fillRoundedRect(10, 20, 232, 328, 48);

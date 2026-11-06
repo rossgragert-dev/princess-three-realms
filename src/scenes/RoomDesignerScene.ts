@@ -7,6 +7,7 @@ import { effectiveTile } from '../world/navigation';
 import { services } from '../systems/services';
 import { dur, reducedEffects } from '../systems/accessibility';
 import { burst, makeButton, roundedPanel } from '../ui/touchTargets';
+import { fullBackdrop, stagePoint, useStage } from '../ui/stage';
 
 type Tab = 'wall' | 'floor';
 const K = 0.62;            // miniature scale
@@ -34,8 +35,9 @@ export class RoomDesignerScene extends Phaser.Scene {
   create() {
     this.closing = false; this.openedAt = this.time.now; this.cards = []; this.cardObjs = []; this.tabRings = []; this.btnPos = {};
     this.tab = lastTab.v === 1 ? 'floor' : 'wall';
+    useStage(this);
+    fullBackdrop(this, 0xffe3f1, 0xe6d8ff);
     const g = this.add.graphics().setDepth(0);
-    g.fillGradientStyle(0xffe3f1, 0xffe3f1, 0xe6d8ff, 0xe6d8ff, 1).fillRect(0, 0, 512, 384);
     g.fillStyle(0xe2a53a, 1).fillRoundedRect(OX - 6, OY - 6, 384 * K + 12, 288 * K + 12, 12);
     g.fillStyle(0xfff6e4, 1).fillRoundedRect(OX - 3, OY - 3, 384 * K + 6, 288 * K + 6, 9);
     this.buildMiniRoom();
@@ -164,9 +166,10 @@ export class RoomDesignerScene extends Phaser.Scene {
 
   // ---------------------------------------------------------------- pointer: choose on release
   private cardAt(x: number, y: number) { return this.cards.find((c) => Math.abs(x - c.x) <= c.w / 2 && Math.abs(y - c.y) <= c.h / 2) ?? null; }
-  private onDown(p: Phaser.Input.Pointer) { this.down = { id: this.cardAt(p.x, p.y)?.id ?? null }; this.downAt = { x: p.x, y: p.y }; }
+  private onDown(ptr: Phaser.Input.Pointer) { const p = stagePoint(this, ptr); this.down = { id: this.cardAt(p.x, p.y)?.id ?? null }; this.downAt = { x: p.x, y: p.y }; }
   private downAt = { x: 0, y: 0 };
-  private onUp(p: Phaser.Input.Pointer) {
+  private onUp(ptr: Phaser.Input.Pointer) {
+    const p = stagePoint(this, ptr);
     const d = this.down; this.down = null;
     if (!d || !d.id || this.closing) return;
     if (Math.hypot(p.x - this.downAt.x, p.y - this.downAt.y) > 14) return;

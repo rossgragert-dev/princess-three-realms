@@ -7,6 +7,7 @@ import { UI } from '../content/frameIndex';
 import { services } from '../systems/services';
 import { dur, reducedEffects } from '../systems/accessibility';
 import { burst, makeButton } from '../ui/touchTargets';
+import { HUGE, fullBackdrop, stagePoint, useStage } from '../ui/stage';
 
 const SKY_H = 262;           // taps above this line launch fireworks
 const HIT = 58;              // >= 44 CSS px even on a phone held upright (512 logical px -> ~390 CSS px)
@@ -60,25 +61,26 @@ export class FireworksScene extends Phaser.Scene {
 
   // ------------------------------------------------------------------ backdrop
   private drawSky() {
-    const g = this.add.graphics().setDepth(0);
-    g.fillGradientStyle(0x0b0a2e, 0x0b0a2e, 0x3a2a7a, 0x3a2a7a, 1).fillRect(0, 0, 512, 384);
+    useStage(this);
+    fullBackdrop(this, 0x0b0a2e, 0x4a2f8f);
     const rnd = new Phaser.Math.RandomDataGenerator(['festival']);
     for (let i = 0; i < 46; i++) {
       const s = this.add.image(rnd.between(6, 506), rnd.between(6, 200), 'fw_spark').setAlpha(0.5 + rnd.frac() * 0.4).setScale(rnd.pick([0.6, 0.8, 1])).setDepth(1);
       if (!reducedEffects() && i % 4 === 0) this.tweens.add({ targets: s, alpha: 0.25, duration: 1400 + i * 30, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     }
+    // the ground and castle silhouette run on past the stage edges so wide screens never show a seam
+    this.add.graphics().setDepth(2).fillStyle(0x1a1245, 1).fillRect(-HUGE, 226, 512 + 2 * HUGE, 40);
     this.add.image(256, 226, 'fw_castle').setScale(2.2).setOrigin(0.5, 1).setTint(0x1a1245).setDepth(2);
     const ground = this.add.graphics().setDepth(3);
-    ground.fillStyle(0x1a1245, 1).fillRect(0, 226, 512, 36);
-    ground.fillStyle(0x2c2068, 1).fillRect(0, 226, 512, 3);
+    ground.fillStyle(0x2c2068, 1).fillRect(-HUGE, 226, 512 + 2 * HUGE, 3);
     this.add.image(256, 238, 'fw_dais').setScale(1.4).setDepth(4);
   }
 
   // ------------------------------------------------------------------ the picture-only control panel
   private buildPanel() {
     const g = this.add.graphics().setDepth(10);
-    g.fillStyle(0x000000, 0.25).fillRect(0, SKY_H + 3, 512, 125);
-    g.fillStyle(0x4a2f8f, 1).fillRect(0, SKY_H, 512, 122).lineStyle(3, 0xffd93d, 1).lineBetween(0, SKY_H, 512, SKY_H);
+    g.fillStyle(0x000000, 0.25).fillRect(-HUGE, SKY_H + 3, 512 + 2 * HUGE, HUGE);
+    g.fillStyle(0x4a2f8f, 1).fillRect(-HUGE, SKY_H, 512 + 2 * HUGE, HUGE).lineStyle(3, 0xffd93d, 1).lineBetween(-HUGE, SKY_H, 512 + HUGE, SKY_H);
     const row1 = SKY_H + 33, row2 = SKY_H + 92;
     const cx0 = 256 - (FW_COLORS.length * HIT) / 2 + HIT / 2;
     FW_COLORS.forEach((c, i) => this.addChoice('color', c, cx0 + i * HIT, row1, (x, y) => this.drawSwatch(x, y, c)));
@@ -128,7 +130,8 @@ export class FireworksScene extends Phaser.Scene {
   }
 
   // ------------------------------------------------------------------ launching
-  private onSky(p: Phaser.Input.Pointer) {
+  private onSky(ptr: Phaser.Input.Pointer) {
+    const p = stagePoint(this, ptr);
     if (this.closing || p.y >= SKY_H || this.time.now - this.openedAt < 250) return;
     if (p.x < 70 && p.y < 70) return; // the back button
     this.launchAt(p.x, p.y);

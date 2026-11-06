@@ -21,6 +21,9 @@ export class PuzzlePanel {
   isOpen = false;
   /** Card positions on the canvas (browser test drivers use these). */
   cardPos: { id: string; x: number; y: number }[] = [];
+  private off = { x: 0, y: 0 };
+  /** Centres the authored 512x384 panel on the real screen. */
+  setOffset(ox: number, oy: number) { this.off = { x: ox, y: oy }; this.root.setPosition(ox, oy); }
 
   constructor(private scene: Phaser.Scene, private setModal: (on: boolean) => void) {
     this.root = scene.add.container(0, 0).setDepth(60).setVisible(false);
@@ -39,7 +42,7 @@ export class PuzzlePanel {
     this.setModal(true);
     this.root.setVisible(true);
     const s = this.scene;
-    this.add(s.add.rectangle(256, 192, 512, 384, 0x1a1033, 0.55).setInteractive());
+    this.add(s.add.rectangle(256, 192, 6000, 6000, 0x1a1033, 0.55).setInteractive());
     this.add(roundedPanel(s, 28, 30, 456, 322));
     if (def.letter) {
       // [who is asking]  [ B ]  [sound waves]  - pictures only, no sentence
@@ -127,7 +130,7 @@ export class PuzzlePanel {
           void services.audio.speak(ch.narrationKey); // each picture says its word
         });
         this.add(c);
-        this.cardPos.push({ id, x: c.x, y: c.y });
+        this.cardPos.push({ id, x: c.x + this.off.x, y: c.y + this.off.y });
         cards.set(id, { c, bg });
       });
 
@@ -150,7 +153,7 @@ export class PuzzlePanel {
         locked = true;
         const k = cards.get(def.correctAnswer as string)!;
         services.audio.sfx('chime');
-        burst(s, k.c.x, k.c.y, 14, 300);
+        burst(s, k.c.x + this.off.x, k.c.y + this.off.y, 14, 300);
         s.tweens.add({ targets: k.c, scale: 1.12, duration: 160, yoyo: true, repeat: 1 });
         await sleep(s, 900);
         this.close();
@@ -234,7 +237,7 @@ export class PuzzlePanel {
         const c = s.add.container(cx0 + i * gap, cy, [bg, img]).setSize(92, 92).setInteractive({ useHandCursor: true });
         c.on('pointerdown', () => { if (!locked && !(!reuse && used.has(id))) place(id, c); });
         this.add(c);
-        this.cardPos.push({ id, x: c.x, y: c.y });
+        this.cardPos.push({ id, x: c.x + this.off.x, y: c.y + this.off.y });
         cards.set(id, c);
       });
       const undo = (k: number) => {
@@ -268,7 +271,7 @@ export class PuzzlePanel {
         const r = answerSequence(def, prog, placed);
         if (r.kind === 'correct') {
           services.audio.sfx('chime');
-          for (let k = 0; k < target.length; k++) burst(s, slotXY(k).x, slotXY(k).y, 8, 300);
+          for (let k = 0; k < target.length; k++) burst(s, slotXY(k).x + this.off.x, slotXY(k).y + this.off.y, 8, 300);
           await sleep(s, 900);
           this.close();
           resolve({ solved: true, assisted: r.assisted, cancelled: false });

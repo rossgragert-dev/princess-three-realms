@@ -24,7 +24,8 @@ export function makeConfig(parent: string): Phaser.Types.Core.GameConfig {
     backgroundColor: '#1a1033',
     pixelArt: true,
     roundPixels: true,
-    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+    // v0.4b.2: EXPAND keeps 512x384 as the always-visible minimum and grows the game to the screen's aspect (see ui/stage.ts)
+    scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH, width: LOGICAL_W, height: LOGICAL_H },
     input: { activePointers: 3, touch: { capture: true } },
     scene: [BootScene, TitleScene, WorldScene, UIScene, StickerbookScene, WardrobeScene, VanityScene, RoomDesignerScene, FireworksScene, WandWorkshopScene, DecorateScene, ParentSettingsScene]
   };

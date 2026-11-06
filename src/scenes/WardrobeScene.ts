@@ -1,4 +1,5 @@
 import { StationScene } from './StationScene';
+import { fullBackdrop } from '../ui/stage';
 
 /** The Royal Wardrobe: big full-body princess, dress / dress colour / shoes / cape-gloves-wings. */
 export class WardrobeScene extends StationScene {
@@ -12,7 +13,7 @@ export class WardrobeScene extends StationScene {
 
   protected drawBackdrop() {
     const g = this.add.graphics().setDepth(0);
-    g.fillGradientStyle(0xffd6ef, 0xffd6ef, 0xd9c2ff, 0xd9c2ff, 1).fillRect(0, 0, 512, 384);
+    fullBackdrop(this, 0xffd6ef, 0xd9c2ff);
     // armoire doors, open, behind her
     for (const [x, flip] of [[8, 1], [156, -1]] as const) {
       g.fillStyle(0xf7c1dd, 1).fillRoundedRect(x, 28, 88, 312, 8).lineStyle(5, 0xe2a53a, 1).strokeRoundedRect(x, 28, 88, 312, 8);

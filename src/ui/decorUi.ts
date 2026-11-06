@@ -18,6 +18,8 @@ export function decorImage(scene: Phaser.Scene, def: DecorDef, x: number, y: num
 /** "You got a new thing!" moment: big picture, rays, sparkles. Tap or wait. */
 export class DecorReveal {
   isOpen = false;
+  private off = { x: 0, y: 0 };
+  setOffset(ox: number, oy: number) { this.off = { x: ox, y: oy }; }
   constructor(private scene: Phaser.Scene, private setModal: (on: boolean) => void) {}
 
   async show(id: string): Promise<void> {
@@ -30,8 +32,11 @@ export class DecorReveal {
     this.isOpen = true;
     services.audio.sfx('chime');
     const objs: GO[] = [];
-    const add = <T extends GO>(o: T) => { objs.push(o); return o; };
-    const dim = add(s.add.rectangle(256, 192, 512, 384, 0x1a1033, 0.7).setDepth(80).setInteractive());
+    const { x: ox, y: oy } = this.off;
+    const cont = s.add.container(ox, oy).setDepth(80);
+    objs.push(cont);
+    const add = <T extends GO>(o: T) => { cont.add(o); return o; };
+    const dim = add(s.add.rectangle(256, 192, 6000, 6000, 0x1a1033, 0.7).setDepth(80).setInteractive());
     // slowly turning rays
     const rays = add(s.add.graphics().setDepth(81).setPosition(256, 178));
     for (let i = 0; i < 12; i++) {
@@ -58,8 +63,8 @@ export class DecorReveal {
     img.setScale(0.1);
     s.tweens.add({ targets: img, scale: final, duration: dur(550), ease: 'Back.Out' });
     if (!services.save.state.settings.reducedEffects) s.tweens.add({ targets: img, y: 172, duration: 900, yoyo: true, repeat: -1, delay: 600, ease: 'Sine.InOut' });
-    burst(s, 256, 178, 24, 84);
-    s.time.delayedCall(350, () => burst(s, 256, 178, 18, 84));
+    burst(s, 256 + ox, 178 + oy, 24, 84);
+    s.time.delayedCall(350, () => burst(s, 256 + ox, 178 + oy, 18, 84));
     const star = add(pic(s, 'sparkle0', 256 - 98, 178 - 98, 3).setDepth(84));
     const star2 = add(pic(s, 'sparkle1', 256 + 98, 178 + 98, 3).setDepth(84));
     s.tweens.add({ targets: [star, star2], scale: 4.5, duration: 500, yoyo: true, repeat: -1 });
@@ -73,7 +78,7 @@ export class DecorReveal {
       let fin = false;
       const end = () => { if (!fin) { fin = true; resolve(); } };
       const ok = makeButton(s, 440, 330, 'icon_check', 1.3, end);
-      ok.container.setDepth(90); objs.push(ok.container); ok.pulse(true);
+      ok.container.setDepth(90); cont.add(ok.container); ok.pulse(true);
       dim.on('pointerdown', () => { if (s.time.now > armed) end(); });
       const armed = s.time.now + 900; // a stray double-tap must not skip the surprise
       s.time.delayedCall(6500, end);
