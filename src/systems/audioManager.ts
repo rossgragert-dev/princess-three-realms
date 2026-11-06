@@ -182,6 +182,18 @@ export class AudioManager {
     this.musicGain = undefined;
   }
 
+  /** v0.4c: one soft musical note (musical mushrooms, shell chimes, lanterns). */
+  note(hz: number, ms = 420, type: OscillatorType = 'sine'): void {
+    if (!this.ctx || this.settings.sfxVolume <= 0) return;
+    const t0 = this.ctx.currentTime, o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.value = hz;
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.2 * this.settings.sfxVolume, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + ms / 1000);
+    o.connect(g).connect(this.ctx.destination);
+    o.start(t0); o.stop(t0 + ms / 1000 + 0.05);
+  }
+
   /** Short synthesized SFX (originals, no files needed). */
   sfx(kind: 'chime' | 'pop' | 'sparkle' | 'bloom' | 'splash' | 'wand' | 'shimmer' | 'spray'): void {
     if (!this.ctx || this.settings.sfxVolume <= 0) return;

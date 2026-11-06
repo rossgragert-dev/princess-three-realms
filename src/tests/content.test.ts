@@ -7,6 +7,7 @@ import { narrationKeysFor } from '../systems/puzzleEngine';
 import { STICKERS } from '../content/stickers';
 import { SCRIPT } from '../content/dialogue';
 import { ITEM, UI } from '../content/frameIndex';
+import { KINGDOM_KEYS } from '../art/kingdomArt';
 import { OBJECTIVE_NARRATION } from '../world/guide';
 import { MAIN_PATH } from '../systems/questEngine';
 import { getMaps } from '../world/maps';
@@ -43,7 +44,7 @@ test('manifest clips are unique, spoken by a known speaker and have text for the
 });
 
 test('every picture named by a puzzle, sticker, objective or celebration exists in the generated frame index', () => {
-  const isPic = (n: string) => (n.startsWith('icon_') ? n in UI : n in ITEM);
+  const isPic = (n: string) => (n.startsWith('px_') ? (KINGDOM_KEYS as readonly string[]).includes(n) || /^px_(flower|pkt|butterfly|lantern)_(red|blue|yellow|pink)$/.test(n) : n.startsWith('icon_') ? n in UI : n in ITEM);
   const bad: string[] = [];
   for (const p of PUZZLES) {
     if (!isPic(p.promptVisual)) bad.push(`prompt ${p.promptVisual}`);

@@ -56,7 +56,60 @@ export const LINE_GLYPHS: Record<string, string[]> = {
   retry_gentle: ['heart', 'icon_hint'],
   hint_together: ['icon_hint', 'heart'],
   controls_tap: ['icon_princess', 'icon_hint'],
-  quest_replay: ['icon_hint']
+  quest_replay: ['icon_hint'],
+  // v0.4c: the Kingdom Beyond
+  king_fading: ['star', 'sparkle0', 'icon_wand'],
+  queen_fading: ['icon_tree', 'flower', 'icon_mermaid'],
+  obj_kingdom: ['icon_tree', 'flower', 'icon_mermaid'],
+  woods_intro: ['icon_tree', 'px_mush', 'sparkle0'],
+  obj_lanterns: ['px_lantern_red', 'px_lantern_blue', 'icon_hint'],
+  lanterns_watch: ['px_lantern_red', 'px_lantern_blue', 'icon_next'],
+  lanterns_again: ['px_lantern_yellow', 'icon_hint'],
+  lanterns_done: ['px_lantern_pink', 'sparkle0', 'heart'],
+  woods_done: ['icon_tree', 'sparkle0', 'heart'],
+  atree_sound_s: ['icon_tree', '#S', 'icon_sound'],
+  atree_sound_c: ['icon_tree', '#C', 'icon_sound'],
+  atree_sound_f: ['icon_tree', '#F', 'icon_sound'],
+  hint_atree_s_1: ['sun', 'icon_hint'], hint_atree_s_2: ['sun', 'icon_hint'],
+  hint_atree_c_1: ['cat', 'icon_hint'], hint_atree_c_2: ['cat', 'icon_hint'],
+  hint_atree_f_1: ['fish', 'icon_hint'], hint_atree_f_2: ['fish', 'icon_hint'],
+  success_sound_s: ['sun', 'sparkle0', 'heart'], success_sound_c: ['cat', 'sparkle0', 'heart'], success_sound_f: ['fish', 'sparkle0', 'heart'],
+  trees_done: ['icon_tree', 'sparkle0', 'heart'],
+  bridge_rhyme_bee: ['px_bee', 'icon_music', 'px_treepic'],
+  bridge_rhyme_frog: ['px_frog', 'icon_music', 'px_log'],
+  hint_bee_1: ['px_bee', 'px_treepic'], hint_bee_2: ['px_treepic', 'icon_hint'],
+  hint_frog_1: ['px_frog', 'px_log'], hint_frog_2: ['px_log', 'icon_hint'],
+  success_rhyme_cat: ['cat', 'hat', 'heart'], success_rhyme_bee: ['px_bee', 'px_treepic', 'heart'], success_rhyme_frog: ['px_frog', 'px_log', 'heart'],
+  bridge_done: ['icon_bridge', 'sparkle0', 'heart'],
+  story_egg: ['px_egg', 'px_chick', 'px_hen'],
+  story_day: ['star', 'sun', 'flower'],
+  hint_story_1: ['px_egg', 'px_chick'], hint_story_2: ['px_egg', 'px_chick', 'px_hen'],
+  hint_day_1: ['star', 'sun'], hint_day_2: ['star', 'sun', 'flower'],
+  success_story_egg: ['px_hen', 'sparkle0', 'heart'], success_story_day: ['flower', 'sparkle0', 'heart'],
+  word_egg: ['px_egg'], word_chick: ['px_chick'], word_hen: ['px_hen'], word_tree: ['px_treepic'], word_log: ['px_log'], word_star: ['star'],
+  garden_intro: ['px_pkt_red', 'px_plot', 'water'],
+  garden_plant: ['px_pkt_blue', 'icon_next', 'px_plot'],
+  garden_water: ['water', 'px_seedmound', 'icon_next'],
+  garden_fountain_hint: ['px_flower_red', 'px_flower_blue', 'px_flower_yellow'],
+  garden_done: ['px_flower_pink', 'sparkle0', 'heart'],
+  fountain_ready: ['flower', 'px_fountain', 'sparkle0'],
+  fountain_back: ['water', 'sparkle0', 'heart'],
+  fountain_tired: ['px_flower_red', 'px_flower_blue', 'px_flower_yellow'],
+  butterfly_ask: ['px_butterfly_red', 'icon_next', 'px_flower_red'],
+  butterflies_done: ['px_butterfly_blue', 'sparkle0', 'heart'],
+  ladybug_count: ['px_ladybug', 'px_ladybug', 'px_ladybug'],
+  word_ladybug_1: ['px_ladybug'], word_ladybug_2: ['px_ladybug'], word_ladybug_3: ['px_ladybug'],
+  hint_ladybug_1: ['px_ladybug', 'icon_hint'], hint_ladybug_2: ['px_ladybug', 'sparkle0'],
+  success_ladybugs: ['px_ladybug', 'sparkle0', 'heart'],
+  word_red: ['px_flower_red'], word_blue: ['px_flower_blue'], word_yellow: ['px_flower_yellow'], word_pink: ['px_flower_pink'],
+  river_intro: ['icon_mermaid', 'px_ring', 'water'],
+  river_hint: ['px_startpost', 'px_shell'],
+  river_pearls_hint: ['px_shell', 'bubble', 'icon_music'],
+  river_pearls_done: ['px_shell', 'icon_music', 'heart'],
+  race_pick: ['icon_mermaid', 'fish', 'icon_star'],
+  race_go: ['px_ring', 'icon_right'],
+  race_done: ['px_ring', 'sparkle0', 'heart'],
+  race_stars: ['icon_star', 'icon_star', 'icon_star']
 };
 
 const BY_PREFIX: [RegExp, string[]][] = [
@@ -69,7 +122,7 @@ const BY_PREFIX: [RegExp, string[]][] = [
   [/^sticker_/, ['star', 'sparkle0']]
 ];
 
-export const isGlyph = (g: string) => g.startsWith('#') || g in ITEM || g in UI;
+export const isGlyph = (g: string) => g.startsWith('#') || g.startsWith('px_') || g in ITEM || g in UI;
 
 /** Pictures for a narration key. Never empty: unknown keys get a friendly heart. */
 export function glyphsFor(key: string): string[] {

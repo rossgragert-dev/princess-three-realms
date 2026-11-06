@@ -46,6 +46,7 @@ export function makeButton(scene: Phaser.Scene, x: number, y: number, icon: UiNa
 
 /** Draws a picture by name: `icon_*` come from the UI sheet, everything else from the items sheet. */
 export function pic(scene: Phaser.Scene, name: string, x: number, y: number, scale: number): Phaser.GameObjects.Image {
+  if (name.startsWith('px_')) return scene.add.image(x, y, name).setScale(scale); // v0.4c: pictures drawn at runtime (first frame)
   return name.startsWith('icon_')
     ? scene.add.image(x, y, 'ui', UI[name as UiName]).setScale(scale)
     : scene.add.image(x, y, 'items', ITEM[name as ItemName]).setScale(scale);

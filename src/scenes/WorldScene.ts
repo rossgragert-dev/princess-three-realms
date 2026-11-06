@@ -10,7 +10,7 @@ import {
 } from '../world/navigation';
 import { guideTarget, OBJECTIVE_NARRATION } from '../world/guide';
 import { interact, lampPlaced, onArrive, pearlBubbleHit, session, type StoryCtx } from '../world/story';
-import { bubbleShot } from '../world/pearl';
+import { BUBBLE_RANGE, bubbleShot } from '../world/pearl';
 import { SlotPool, TRAIL, TrailPlanner, flowerLook, isGrassTile } from '../world/trail';
 import { ensureTrailTextures, flowerKey, hornOffset } from '../art/unicornFx';
 import { bubbleTexture, ensureMermaidTextures, wandPose } from '../art/mermaidFx';
@@ -25,6 +25,9 @@ import { COOLDOWN_MS, HORN_RANGE, Effects, REACTIONS, SHOT_TILES_PER_SEC, facing
 import { FURNITURE, LayoutEditor, furnitureBlockedTiles, hasItem, spot, tableUnder, type PlacedItem } from '../content/furniture';
 import { ITEM, TILE, UI } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
+import { KingdomLayer } from './kingdomLayer';
+import { envTargets } from '../world/envMagic';
+import type { KingdomApi } from '../world/kingdomStory';
 
 const T = 16;
 
@@ -51,6 +54,7 @@ export class WorldScene extends Phaser.Scene {
   private waterTick = 0;
   private treeSprite?: Phaser.GameObjects.Sprite;
   private init0: InitData = {};
+  private kingdom?: KingdomLayer;
 
   constructor() { super('World'); }
 
@@ -70,6 +74,7 @@ export class WorldScene extends Phaser.Scene {
     this.merWand = undefined; this.pearlCue = undefined; this.pearlCueKey = ''; this.pearlBusy = false;
     this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.furnBlocked = new Set(); this.revealQueue = []; this.waterCells = [];
     this.treeSprite = undefined;
+    this.kingdom = undefined;
     this.waterTick = 0;
 
     // keep the form valid for the place
@@ -81,6 +86,7 @@ export class WorldScene extends Phaser.Scene {
     this.buildGround();
     this.buildProps();
     this.buildObjects();
+    this.buildKingdom();
 
     this.refreshFurnBlocked();
     this.grid = makeGrid(this.map, st.flags, st.form, this.furnBlocked);
@@ -249,6 +255,19 @@ export class WorldScene extends Phaser.Scene {
       else this.treeSprite.x = tx;
     }
     this.grid = makeGrid(this.map, flags, st.form, this.furnBlocked);
+    this.kingdom?.applyFlags(animated);
+  }
+
+  /** v0.4c: the Enchanted Woods, Royal Magic Garden and Shimmering River carry a living layer; other maps skip it. */
+  private buildKingdom() {
+    if (!this.map.env?.length) return;
+    this.kingdom = new KingdomLayer({
+      scene: this, map: this.map, state: () => this.state, props: this.props,
+      objSprite: (id) => this.objSprites.get(id),
+      setObjPos: (id, t) => this.objPos.set(id, { ...t }),
+      playerPos: () => { const f = this.player.foot; return { x: f.x / T, y: f.y / T }; },
+      ctx: () => this.ctx, ui: () => this.ui, sparkle: (x, y, n) => this.sparkleAt(x, y, n)
+    });
   }
 
   // ------------------------------------------------------------------ bedroom decorating
@@ -398,7 +417,10 @@ export class WorldScene extends Phaser.Scene {
         self.ui.refresh();
         return true;
       },
-      sparkle: (t: Tile) => self.sparkleAt(t.x, t.y, 8)
+      sparkle: (t: Tile) => self.sparkleAt(t.x, t.y, 8),
+      get k() { return self.kingdom as unknown as KingdomApi; },
+      pickOne: (o: readonly { id: string; picture: string }[]) => self.ui.pickOne(o),
+      save: () => services.save.save()
     };
   }
 
@@ -645,7 +667,7 @@ export class WorldScene extends Phaser.Scene {
   private shootWand() {
     this.lastShot = performance.now();
     const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T };
-    const targets = targetsOf(this.map);
+    const targets = [...targetsOf(this.map), ...envTargets(this.map, this.player.form, this.state.flags)];
     const a = { dir: facingVector(this.player.dir) };
     const f = fly(from, a.dir, targets, (x, y) => !this.grid.passable(x, y));
     const wandNow = this.state.equippedWand;
@@ -754,7 +776,7 @@ export class WorldScene extends Phaser.Scene {
     }
     // 2. beam + burst, from the tip along the facing
     const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T };
-    const targets = hitScenery ? targetsOf(this.map) : [];
+    const targets = hitScenery ? [...targetsOf(this.map), ...envTargets(this.map, this.player.form, this.state.flags)] : [];
     const f = fly(from, v, targets, (x, y) => !this.grid.passable(x, y), HORN_RANGE);
     this.shots.push({ id: f.hit?.id, kind: f.hit ? `horn-${f.hit.kind}` : 'horn', dist: f.dist, blocked: f.blocked, dir });
     if (this.shots.length > 40) this.shots.shift();
@@ -809,9 +831,13 @@ export class WorldScene extends Phaser.Scene {
     const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T }, dir = this.player.dir;
     const po = this.pearlObj(), pp = po ? (this.objPos.get('pearl') ?? po) : null;
     const pearlLive = this.pearlActive() && !this.pearlBusy && !!pp;
-    const r = bubbleShot(from, dir, pearlLive ? pp : null, (x, y) => !this.grid.passable(x, y));
+    const r0 = bubbleShot(from, dir, pearlLive ? pp : null, (x, y) => !this.grid.passable(x, y));
+    // v0.4c: bubbles also wake shells, wheels and secret kelp; whichever thing is nearer along the line gets the bubble
+    const ef = this.kingdom ? fly(from, facingVector(dir), envTargets(this.map, 'mermaid', this.state.flags), (x, y) => !this.grid.passable(x, y), BUBBLE_RANGE) : null;
+    const envHit = ef?.hit && (!r0.hitPearl || ef.dist < r0.dist) ? ef : null;
+    const r = envHit ? { ...r0, end: envHit.end, dist: envHit.dist, blocked: false, hitPearl: false, push: false } : r0;
     const wand = this.state.equippedWand;
-    this.shots.push({ id: r.hitPearl ? 'pearl' : undefined, kind: r.hitPearl ? (r.push ? 'pearl-push' : 'pearl-touch') : undefined, dist: r.dist, blocked: r.blocked, wand: `${wand.headId}/${wand.colorId}/${wand.trailId}`, dir });
+    this.shots.push({ id: envHit?.hit?.id ?? (r.hitPearl ? 'pearl' : undefined), kind: envHit ? 'bubble-env' : r.hitPearl ? (r.push ? 'pearl-push' : 'pearl-touch') : undefined, dist: r.dist, blocked: r.blocked, wand: `${wand.headId}/${wand.colorId}/${wand.trailId}`, dir });
     if (this.shots.length > 40) this.shots.shift();
     services.audio.sfx('splash');
     const tip = this.wandTip(), col = this.mermaidColor();
@@ -831,6 +857,7 @@ export class WorldScene extends Phaser.Scene {
       onComplete: () => {
         b.destroy();
         this.sparkleAt(Math.floor(r.end.x), Math.floor(r.end.y), 3);
+        if (envHit?.hit) { this.spellReact(envHit.hit); return; }
         if (!r.hitPearl || !po) return;
         const ps = this.objSprites.get('pearl');
         if (ps && !reducedEffects()) this.tweens.add({ targets: ps, angle: { from: -10, to: 10 }, duration: 80, yoyo: true, repeat: 2, onComplete: () => ps.setAngle(0) });
@@ -872,6 +899,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private spellReact(t: SpellTarget) {
+    if (t.kind === 'env') { this.kingdom?.react(t); return; }
     const r = REACTIONS[t.kind], now = performance.now();
     const fresh = this.spellFx.start(t.id, r.ms, now);
     services.audio.sfx(r.sfx);
@@ -933,6 +961,7 @@ export class WorldScene extends Phaser.Scene {
     delete st.tile;
     services.save.save();
     this.ui.hideCount();
+    this.kingdom?.stopRace(true); this.ui.hideRaceHud();
     this.cameras.main.fadeOut(dur(250));
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.restart({ scene, spawn } as InitData));
   }
@@ -1153,6 +1182,7 @@ export class WorldScene extends Phaser.Scene {
     this.updateMerWand();
     this.updateTrail(dt);
     this.updatePearlCue();
+    this.kingdom?.update(performance.now(), dt);
     const idle = !this.busy && !this.tagGame && !this.player.moving && !(this.ui && this.ui.modal);
     this.idleMs = idle ? this.idleMs + dt : 0;
     if (this.idleMs > 12000 && this.idleMs - dt <= 12000) { void this.hint(false); this.ui?.pulseHint(true); }
@@ -1197,6 +1227,10 @@ export class WorldScene extends Phaser.Scene {
       teleportPlayer: (t: Tile) => this.player.teleport(t),
       faceDir: (d: 'up' | 'down' | 'left' | 'right') => { this.player.dir = d; this.player.idle(); },
       tag: () => (this.tagGame ? { phase: this.tagGame.s.phase, stars: this.tagGame.s.stars, pal: { ...this.tagGame.s.pal }, t: this.tagGame.s.t, ended: this.tagGame.ended, tally: this.ui.tallyState, exit: this.ui.exitPos } : null),
+      kingdom: () => this.kingdom?.debug() ?? null,
+      kingdomApi: () => this.kingdom,
+      envFx: () => this.kingdom?.debug().activeFx ?? 0,
+      raceHud: () => this.ui.raceHudInfo,
       sprayOn: () => !!this.fountainSpray,
       effectsOn: () => this.spellFx.count(performance.now()),
       cooldown: COOLDOWN_MS,

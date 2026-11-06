@@ -1,0 +1,283 @@
+// v0.4c: story beats and activity flow for the Kingdom Beyond. Gentle by design: replay is always welcome, a wrong
+// answer only ever brings a hint, and every reward is granted once through completeFlag.
+import type { PuzzleDef, QuestFlag } from '../types/game';
+import type { ObjDef } from './types';
+import type { StoryCtx } from './story';
+import { SCRIPT, type Line } from '../content/dialogue';
+import { puzzleById } from '../content/puzzleBank';
+import { newProgress, countTap } from '../systems/puzzleEngine';
+import { services } from '../systems/services';
+import { allDone, fountainReady, markDone, plantedCount, type PlotId, type PlotStage, type Seed } from '../content/kingdom';
+import type { RaceMode } from './race';
+
+/** What the running world offers the story for the Kingdom's interactive systems (implemented by KingdomLayer). */
+export interface KingdomApi {
+  held(): Seed | null;
+  hold(s: Seed): void;
+  plotStage(id: PlotId): PlotStage;
+  plantedSeed(id: PlotId): Seed | null;
+  plant(id: PlotId): void;
+  water(id: PlotId): Promise<Seed>;
+  replant(id: PlotId): void;
+  petFlower(id: PlotId): void;
+  lanternsActive(): boolean;
+  startLanterns(onDone: () => void): void;
+  lanternTap(i: number): void;
+  followButterfly(c: Seed): boolean;
+  fountainFx(): void;
+  cycleFountain(): void;
+  startRace(mode: RaceMode): void;
+  stopRace(): void;
+  raceActive(): boolean;
+}
+
+export interface PickOption { id: string; picture: string }
+
+/** Session-only progress (everything that matters for rewards is a quest flag). */
+export const ksession = {
+  said: new Set<string>(),
+  chimed: new Set<string>(),
+  counted: new Set<string>(),
+  storyToggle: 0
+};
+export function resetKingdomSession() { ksession.said.clear(); ksession.chimed.clear(); ksession.counted.clear(); ksession.storyToggle = 0; }
+
+const once = (key: string) => { if (ksession.said.has(key)) return false; ksession.said.add(key); return true; };
+const L = (speaker: Line['speaker'], key: string): Line => ({ speaker, key });
+const WORD_OF: Record<Seed, string> = { red: 'word_red', blue: 'word_blue', yellow: 'word_yellow', pink: 'word_pink' };
+
+/** A replay starts from a clean slate (the saved record that it was done once is kept separately). */
+function freshen(ctx: StoryCtx, id: string) {
+  const p = (ctx.state.puzzles[id] ??= newProgress());
+  p.solved = false; p.attempts = 0; p.hintLevel = 0; p.assisted = false;
+}
+
+/** Runs on entering a new area: silently notes that it has been visited (no mandatory speech). */
+export async function onKingdomArrive(ctx: StoryCtx) {
+  const seen: Partial<Record<string, QuestFlag>> = { enchanted: 'WOODS_SEEN', garden: 'GARDEN_SEEN', river: 'RIVER_SEEN' };
+  const flag = seen[ctx.mapId];
+  if (flag) ctx.complete(flag);
+}
+
+/** Returns true when it handled the object. */
+export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boolean> {
+  const f = ctx.state.flags, id = obj.id, K = ctx.k, kd = ctx.state.kingdom;
+
+  // ------------------------------------------------------------ the Enchanted Woods
+  if (id === 'willa_woods') {
+    ctx.react(id);
+    if (once('woods_intro')) { await ctx.say(SCRIPT.woodsIntro); return true; }
+    if (!f.LANTERNS_LIT) await ctx.say(SCRIPT.lanternsAsk);
+    else if (!f.TREES_HEARD || !f.RHYME_BRIDGE) await ctx.say(SCRIPT.woodsIntro);
+    else await ctx.say(SCRIPT.woodsDone);
+    return true;
+  }
+
+  const treeN = /^atree_(\d)$/.exec(id)?.[1];
+  if (treeN) { await learn(ctx, ['sound_s', 'sound_c', 'sound_f'][Number(treeN) - 1], 'tree', ['sound_s', 'sound_c', 'sound_f'], 'TREES_HEARD', SCRIPT.treesDone); return true; }
+  const plank = /^rhyme_(\d)$/.exec(id)?.[1];
+  if (plank) { await learn(ctx, ['rhyme_cat', 'rhyme_bee', 'rhyme_frog'][Number(plank) - 1], 'shell', ['rhyme_cat', 'rhyme_bee', 'rhyme_frog'], 'RHYME_BRIDGE', SCRIPT.bridgeReady); return true; }
+
+  if (id === 'storybook') {
+    const order = ['story_egg', 'story_day'];
+    const pick = order[(ksession.storyToggle++ + (kd.done.includes('story_egg') && !kd.done.includes('story_day') ? 1 : 0)) % 2];
+    const def = puzzleById(pick)!;
+    freshen(ctx, pick);
+    await ctx.say([L('tree', def.narrationKey)]);
+    const r = await ctx.sequencePuzzle(def, [], false);
+    if (!r.solved) return true;
+    markDone(kd, pick); ctx.save();
+    ctx.celebrate(pick === 'story_egg' ? 'px_hen' : 'flower');
+    await ctx.say([L('tree', `success_${pick}`)]);
+    if (!f.STUMP_STORY) ctx.complete('STUMP_STORY');
+    return true;
+  }
+
+  if (id === 'lantern_stone') {
+    if (once('lantern_watch')) await ctx.say(SCRIPT.lanternsWatch);
+    K.startLanterns(() => void lanternsWon(ctx));
+    return true;
+  }
+  const lant = /^lantern_(\d)$/.exec(id)?.[1];
+  if (lant) {
+    if (K.lanternsActive()) K.lanternTap(Number(lant) - 1);
+    else { ctx.sparkle({ x: obj.x, y: obj.y }); if (once('lantern_hint')) await ctx.say(SCRIPT.lanternsAsk); }
+    return true;
+  }
+
+  // ------------------------------------------------------------ the Royal Magic Garden
+  if (id === 'gardener') {
+    ctx.react(id);
+    if (once('garden_intro')) { await ctx.say(SCRIPT.gardenIntro); return true; }
+    const n = plantedCount(kd);
+    if (n === 0) await ctx.say(SCRIPT.gardenPlant);
+    else if (!f.FOUNTAIN_RESTORED) await ctx.say(fountainReady(kd) ? SCRIPT.fountainReady : SCRIPT.gardenFountainHint);
+    else if (!f.BUTTERFLIES_GUIDED) await ctx.say(SCRIPT.butterflyAsk);
+    else await ctx.say(SCRIPT.gardenAllDone);
+    return true;
+  }
+  const seed = /^seed_(red|blue|yellow|pink)$/.exec(id)?.[1] as Seed | undefined;
+  if (seed) {
+    K.hold(seed); ctx.hop(id);
+    void services.audio.speak(WORD_OF[seed]);
+    return true;
+  }
+  if (/^plot_[1-6]$/.test(id)) { await tendPlot(ctx, id as PlotId); return true; }
+
+  if (id === 'seq_bed') {
+    freshen(ctx, 'garden_grow');
+    await ctx.say(SCRIPT.gardenAsk);
+    const r = await ctx.sequencePuzzle(puzzleById('garden_grow')!, [], false);
+    if (!r.solved) return true;
+    markDone(kd, 'garden_grow'); ctx.save();
+    ctx.complete('GARDEN_SEQUENCED');
+    ctx.celebrate('flower');
+    await ctx.say(SCRIPT.gardenDone);
+    return true;
+  }
+
+  if (id === 'fountain_obj') {
+    if (!f.FOUNTAIN_RESTORED) {
+      if (fountainReady(kd)) {
+        ctx.complete('FOUNTAIN_RESTORED');
+        K.fountainFx();
+        ctx.celebrate('water');
+        await ctx.say(SCRIPT.fountainBack);
+      } else await ctx.say(SCRIPT.fountainTired);
+    } else { K.cycleFountain(); }
+    return true;
+  }
+
+  const bug = /^ladybug_(\d)$/.exec(id)?.[1];
+  if (bug) { await countLadybug(ctx, obj); return true; }
+
+  const bf = /^bf_(red|blue|yellow)$/.exec(id)?.[1] as Seed | undefined;
+  if (bf) {
+    if (K.followButterfly(bf)) { ctx.sparkle({ x: obj.x, y: obj.y }); if (!f.BUTTERFLIES_GUIDED && once('butterfly_ask')) await ctx.say(SCRIPT.butterflyAsk); }
+    else ctx.hop(id);
+    return true;
+  }
+  if (/^goal_(red|blue|yellow)$/.test(id)) { ctx.sparkle({ x: obj.x, y: obj.y }); ctx.hop(id); return true; }
+
+  // ------------------------------------------------------------ the Shimmering River
+  if (id === 'coralie_r') {
+    ctx.react(id);
+    if (once('river_intro')) { await ctx.say(SCRIPT.riverIntro); return true; }
+    await ctx.say(!f.RIVER_FRIENDLY ? SCRIPT.riverHint : !f.RIVER_PEARLS ? SCRIPT.riverPearlsHint : SCRIPT.riverHint);
+    return true;
+  }
+  if (id === 'race_start') {
+    if (K.raceActive()) { K.stopRace(); return true; }
+    if (once('race_pick')) await ctx.say(SCRIPT.racePick);
+    const choice = await ctx.pickOne([{ id: 'free', picture: 'icon_mermaid' }, { id: 'friendly', picture: 'px_dolphin' }, { id: 'star', picture: 'icon_star' }]);
+    if (!choice) return true;
+    if (choice === 'free') { K.stopRace(); return true; }
+    K.startRace(choice as RaceMode);
+    return true;
+  }
+  return false;
+}
+
+/** One early-learning activity (letter sound, rhyme): ask, let her try with hints, celebrate, count it, finish the set. */
+async function learn(ctx: StoryCtx, pid: string, speaker: Line['speaker'], set: string[], flag: QuestFlag, done: readonly Line[]) {
+  const def: PuzzleDef = puzzleById(pid)!;
+  freshen(ctx, pid);
+  await ctx.say([{ speaker, key: def.narrationKey }]);
+  const r = await ctx.choicePuzzle(def, false);
+  if (!r.solved) return;
+  markDone(ctx.state.kingdom, pid); ctx.save();
+  const celebrateWith = def.type === 'sound-picture' ? def.correctAnswer as string : (def.choices.find((c) => c.id === def.correctAnswer)?.picture ?? 'heart');
+  ctx.celebrate(celebrateWith);
+  await ctx.say([{ speaker, key: `success_${pid}` }]);
+  if (allDone(ctx.state.kingdom, set) && !ctx.state.flags[flag]) {
+    ctx.complete(flag);
+    await ctx.say(done);
+  }
+}
+
+async function lanternsWon(ctx: StoryCtx) {
+  const fresh = ctx.complete('LANTERNS_LIT');
+  ctx.celebrate('icon_lamp');
+  if (fresh) await ctx.say(SCRIPT.lanternsDone);
+}
+
+async function tendPlot(ctx: StoryCtx, id: PlotId) {
+  const K = ctx.k, stage = K.plotStage(id);
+  if (stage === 'empty') {
+    if (!K.held()) { await ctx.say(SCRIPT.gardenPlant); return; }
+    K.plant(id);
+    if (once('garden_water')) await ctx.say(SCRIPT.gardenWater);
+    return;
+  }
+  if (stage === 'seed') {
+    const c = await K.water(id);
+    void services.audio.speak(WORD_OF[c]);
+    const fresh = ctx.complete('GARDEN_GROWN');
+    if (fresh) ctx.celebrate('flower');
+    if (plantedCount(ctx.state.kingdom) >= 3 && !ctx.state.flags.FOUNTAIN_RESTORED && once('fountain_ready')) await ctx.say(SCRIPT.fountainReady);
+    return;
+  }
+  if (stage === 'flower') {
+    const held = K.held(), cur = K.plantedSeed(id);
+    if (held && held !== cur) K.replant(id); else K.petFlower(id);
+  }
+}
+
+async function countLadybug(ctx: StoryCtx, obj: ObjDef) {
+  const def = puzzleById('ladybugs')!;
+  const prog = (ctx.state.puzzles.ladybugs ??= newProgress());
+  if (prog.solved) freshen(ctx, 'ladybugs'); // replay: start a new count
+  const r = countTap(def, prog, ksession.counted, obj.id);
+  ctx.hop(obj.id);
+  if (r.result === 'duplicate') return; // already counted: a happy hop, never an error
+  ctx.setFrame(obj.id, 1);
+  services.audio.sfx('pop');
+  ctx.showCount(r.number, 3);
+  await services.audio.speak(`word_ladybug_${r.number}`);
+  if (r.result !== 'done') return;
+  ctx.hideCount();
+  ctx.celebrate('px_ladybug');
+  ctx.complete('GARDEN_COUNTED');
+  ksession.counted.clear();
+  await ctx.say([L('nana', 'success_ladybugs')]);
+  for (const n of [1, 2, 3]) ctx.setFrame(`ladybug_${n}`, 0);
+}
+
+// ---------------------------------------------------------------- callbacks from the world layer
+export async function onSecretRevealed(ctx: StoryCtx, flag: QuestFlag) {
+  if (ctx.state.flags[flag]) return;
+  ctx.complete(flag);
+  services.audio.sfx('chime');
+}
+
+export async function onButterfliesDone(ctx: StoryCtx) {
+  const fresh = ctx.complete('BUTTERFLIES_GUIDED');
+  ctx.celebrate('px_butterfly_blue');
+  if (fresh) await ctx.say(SCRIPT.butterfliesDone);
+}
+
+export async function onShellChime(ctx: StoryCtx, id: string) {
+  ksession.chimed.add(id);
+  if (ksession.chimed.size >= 4 && !ctx.state.flags.RIVER_PEARLS) {
+    ctx.complete('RIVER_PEARLS');
+    ctx.celebrate('pearl');
+    await ctx.say(SCRIPT.riverPearlsDone);
+  }
+}
+
+export async function onRaceFinish(ctx: StoryCtx, mode: RaceMode, stars: number, ms: number) {
+  const r = ctx.state.kingdom.race;
+  if (mode === 'friendly') {
+    r.friendly += 1;
+    ctx.complete('RIVER_FRIENDLY');
+    ctx.celebrate('icon_mermaid');
+    await ctx.say(SCRIPT.raceDone);
+  } else if (mode === 'star') {
+    if (stars > r.starBest) r.starBest = stars;
+    if (stars > 0 && (r.bestMs === 0 || ms < r.bestMs)) r.bestMs = Math.floor(ms);
+    if (stars > 0) ctx.complete('RIVER_STAR');
+    ctx.celebrate('icon_star', 5);
+    await ctx.say(SCRIPT.raceStars);
+  }
+  ctx.save();
+}

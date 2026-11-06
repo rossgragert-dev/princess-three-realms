@@ -950,6 +950,985 @@
     ]
   },
   {
+    "key": "king_fading",
+    "speaker": "king",
+    "text": "Oh dear! The magic in our kingdom is getting sleepy. Will you help wake it up?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/king_fading.m4a",
+      "assets/audio/narration/king_fading.ogg"
+    ]
+  },
+  {
+    "key": "queen_fading",
+    "speaker": "queen",
+    "text": "The Enchanted Woods, the Royal Garden and the Shimmering River are waiting for you!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/queen_fading.m4a",
+      "assets/audio/narration/queen_fading.ogg"
+    ]
+  },
+  {
+    "key": "obj_kingdom",
+    "speaker": "narrator",
+    "text": "The kingdom's magic is sleepy. Visit the woods, the garden and the river!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/obj_kingdom.m4a",
+      "assets/audio/narration/obj_kingdom.ogg"
+    ]
+  },
+  {
+    "key": "woods_intro",
+    "speaker": "willa",
+    "text": "These woods are magical! The old trees whisper. Let us wake them up.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/woods_intro.m4a",
+      "assets/audio/narration/woods_intro.ogg"
+    ]
+  },
+  {
+    "key": "obj_lanterns",
+    "speaker": "willa",
+    "text": "Tap the stone, watch the lanterns glow, then tap them in the same order.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/obj_lanterns.m4a",
+      "assets/audio/narration/obj_lanterns.ogg"
+    ]
+  },
+  {
+    "key": "lanterns_watch",
+    "speaker": "willa",
+    "text": "Watch the lanterns glow. Then tap them in the same order.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lanterns_watch.m4a",
+      "assets/audio/narration/lanterns_watch.ogg"
+    ]
+  },
+  {
+    "key": "lanterns_again",
+    "speaker": "willa",
+    "text": "Tap the glowing one next. You can do it!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lanterns_again.m4a",
+      "assets/audio/narration/lanterns_again.ogg"
+    ]
+  },
+  {
+    "key": "lanterns_done",
+    "speaker": "willa",
+    "text": "The lanterns are lit! A secret path is open!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lanterns_done.m4a",
+      "assets/audio/narration/lanterns_done.ogg"
+    ]
+  },
+  {
+    "key": "woods_done",
+    "speaker": "willa",
+    "text": "The woods are bright again. Thank you, Princess!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/woods_done.m4a",
+      "assets/audio/narration/woods_done.ogg"
+    ]
+  },
+  {
+    "key": "atree_sound_s",
+    "speaker": "tree",
+    "text": "Listen! Which picture begins with the sss sound?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/atree_sound_s.m4a",
+      "assets/audio/narration/atree_sound_s.ogg"
+    ]
+  },
+  {
+    "key": "atree_sound_c",
+    "speaker": "tree",
+    "text": "Listen! Which picture begins with the kuh sound?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/atree_sound_c.m4a",
+      "assets/audio/narration/atree_sound_c.ogg"
+    ]
+  },
+  {
+    "key": "atree_sound_f",
+    "speaker": "tree",
+    "text": "Listen! Which picture begins with the fff sound?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/atree_sound_f.m4a",
+      "assets/audio/narration/atree_sound_f.ogg"
+    ]
+  },
+  {
+    "key": "hint_atree_s_1",
+    "speaker": "tree",
+    "text": "Sun. Sss, sss, sun. Do you hear the sss?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_atree_s_1.m4a",
+      "assets/audio/narration/hint_atree_s_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_atree_s_2",
+    "speaker": "tree",
+    "text": "Try the bright, shiny one!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_atree_s_2.m4a",
+      "assets/audio/narration/hint_atree_s_2.ogg"
+    ]
+  },
+  {
+    "key": "hint_atree_c_1",
+    "speaker": "tree",
+    "text": "Cat. Kuh, kuh, cat. Do you hear the kuh?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_atree_c_1.m4a",
+      "assets/audio/narration/hint_atree_c_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_atree_c_2",
+    "speaker": "tree",
+    "text": "Try the furry one that purrs!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_atree_c_2.m4a",
+      "assets/audio/narration/hint_atree_c_2.ogg"
+    ]
+  },
+  {
+    "key": "hint_atree_f_1",
+    "speaker": "tree",
+    "text": "Fish. Fff, fff, fish. Do you hear the fff?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_atree_f_1.m4a",
+      "assets/audio/narration/hint_atree_f_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_atree_f_2",
+    "speaker": "tree",
+    "text": "Try the one that swims!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_atree_f_2.m4a",
+      "assets/audio/narration/hint_atree_f_2.ogg"
+    ]
+  },
+  {
+    "key": "success_sound_s",
+    "speaker": "tree",
+    "text": "Yes! Sun starts with sss!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_sound_s.m4a",
+      "assets/audio/narration/success_sound_s.ogg"
+    ]
+  },
+  {
+    "key": "success_sound_c",
+    "speaker": "tree",
+    "text": "Yes! Cat starts with kuh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_sound_c.m4a",
+      "assets/audio/narration/success_sound_c.ogg"
+    ]
+  },
+  {
+    "key": "success_sound_f",
+    "speaker": "tree",
+    "text": "Yes! Fish starts with fff!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_sound_f.m4a",
+      "assets/audio/narration/success_sound_f.ogg"
+    ]
+  },
+  {
+    "key": "trees_done",
+    "speaker": "tree",
+    "text": "All the trees heard you! The woods are happier now!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/trees_done.m4a",
+      "assets/audio/narration/trees_done.ogg"
+    ]
+  },
+  {
+    "key": "bridge_rhyme_bee",
+    "speaker": "tree",
+    "text": "Which one rhymes with bee?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/bridge_rhyme_bee.m4a",
+      "assets/audio/narration/bridge_rhyme_bee.ogg"
+    ]
+  },
+  {
+    "key": "bridge_rhyme_frog",
+    "speaker": "tree",
+    "text": "Which one rhymes with frog?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/bridge_rhyme_frog.m4a",
+      "assets/audio/narration/bridge_rhyme_frog.ogg"
+    ]
+  },
+  {
+    "key": "word_tree",
+    "speaker": "narrator",
+    "text": "Tree.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_tree.m4a",
+      "assets/audio/narration/word_tree.ogg"
+    ]
+  },
+  {
+    "key": "word_log",
+    "speaker": "narrator",
+    "text": "Log.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_log.m4a",
+      "assets/audio/narration/word_log.ogg"
+    ]
+  },
+  {
+    "key": "hint_bee_1",
+    "speaker": "tree",
+    "text": "Bee, tree. They sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_bee_1.m4a",
+      "assets/audio/narration/hint_bee_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_bee_2",
+    "speaker": "tree",
+    "text": "Sun does not sound like bee. Try the other one.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_bee_2.m4a",
+      "assets/audio/narration/hint_bee_2.ogg"
+    ]
+  },
+  {
+    "key": "hint_frog_1",
+    "speaker": "tree",
+    "text": "Frog, log. They sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_frog_1.m4a",
+      "assets/audio/narration/hint_frog_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_frog_2",
+    "speaker": "tree",
+    "text": "Ball does not sound like frog. Try the other one.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_frog_2.m4a",
+      "assets/audio/narration/hint_frog_2.ogg"
+    ]
+  },
+  {
+    "key": "success_rhyme_cat",
+    "speaker": "tree",
+    "text": "Cat and hat! They rhyme!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_rhyme_cat.m4a",
+      "assets/audio/narration/success_rhyme_cat.ogg"
+    ]
+  },
+  {
+    "key": "success_rhyme_bee",
+    "speaker": "tree",
+    "text": "Bee and tree! They rhyme!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_rhyme_bee.m4a",
+      "assets/audio/narration/success_rhyme_bee.ogg"
+    ]
+  },
+  {
+    "key": "success_rhyme_frog",
+    "speaker": "tree",
+    "text": "Frog and log! They rhyme!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_rhyme_frog.m4a",
+      "assets/audio/narration/success_rhyme_frog.ogg"
+    ]
+  },
+  {
+    "key": "bridge_done",
+    "speaker": "willa",
+    "text": "The rhyme bridge is ready. Let us cross!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/bridge_done.m4a",
+      "assets/audio/narration/bridge_done.ogg"
+    ]
+  },
+  {
+    "key": "story_egg",
+    "speaker": "tree",
+    "text": "Put the pictures in order. What happens first?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/story_egg.m4a",
+      "assets/audio/narration/story_egg.ogg"
+    ]
+  },
+  {
+    "key": "story_day",
+    "speaker": "tree",
+    "text": "Put the pictures in order: night, morning, flowers!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/story_day.m4a",
+      "assets/audio/narration/story_day.ogg"
+    ]
+  },
+  {
+    "key": "word_egg",
+    "speaker": "narrator",
+    "text": "Egg.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_egg.m4a",
+      "assets/audio/narration/word_egg.ogg"
+    ]
+  },
+  {
+    "key": "word_chick",
+    "speaker": "narrator",
+    "text": "Chick.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_chick.m4a",
+      "assets/audio/narration/word_chick.ogg"
+    ]
+  },
+  {
+    "key": "word_hen",
+    "speaker": "narrator",
+    "text": "Hen.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_hen.m4a",
+      "assets/audio/narration/word_hen.ogg"
+    ]
+  },
+  {
+    "key": "word_star",
+    "speaker": "narrator",
+    "text": "Star.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_star.m4a",
+      "assets/audio/narration/word_star.ogg"
+    ]
+  },
+  {
+    "key": "hint_story_1",
+    "speaker": "tree",
+    "text": "First there is an egg. Then a chick.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_story_1.m4a",
+      "assets/audio/narration/hint_story_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_story_2",
+    "speaker": "tree",
+    "text": "Egg, chick, hen. Tap them in that order.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_story_2.m4a",
+      "assets/audio/narration/hint_story_2.ogg"
+    ]
+  },
+  {
+    "key": "hint_day_1",
+    "speaker": "tree",
+    "text": "First the star. Then the sun.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_day_1.m4a",
+      "assets/audio/narration/hint_day_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_day_2",
+    "speaker": "tree",
+    "text": "Star, sun, flower. Tap them in that order.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_day_2.m4a",
+      "assets/audio/narration/hint_day_2.ogg"
+    ]
+  },
+  {
+    "key": "success_story_egg",
+    "speaker": "tree",
+    "text": "Egg, chick, hen! What a story!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_story_egg.m4a",
+      "assets/audio/narration/success_story_egg.ogg"
+    ]
+  },
+  {
+    "key": "success_story_day",
+    "speaker": "tree",
+    "text": "Star, sun, flower! A lovely story!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_story_day.m4a",
+      "assets/audio/narration/success_story_day.ogg"
+    ]
+  },
+  {
+    "key": "garden_intro",
+    "speaker": "nana",
+    "text": "Welcome to the Royal Garden! Pick a seed, plant it, and give it water.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/garden_intro.m4a",
+      "assets/audio/narration/garden_intro.ogg"
+    ]
+  },
+  {
+    "key": "garden_plant",
+    "speaker": "nana",
+    "text": "Tap a seed packet. Then tap a flower bed.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/garden_plant.m4a",
+      "assets/audio/narration/garden_plant.ogg"
+    ]
+  },
+  {
+    "key": "garden_water",
+    "speaker": "nana",
+    "text": "Now tap the seed to give it water!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/garden_water.m4a",
+      "assets/audio/narration/garden_water.ogg"
+    ]
+  },
+  {
+    "key": "garden_fountain_hint",
+    "speaker": "nana",
+    "text": "Grow three flowers and the fountain will sing again!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/garden_fountain_hint.m4a",
+      "assets/audio/narration/garden_fountain_hint.ogg"
+    ]
+  },
+  {
+    "key": "garden_done",
+    "speaker": "nana",
+    "text": "Look at all your flowers! The garden is so happy.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/garden_done.m4a",
+      "assets/audio/narration/garden_done.ogg"
+    ]
+  },
+  {
+    "key": "fountain_ready",
+    "speaker": "nana",
+    "text": "Lots of flowers! Touch the fountain!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/fountain_ready.m4a",
+      "assets/audio/narration/fountain_ready.ogg"
+    ]
+  },
+  {
+    "key": "fountain_back",
+    "speaker": "nana",
+    "text": "The fountain is dancing again! Thank you, Princess!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/fountain_back.m4a",
+      "assets/audio/narration/fountain_back.ogg"
+    ]
+  },
+  {
+    "key": "fountain_tired",
+    "speaker": "nana",
+    "text": "The fountain is sleepy. Grow three flowers to wake it.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/fountain_tired.m4a",
+      "assets/audio/narration/fountain_tired.ogg"
+    ]
+  },
+  {
+    "key": "butterfly_ask",
+    "speaker": "nana",
+    "text": "Butterflies love their own colors. Take each one to the matching flower!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/butterfly_ask.m4a",
+      "assets/audio/narration/butterfly_ask.ogg"
+    ]
+  },
+  {
+    "key": "butterflies_done",
+    "speaker": "nana",
+    "text": "Every butterfly found its flower!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/butterflies_done.m4a",
+      "assets/audio/narration/butterflies_done.ogg"
+    ]
+  },
+  {
+    "key": "ladybug_count",
+    "speaker": "nana",
+    "text": "Tap each ladybug to count it.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/ladybug_count.m4a",
+      "assets/audio/narration/ladybug_count.ogg"
+    ]
+  },
+  {
+    "key": "word_ladybug_1",
+    "speaker": "narrator",
+    "text": "One!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_ladybug_1.m4a",
+      "assets/audio/narration/word_ladybug_1.ogg"
+    ]
+  },
+  {
+    "key": "word_ladybug_2",
+    "speaker": "narrator",
+    "text": "Two!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_ladybug_2.m4a",
+      "assets/audio/narration/word_ladybug_2.ogg"
+    ]
+  },
+  {
+    "key": "word_ladybug_3",
+    "speaker": "narrator",
+    "text": "Three!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_ladybug_3.m4a",
+      "assets/audio/narration/word_ladybug_3.ogg"
+    ]
+  },
+  {
+    "key": "hint_ladybug_1",
+    "speaker": "nana",
+    "text": "Ladybugs hide near the flowers.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_ladybug_1.m4a",
+      "assets/audio/narration/hint_ladybug_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_ladybug_2",
+    "speaker": "nana",
+    "text": "One ladybug is sparkling. Tap it!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/hint_ladybug_2.m4a",
+      "assets/audio/narration/hint_ladybug_2.ogg"
+    ]
+  },
+  {
+    "key": "success_ladybugs",
+    "speaker": "nana",
+    "text": "Three ladybugs! Thank you!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/success_ladybugs.m4a",
+      "assets/audio/narration/success_ladybugs.ogg"
+    ]
+  },
+  {
+    "key": "word_red",
+    "speaker": "narrator",
+    "text": "Red.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_red.m4a",
+      "assets/audio/narration/word_red.ogg"
+    ]
+  },
+  {
+    "key": "word_blue",
+    "speaker": "narrator",
+    "text": "Blue.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_blue.m4a",
+      "assets/audio/narration/word_blue.ogg"
+    ]
+  },
+  {
+    "key": "word_yellow",
+    "speaker": "narrator",
+    "text": "Yellow.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_yellow.m4a",
+      "assets/audio/narration/word_yellow.ogg"
+    ]
+  },
+  {
+    "key": "word_pink",
+    "speaker": "narrator",
+    "text": "Pink.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_pink.m4a",
+      "assets/audio/narration/word_pink.ogg"
+    ]
+  },
+  {
+    "key": "river_intro",
+    "speaker": "coralie",
+    "text": "Welcome to the river! Swim through the shining rings and listen to its song.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/river_intro.m4a",
+      "assets/audio/narration/river_intro.ogg"
+    ]
+  },
+  {
+    "key": "river_hint",
+    "speaker": "coralie",
+    "text": "Tap the post to start a race. Or swim and play with the shells!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/river_hint.m4a",
+      "assets/audio/narration/river_hint.ogg"
+    ]
+  },
+  {
+    "key": "river_pearls_hint",
+    "speaker": "coralie",
+    "text": "Tap the singing shells with your bubbles. Can you wake four?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/river_pearls_hint.m4a",
+      "assets/audio/narration/river_pearls_hint.ogg"
+    ]
+  },
+  {
+    "key": "river_pearls_done",
+    "speaker": "coralie",
+    "text": "Listen! The river is singing! Thank you!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/river_pearls_done.m4a",
+      "assets/audio/narration/river_pearls_done.ogg"
+    ]
+  },
+  {
+    "key": "race_pick",
+    "speaker": "narrator",
+    "text": "Choose how to swim: free, friendly, or the star challenge!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/race_pick.m4a",
+      "assets/audio/narration/race_pick.ogg"
+    ]
+  },
+  {
+    "key": "race_go",
+    "speaker": "narrator",
+    "text": "Swim through the shining rings!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/race_go.m4a",
+      "assets/audio/narration/race_go.ogg"
+    ]
+  },
+  {
+    "key": "race_done",
+    "speaker": "narrator",
+    "text": "You did it! What a swim!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/race_done.m4a",
+      "assets/audio/narration/race_done.ogg"
+    ]
+  },
+  {
+    "key": "race_stars",
+    "speaker": "narrator",
+    "text": "Star Challenge complete!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/race_stars.m4a",
+      "assets/audio/narration/race_stars.ogg"
+    ]
+  },
+  {
+    "key": "sticker_lanterns",
+    "speaker": "narrator",
+    "text": "You lit the magic lanterns!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_lanterns.m4a",
+      "assets/audio/narration/sticker_lanterns.ogg"
+    ]
+  },
+  {
+    "key": "sticker_trees",
+    "speaker": "narrator",
+    "text": "The old trees heard you!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_trees.m4a",
+      "assets/audio/narration/sticker_trees.ogg"
+    ]
+  },
+  {
+    "key": "sticker_rhyme_bridge",
+    "speaker": "narrator",
+    "text": "You built the rhyme bridge!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_rhyme_bridge.m4a",
+      "assets/audio/narration/sticker_rhyme_bridge.ogg"
+    ]
+  },
+  {
+    "key": "sticker_storybook",
+    "speaker": "narrator",
+    "text": "You told a story!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_storybook.m4a",
+      "assets/audio/narration/sticker_storybook.ogg"
+    ]
+  },
+  {
+    "key": "sticker_woods_gem",
+    "speaker": "narrator",
+    "text": "You found a secret treasure in the woods!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_woods_gem.m4a",
+      "assets/audio/narration/sticker_woods_gem.ogg"
+    ]
+  },
+  {
+    "key": "sticker_garden",
+    "speaker": "narrator",
+    "text": "You grew a garden!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_garden.m4a",
+      "assets/audio/narration/sticker_garden.ogg"
+    ]
+  },
+  {
+    "key": "sticker_butterflies",
+    "speaker": "narrator",
+    "text": "You guided the butterflies!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_butterflies.m4a",
+      "assets/audio/narration/sticker_butterflies.ogg"
+    ]
+  },
+  {
+    "key": "sticker_ladybug",
+    "speaker": "narrator",
+    "text": "You counted the ladybugs!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_ladybug.m4a",
+      "assets/audio/narration/sticker_ladybug.ogg"
+    ]
+  },
+  {
+    "key": "sticker_fountain",
+    "speaker": "narrator",
+    "text": "You woke the garden fountain!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_fountain.m4a",
+      "assets/audio/narration/sticker_fountain.ogg"
+    ]
+  },
+  {
+    "key": "sticker_garden_gem",
+    "speaker": "narrator",
+    "text": "You found a secret treasure in the garden!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_garden_gem.m4a",
+      "assets/audio/narration/sticker_garden_gem.ogg"
+    ]
+  },
+  {
+    "key": "sticker_river",
+    "speaker": "narrator",
+    "text": "You swam the friendly race!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_river.m4a",
+      "assets/audio/narration/sticker_river.ogg"
+    ]
+  },
+  {
+    "key": "sticker_river_star",
+    "speaker": "narrator",
+    "text": "You earned a river star!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_river_star.m4a",
+      "assets/audio/narration/sticker_river_star.ogg"
+    ]
+  },
+  {
+    "key": "sticker_river_pearls",
+    "speaker": "narrator",
+    "text": "You woke the singing shells!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_river_pearls.m4a",
+      "assets/audio/narration/sticker_river_pearls.ogg"
+    ]
+  },
+  {
+    "key": "sticker_river_gem",
+    "speaker": "narrator",
+    "text": "You found a secret treasure in the river!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/sticker_river_gem.m4a",
+      "assets/audio/narration/sticker_river_gem.ogg"
+    ]
+  },
+  {
     "key": "hint_together",
     "speaker": "narrator",
     "text": "Let's do it together!",

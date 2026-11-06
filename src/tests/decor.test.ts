@@ -42,7 +42,7 @@ describe('bedroom decor catalog', () => {
   it('chests and hidden spots exist in the maps', () => {
     const ids = new Set(Object.keys({ ...CHEST_FLAG, ...FIND_FLAG }));
     const found = new Set<string>();
-    for (const sc of ['courtyard', 'woods', 'shore', 'grotto', 'bedroom'] as const) for (const o of getMap(sc).objects) if (ids.has(o.id)) found.add(o.id);
+    for (const sc of ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'enchanted', 'garden', 'river'] as const) for (const o of getMap(sc).objects) if (ids.has(o.id)) found.add(o.id);
     assert.deepEqual([...found].sort(), [...ids].sort());
   });
   it('legacy hotspot table (kept to migrate old saves): at least 8 slots, unique ids and tiles', () => {
@@ -182,7 +182,7 @@ describe('narration is optional; the child flow is picture-first', () => {
     assert.ok(p.promptVisual in UI || p.promptVisual in ITEM);
   });
   it('sequence, pattern and counting puzzles use pictures only', () => {
-    for (const p of PUZZLES) for (const c of p.choices) assert.ok(c.picture in ITEM || c.picture in UI, `${p.id}/${c.id}`);
+    for (const p of PUZZLES) for (const c of p.choices) assert.ok(c.picture in ITEM || c.picture in UI || c.picture.startsWith('px_'), `${p.id}/${c.id}`);
     for (const id of ['garden_grow', 'bridge_pattern', 'carrots', 'starfish']) assert.ok(puzzleById(id));
   });
 });

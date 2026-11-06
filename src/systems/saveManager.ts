@@ -3,6 +3,7 @@ import type { GameState, SceneId } from '../types/game';
 import { DEFAULT_WAND, defaultActivities, sanitizeActivities, sanitizeUnlockedWand, sanitizeWand, START_OPTIONS, syncWandUnlocks } from '../content/family';
 import { sanitizeDecor } from '../content/decorCatalog';
 import { defaultRoomTheme, sanitizeRoomTheme } from '../content/roomThemes';
+import { defaultKingdom, sanitizeKingdom } from '../content/kingdom';
 import { defaultAppearance, defaultWardrobe, sanitizeWardrobe } from '../content/appearance';
 
 export const SAVE_KEY = 'ptr_save_v1';
@@ -15,7 +16,10 @@ export const SAFE_SPAWN: Record<SceneId, string> = {
   bedroom: 'from_courtyard',
   festival: 'from_courtyard',
   conservatory: 'from_courtyard',
-  meadow: 'from_woods'
+  meadow: 'from_woods',
+  enchanted: 'from_woods',
+  garden: 'from_courtyard',
+  river: 'from_shore'
 };
 
 export function defaultState(): GameState {
@@ -36,6 +40,7 @@ export function defaultState(): GameState {
     roomTheme: defaultRoomTheme(),
     appearance: defaultAppearance(),
     wardrobe: defaultWardrobe(),
+    kingdom: defaultKingdom(),
     puzzles: {},
     settings: {
       musicVolume: 0.5,
@@ -49,7 +54,7 @@ export function defaultState(): GameState {
   };
 }
 
-const SCENES: SceneId[] = ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'festival', 'conservatory', 'meadow'];
+const SCENES: SceneId[] = ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'festival', 'conservatory', 'meadow', 'enchanted', 'garden', 'river'];
 
 /** Merge arbitrary parsed JSON onto safe defaults; never throws, never strands the player. */
 export function sanitize(raw: unknown): GameState {
@@ -59,7 +64,7 @@ export function sanitize(raw: unknown): GameState {
   const scene = SCENES.includes(r.scene as SceneId) ? (r.scene as SceneId) : d.scene;
   const form = r.form === 'unicorn' || r.form === 'mermaid' || r.form === 'princess' ? r.form : d.form;
   // Form must be valid for the scene: water-only scene needs mermaid, land scenes can't be mermaid.
-  const safeForm = scene === 'grotto' ? 'mermaid' : form === 'mermaid' && scene !== 'shore' ? 'princess' : form;
+  const safeForm = scene === 'grotto' || scene === 'river' ? 'mermaid' : form === 'mermaid' && scene !== 'shore' ? 'princess' : form;
   const decor = sanitizeDecor(r.unlockedDecor, r.bedroom);
   // v0.4a.1: furniture is free-placed. A layout in the save is validated; an older slot layout is migrated to the nearest valid spots
   // (nothing is lost: what does not fit simply waits in the toy box); a pre-v0.4a empty room gets the starter furniture.
@@ -91,6 +96,7 @@ export function sanitize(raw: unknown): GameState {
     equippedWand: wand,
     unlockedWand,
     activities,
+    kingdom: sanitizeKingdom((r as { kingdom?: unknown }).kingdom),
     puzzles: typeof r.puzzles === 'object' && r.puzzles ? { ...r.puzzles } : {},
     // the on-screen arrows are permanent since v0.4a, whatever an older save said
     settings: { ...d.settings, ...(typeof r.settings === 'object' && r.settings ? r.settings : {}), dpad: true }

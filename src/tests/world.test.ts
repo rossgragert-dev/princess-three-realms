@@ -11,9 +11,9 @@ import type { Form, SceneId, QuestFlag } from '../types/game';
 
 const maps = getMaps();
 const ALL: Flags = Object.fromEntries(
-  ['INTRO_DONE', 'PIP_CARROTS_DONE', 'TREE_GATE_OPEN', 'WILLA_MET', 'RAINBOW_BRIDGE_OPEN', 'MARINA_HELPED', 'PEARL_PLACED', 'STAR_1_FOUND'].map((f) => [f, true])
+  ['INTRO_DONE', 'PIP_CARROTS_DONE', 'TREE_GATE_OPEN', 'WILLA_MET', 'RAINBOW_BRIDGE_OPEN', 'MARINA_HELPED', 'PEARL_PLACED', 'STAR_1_FOUND', 'RHYME_BRIDGE', 'LANTERNS_LIT', 'WOODS_SECRET', 'GARDEN_SECRET', 'RIVER_SECRET'].map((f) => [f, true])
 ) as Flags;
-const formFor = (scene: SceneId, spawn: string): Form => (scene === 'grotto' || (scene === 'shore' && spawn === 'from_grotto') ? 'mermaid' : 'princess');
+const formFor = (scene: SceneId, spawn: string): Form => (scene === 'grotto' || scene === 'river' || (scene === 'shore' && (spawn === 'from_grotto' || spawn === 'from_river')) ? 'mermaid' : 'princess');
 
 describe('map data integrity', () => {
   for (const [id, m] of Object.entries(maps)) {
@@ -43,14 +43,15 @@ describe('spawn and reachability (T03)', () => {
     }
   }
   const flip = (id: SceneId, o: { id: string }): Form =>
-    id === 'grotto' ? 'mermaid' : o.id.startsWith('bloom') || o.id === 'chest_creek' ? 'unicorn' : 'princess';
+    id === 'grotto' || id === 'river' || o.id === 'river_mouth' ? 'mermaid' : o.id.startsWith('bloom') || o.id === 'chest_creek' ? 'unicorn' : 'princess';
   for (const [id, m] of Object.entries(maps)) {
     it(`${id}: every object can be reached once the story has opened every gate`, () => {
       const first = Object.values(m.spawns)[0];
       for (const o of visibleObjects(m, ALL)) {
         const form = o.id === 'dive' ? 'mermaid' : flip(m.id, o);
+        const swimStart = o.id === 'river_mouth' ? m.spawns.from_river : undefined;
         let grid = makeGrid(m, ALL, form);
-        let start = nearestPassable(grid, first, 3)!;
+        let start = nearestPassable(grid, swimStart ?? first, 3)!;
         if (o.id === 'dive') { grid = makeGrid(m, ALL, 'mermaid'); start = m.spawns.from_grotto; }
         assert.ok(start, `${id}: no start for ${o.id}`);
         if (o.kind === 'warp') {

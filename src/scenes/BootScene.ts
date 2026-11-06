@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { useStage } from '../ui/stage';
 import { initLooks, applyOverworldLook, lookKey } from '../art/looks';
 import { services } from '../systems/services';
+import { ensureKingdomTextures } from '../art/kingdomArt';
 
 interface SheetEntry { key: string; file: string; frameWidth: number; frameHeight: number }
 interface ImageEntry { key: string; file: string }
@@ -30,6 +31,7 @@ export class BootScene extends Phaser.Scene {
     const m = this.cache.json.get('manifest') as Manifest;
     // v0.3: the princess and mermaid are live recoloured canvases (her chosen dress, hair, skin); animations play on those.
     initLooks(this);
+    ensureKingdomTextures(this); // v0.4c: runtime art for the Kingdom Beyond
     applyOverworldLook(this, services.save.state.appearance);
     for (const a of m.anims) {
       if (this.anims.exists(a.key)) continue;

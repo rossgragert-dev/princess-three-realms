@@ -73,7 +73,7 @@ export function sanitizeActivities(raw: unknown): Activities {
 }
 
 /** Rewards for activities: bedroom decorations that are earned once (idempotent, via unlockedDecor). */
-export const EXTRA_DECOR: readonly string[] = ['festival_garland', 'meadow_cushion'];
+export const EXTRA_DECOR: readonly string[] = ['festival_garland', 'meadow_cushion', 'mushroom_lamp', 'woodland_plush', 'lantern_garland', 'flower_cushion', 'river_fountain'];
 export const ACTIVITY_REWARD = { fireworks: 'festival_garland', tag: 'meadow_cushion' } as const;
 /** A fireworks visit counts as a completed session after this many launches. */
 export const FIREWORKS_SESSION_LAUNCHES = 3;

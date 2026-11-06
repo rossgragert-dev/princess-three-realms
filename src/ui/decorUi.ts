@@ -2,11 +2,19 @@ import Phaser from 'phaser';
 import { ThumbPool } from '../art/looks';
 import { optionOf, slotOfWearable } from '../content/appearance';
 import { DECOR, type DecorDef } from '../content/decorCatalog';
+import { EXTRA_DECOR } from '../content/family';
+import { furnitureById } from '../content/furniture';
 import { services } from '../systems/services';
 import { dur } from '../systems/accessibility';
 import { burst, makeButton, pic, sleep } from './touchTargets';
 
 type GO = Phaser.GameObjects.GameObject;
+
+/** v0.4c: rewards that live only in the furniture catalog (no legacy slot) still get the same "new thing!" moment. */
+function extraDecorDef(id: string): DecorDef | undefined {
+  const f = EXTRA_DECOR.includes(id) ? furnitureById(id) : undefined;
+  return f ? { id, name: f.name, category: 'accent', source: 'gift', flag: 'INTRO_DONE', hintIcon: 'sparkle0', sprite: { key: f.key, frame: f.frame }, layer: 'stand' } : undefined;
+}
 
 /** A decor picture fitted into `box` px. Single images and sheet frames both work. */
 export function decorImage(scene: Phaser.Scene, def: DecorDef, x: number, y: number, box: number, maxScale = 6): Phaser.GameObjects.Image {
@@ -25,7 +33,7 @@ export class DecorReveal {
   async show(id: string): Promise<void> {
     const wearable = id.startsWith('w:') ? id.slice(2) : null;
     const wslot = wearable ? slotOfWearable(wearable) : undefined;
-    const d = wearable ? undefined : DECOR[id];
+    const d = wearable ? undefined : DECOR[id] ?? extraDecorDef(id);
     if (!d && !(wearable && wslot)) return;
     const s = this.scene;
     this.setModal(true);

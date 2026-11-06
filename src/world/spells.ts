@@ -2,8 +2,9 @@
 import { ITEM } from '../content/frameIndex';
 import type { MapDef } from './types';
 
-export type SpellKind = 'tree' | 'fountain' | 'flower' | 'glow' | 'banner';
-export interface SpellTarget { id: string; kind: SpellKind; x: number; y: number; r: number; /** tiles this scenery blocks: running into one of them is a direct hit */ tiles?: string[] }
+import type { EnvType } from './envMagic';
+export type SpellKind = 'tree' | 'fountain' | 'flower' | 'glow' | 'banner' | 'env';
+export interface SpellTarget { id: string; kind: SpellKind; /** v0.4c: set for environmental-magic targets */ env?: EnvType; x: number; y: number; r: number; /** tiles this scenery blocks: running into one of them is a direct hit */ tiles?: string[] }
 export interface Pt { x: number; y: number }
 
 export const RANGE_TILES = 6;
@@ -21,7 +22,7 @@ export const SPELL_PROPS: Record<string, { kind: SpellKind; r: number; dy?: numb
 const SPELL_ITEM_FRAMES: Record<number, { kind: SpellKind; r: number }> = { [ITEM.mushroom]: { kind: 'glow', r: 0.6 } };
 
 export interface Reaction { fx: 'blossom' | 'spray' | 'bloom' | 'glow' | 'shimmer'; ms: number; sfx: 'shimmer' | 'bloom' | 'spray' }
-export const REACTIONS: Record<SpellKind, Reaction> = {
+export const REACTIONS: Record<Exclude<SpellKind, 'env'>, Reaction> = {
   tree: { fx: 'blossom', ms: 3500, sfx: 'bloom' },
   fountain: { fx: 'spray', ms: 4000, sfx: 'spray' },
   flower: { fx: 'bloom', ms: 3000, sfx: 'bloom' },

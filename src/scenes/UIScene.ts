@@ -169,6 +169,7 @@ export class UIScene extends Phaser.Scene {
     this.dialogue.setOffset(ox, by);
     this.puzzle.setOffset(ox, oy);
     this.reveal.setOffset(ox, oy);
+    this.raceHud?.panel.setPosition(256 + ox, 24);
     if (this.mg) { this.mg.panel.setPosition(ox, 0); this.mg.stars.forEach((q, i) => q.setPosition(256 - 44 + i * 44 + ox, 30)); }
   }
 
@@ -354,6 +355,70 @@ export class UIScene extends Phaser.Scene {
   }
 
   hideCount() { this.countTray.removeAll(true); this.countTray.setVisible(false); }
+
+
+  // ------------------------------------------------------------------ v0.4c: river race HUD (big exit, checkpoint pips, optional timer)
+  private raceHud?: { exit: Btn; panel: Phaser.GameObjects.Container; pips: Phaser.GameObjects.Arc[]; time?: Phaser.GameObjects.Text; total: number };
+  get raceHudInfo() { return this.raceHud ? { pips: this.raceHud.pips.map((q) => q.fillColor === 0xffc800), exit: { x: this.raceHud.exit.container.x, y: this.raceHud.exit.container.y }, timed: !!this.raceHud.time } : null; }
+
+  showRaceHud(total: number, timed: boolean, onExit: () => void) {
+    this.hideRaceHud();
+    const panel = this.add.container(256 + this.L.ox, 24).setDepth(8);
+    const gap = 26, w = (total - 1) * gap + 56;
+    panel.add(roundedPanel(this, -w / 2, -18, w, timed ? 58 : 36, 0xfff6e4, 0x3ea6ff, 16));
+    const pips = Array.from({ length: total }, (_, i) => this.add.circle(-((total - 1) * gap) / 2 + i * gap, 0, 8, 0xece4ff).setStrokeStyle(3, 0xc9b8ff));
+    panel.add(pips);
+    let time: Phaser.GameObjects.Text | undefined;
+    if (timed) { time = this.add.text(0, 26, '', { fontFamily: 'sans-serif', fontSize: '16px', color: '#40255a', fontStyle: 'bold' }).setOrigin(0.5); panel.add(time); }
+    const exit = makeButton(this, 40, 36, 'icon_back', 1.5, onExit);
+    exit.container.setDepth(9);
+    this.hud.push(exit);
+    this.raceHud = { exit, panel, pips, time, total };
+  }
+
+  setRaceProgress(done: number, _total: number) {
+    const r = this.raceHud; if (!r) return;
+    r.pips.forEach((q, i) => {
+      const on = i < done;
+      q.setFillStyle(on ? 0xffc800 : 0xece4ff).setStrokeStyle(3, on ? 0xff9a00 : 0xc9b8ff);
+      if (on && i === done - 1) this.tweens.add({ targets: q, scale: 1.6, duration: dur(150), yoyo: true });
+    });
+  }
+
+  setRaceTime(ms: number | null) {
+    const t = this.raceHud?.time; if (!t) return;
+    t.setText(ms === null ? '' : `${Math.floor(ms / 1000)}`);
+  }
+
+  hideRaceHud() {
+    const r = this.raceHud; if (!r) return;
+    this.hud = this.hud.filter((b) => b !== r.exit);
+    r.exit.container.destroy(); r.panel.destroy(true);
+    this.raceHud = undefined;
+  }
+
+  /** A big, picture-only chooser (no reading). Resolves with the tapped id, or null for the back button. */
+  pickOne(options: readonly { id: string; picture: string }[]): Promise<string | null> {
+    this.modalDepth++;
+    return new Promise((resolve) => {
+      const cx = 256 + this.L.ox, cy = 192 + this.L.oy, n = options.length, gap = 112;
+      const root = this.add.container(0, 0).setDepth(60);
+      const dim = this.add.rectangle(cx, cy, 2000, 2000, 0x40255a, 0.45).setInteractive();
+      root.add(dim);
+      const close = (v: string | null) => { root.destroy(true); back.container.destroy(); this.modalDepth = Math.max(0, this.modalDepth - 1); resolve(v); };
+      const back = makeButton(this, 40 + this.L.ox * 0, 36, 'icon_back', 1.5, () => close(null));
+      back.container.setDepth(61);
+      options.forEach((o, i) => {
+        const x = cx + (i - (n - 1) / 2) * gap;
+        const card = this.add.container(x, cy);
+        card.add(roundedPanel(this, -48, -48, 96, 96, 0xfff6e4, 0x3ea6ff, 18));
+        card.add(pic(this, o.picture, 0, 0, 2.2));
+        card.setSize(96, 96).setInteractive({ useHandCursor: true });
+        card.on('pointerdown', () => { services.audio.sfx('pop'); this.tweens.add({ targets: card, scale: 1.12, duration: 90, yoyo: true, onComplete: () => close(o.id) }); });
+        root.add(card);
+      });
+    });
+  }
 
   // ------------------------------------------------------------------ reward moment
   celebrate(picture: string, scale = 4) {

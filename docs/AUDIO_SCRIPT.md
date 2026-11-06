@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 89 (80 required)
+- Total lines: 178 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -80,6 +80,38 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `sticker_shell` | You found a treasure by the sparkly lake! |  | yes |
 | anywhere | `sticker_pearl` | You found a treasure under the sea! |  | yes |
 | anywhere | `ui_book` | This is your sticker book. Tap a sticker to hear its story. |  | yes |
+| anywhere | `obj_kingdom` | The kingdom's magic is sleepy. Visit the woods, the garden and the river! |  | no |
+| anywhere | `word_tree` | Tree. |  | no |
+| anywhere | `word_log` | Log. |  | no |
+| anywhere | `word_egg` | Egg. |  | no |
+| anywhere | `word_chick` | Chick. |  | no |
+| anywhere | `word_hen` | Hen. |  | no |
+| anywhere | `word_star` | Star. |  | no |
+| anywhere | `word_ladybug_1` | One! |  | no |
+| anywhere | `word_ladybug_2` | Two! |  | no |
+| anywhere | `word_ladybug_3` | Three! |  | no |
+| anywhere | `word_red` | Red. |  | no |
+| anywhere | `word_blue` | Blue. |  | no |
+| anywhere | `word_yellow` | Yellow. |  | no |
+| anywhere | `word_pink` | Pink. |  | no |
+| anywhere | `race_pick` | Choose how to swim: free, friendly, or the star challenge! |  | no |
+| anywhere | `race_go` | Swim through the shining rings! |  | no |
+| anywhere | `race_done` | You did it! What a swim! |  | no |
+| anywhere | `race_stars` | Star Challenge complete! |  | no |
+| anywhere | `sticker_lanterns` | You lit the magic lanterns! |  | no |
+| anywhere | `sticker_trees` | The old trees heard you! |  | no |
+| anywhere | `sticker_rhyme_bridge` | You built the rhyme bridge! |  | no |
+| anywhere | `sticker_storybook` | You told a story! |  | no |
+| anywhere | `sticker_woods_gem` | You found a secret treasure in the woods! |  | no |
+| anywhere | `sticker_garden` | You grew a garden! |  | no |
+| anywhere | `sticker_butterflies` | You guided the butterflies! |  | no |
+| anywhere | `sticker_ladybug` | You counted the ladybugs! |  | no |
+| anywhere | `sticker_fountain` | You woke the garden fountain! |  | no |
+| anywhere | `sticker_garden_gem` | You found a secret treasure in the garden! |  | no |
+| anywhere | `sticker_river` | You swam the friendly race! |  | no |
+| anywhere | `sticker_river_star` | You earned a river star! |  | no |
+| anywhere | `sticker_river_pearls` | You woke the singing shells! |  | no |
+| anywhere | `sticker_river_gem` | You found a secret treasure in the river! |  | no |
 | anywhere | `hint_together` | Let's do it together! |  | yes |
 | anywhere | `retry_gentle` | Let's try again! |  | yes |
 
@@ -101,6 +133,36 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | woods | `hint_tree_1` | Ball. Buh, buh, ball. Do you hear the buh? |  | yes |
 | woods | `hint_tree_2` | Try the round bouncy one! |  | yes |
 | woods | `success_tree_sound` | Yes! Ball starts with buh. The path is open! |  | yes |
+| anywhere | `atree_sound_s` | Listen! Which picture begins with the sss sound? |  | no |
+| anywhere | `atree_sound_c` | Listen! Which picture begins with the kuh sound? |  | no |
+| anywhere | `atree_sound_f` | Listen! Which picture begins with the fff sound? |  | no |
+| anywhere | `hint_atree_s_1` | Sun. Sss, sss, sun. Do you hear the sss? |  | no |
+| anywhere | `hint_atree_s_2` | Try the bright, shiny one! |  | no |
+| anywhere | `hint_atree_c_1` | Cat. Kuh, kuh, cat. Do you hear the kuh? |  | no |
+| anywhere | `hint_atree_c_2` | Try the furry one that purrs! |  | no |
+| anywhere | `hint_atree_f_1` | Fish. Fff, fff, fish. Do you hear the fff? |  | no |
+| anywhere | `hint_atree_f_2` | Try the one that swims! |  | no |
+| anywhere | `success_sound_s` | Yes! Sun starts with sss! |  | no |
+| anywhere | `success_sound_c` | Yes! Cat starts with kuh! |  | no |
+| anywhere | `success_sound_f` | Yes! Fish starts with fff! |  | no |
+| anywhere | `trees_done` | All the trees heard you! The woods are happier now! |  | no |
+| anywhere | `bridge_rhyme_bee` | Which one rhymes with bee? |  | no |
+| anywhere | `bridge_rhyme_frog` | Which one rhymes with frog? |  | no |
+| anywhere | `hint_bee_1` | Bee, tree. They sound the same at the end! |  | no |
+| anywhere | `hint_bee_2` | Sun does not sound like bee. Try the other one. |  | no |
+| anywhere | `hint_frog_1` | Frog, log. They sound the same at the end! |  | no |
+| anywhere | `hint_frog_2` | Ball does not sound like frog. Try the other one. |  | no |
+| anywhere | `success_rhyme_cat` | Cat and hat! They rhyme! |  | no |
+| anywhere | `success_rhyme_bee` | Bee and tree! They rhyme! |  | no |
+| anywhere | `success_rhyme_frog` | Frog and log! They rhyme! |  | no |
+| anywhere | `story_egg` | Put the pictures in order. What happens first? |  | no |
+| anywhere | `story_day` | Put the pictures in order: night, morning, flowers! |  | no |
+| anywhere | `hint_story_1` | First there is an egg. Then a chick. |  | no |
+| anywhere | `hint_story_2` | Egg, chick, hen. Tap them in that order. |  | no |
+| anywhere | `hint_day_1` | First the star. Then the sun. |  | no |
+| anywhere | `hint_day_2` | Star, sun, flower. Tap them in that order. |  | no |
+| anywhere | `success_story_egg` | Egg, chick, hen! What a story! |  | no |
+| anywhere | `success_story_day` | Star, sun, flower! A lovely story! |  | no |
 
 ## Willa the woodland fairy (`willa`)
 
@@ -112,6 +174,13 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | shore | `form_wrong_terrain` | Let us go to the glowing spot first. Follow the sparkles! |  | yes |
 | shore | `shore_intro` | Look! Sparkly water. Tap it to become a mermaid! |  | yes |
 | anywhere | `willa_meadow` | Follow the path north. A friend is waiting in the meadow! |  | no |
+| anywhere | `woods_intro` | These woods are magical! The old trees whisper. Let us wake them up. |  | no |
+| anywhere | `obj_lanterns` | Tap the stone, watch the lanterns glow, then tap them in the same order. |  | no |
+| anywhere | `lanterns_watch` | Watch the lanterns glow. Then tap them in the same order. |  | no |
+| anywhere | `lanterns_again` | Tap the glowing one next. You can do it! |  | no |
+| anywhere | `lanterns_done` | The lanterns are lit! A secret path is open! |  | no |
+| anywhere | `woods_done` | The woods are bright again. Thank you, Princess! |  | no |
+| anywhere | `bridge_done` | The rhyme bridge is ready. Let us cross! |  | no |
 
 ## The King (`king`)
 
@@ -119,6 +188,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 |---|---|---|---|---|
 | anywhere | `king_hello` | Hello, Princess! Shall we light up the night sky? Tap the launch pad! |  | no |
 | anywhere | `king_again` | Ooh, so pretty! Let us make more fireworks! |  | no |
+| anywhere | `king_fading` | Oh dear! The magic in our kingdom is getting sleepy. Will you help wake it up? |  | no |
 
 ## The Queen (`queen`)
 
@@ -126,6 +196,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 |---|---|---|---|---|
 | anywhere | `queen_hello` | Welcome to my wand workshop! Come and make your very own wand. |  | no |
 | anywhere | `queen_again` | What a lovely wand! Would you like to change it? |  | no |
+| anywhere | `queen_fading` | The Enchanted Woods, the Royal Garden and the Shimmering River are waiting for you! |  | no |
 
 ## Dapple the unicorn (`dapple`)
 
@@ -160,6 +231,10 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 |---|---|---|---|---|
 | grotto | `pearl_prompt` | Use your bubbles to push the pearl to the shiny shell. |  | yes |
 | grotto | `pearl_pushed` | Pop! Bubbles can push the pearl. One more! |  | yes |
+| anywhere | `river_intro` | Welcome to the river! Swim through the shining rings and listen to its song. |  | no |
+| anywhere | `river_hint` | Tap the post to start a race. Or swim and play with the shells! |  | no |
+| anywhere | `river_pearls_hint` | Tap the singing shells with your bubbles. Can you wake four? |  | no |
+| anywhere | `river_pearls_done` | Listen! The river is singing! Thank you! |  | no |
 
 ## Nana Bluebird (`nana`)
 
@@ -171,6 +246,20 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | courtyard | `success_garden_grow` | Look at the flower grow! Beautiful! |  | yes |
 | bedroom | `nana_return` | Look! Our rainbow is brighter. Let us put your new lamp in your room! |  | yes |
 | bedroom | `lamp_placed` | What a beautiful room, Princess! |  | yes |
+| anywhere | `garden_intro` | Welcome to the Royal Garden! Pick a seed, plant it, and give it water. |  | no |
+| anywhere | `garden_plant` | Tap a seed packet. Then tap a flower bed. |  | no |
+| anywhere | `garden_water` | Now tap the seed to give it water! |  | no |
+| anywhere | `garden_fountain_hint` | Grow three flowers and the fountain will sing again! |  | no |
+| anywhere | `garden_done` | Look at all your flowers! The garden is so happy. |  | no |
+| anywhere | `fountain_ready` | Lots of flowers! Touch the fountain! |  | no |
+| anywhere | `fountain_back` | The fountain is dancing again! Thank you, Princess! |  | no |
+| anywhere | `fountain_tired` | The fountain is sleepy. Grow three flowers to wake it. |  | no |
+| anywhere | `butterfly_ask` | Butterflies love their own colors. Take each one to the matching flower! |  | no |
+| anywhere | `butterflies_done` | Every butterfly found its flower! |  | no |
+| anywhere | `ladybug_count` | Tap each ladybug to count it. |  | no |
+| anywhere | `hint_ladybug_1` | Ladybugs hide near the flowers. |  | no |
+| anywhere | `hint_ladybug_2` | One ladybug is sparkling. Tap it! |  | no |
+| anywhere | `success_ladybugs` | Three ladybugs! Thank you! |  | no |
 
 ## The Singing Shell (`shell`)
 
@@ -274,7 +363,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (23)
+## anywhere (112)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -299,5 +388,94 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `sticker_shell` | You found a treasure by the sparkly lake! |
 | narrator | `sticker_pearl` | You found a treasure under the sea! |
 | narrator | `ui_book` | This is your sticker book. Tap a sticker to hear its story. |
+| king | `king_fading` | Oh dear! The magic in our kingdom is getting sleepy. Will you help wake it up? |
+| queen | `queen_fading` | The Enchanted Woods, the Royal Garden and the Shimmering River are waiting for you! |
+| narrator | `obj_kingdom` | The kingdom's magic is sleepy. Visit the woods, the garden and the river! |
+| willa | `woods_intro` | These woods are magical! The old trees whisper. Let us wake them up. |
+| willa | `obj_lanterns` | Tap the stone, watch the lanterns glow, then tap them in the same order. |
+| willa | `lanterns_watch` | Watch the lanterns glow. Then tap them in the same order. |
+| willa | `lanterns_again` | Tap the glowing one next. You can do it! |
+| willa | `lanterns_done` | The lanterns are lit! A secret path is open! |
+| willa | `woods_done` | The woods are bright again. Thank you, Princess! |
+| tree | `atree_sound_s` | Listen! Which picture begins with the sss sound? |
+| tree | `atree_sound_c` | Listen! Which picture begins with the kuh sound? |
+| tree | `atree_sound_f` | Listen! Which picture begins with the fff sound? |
+| tree | `hint_atree_s_1` | Sun. Sss, sss, sun. Do you hear the sss? |
+| tree | `hint_atree_s_2` | Try the bright, shiny one! |
+| tree | `hint_atree_c_1` | Cat. Kuh, kuh, cat. Do you hear the kuh? |
+| tree | `hint_atree_c_2` | Try the furry one that purrs! |
+| tree | `hint_atree_f_1` | Fish. Fff, fff, fish. Do you hear the fff? |
+| tree | `hint_atree_f_2` | Try the one that swims! |
+| tree | `success_sound_s` | Yes! Sun starts with sss! |
+| tree | `success_sound_c` | Yes! Cat starts with kuh! |
+| tree | `success_sound_f` | Yes! Fish starts with fff! |
+| tree | `trees_done` | All the trees heard you! The woods are happier now! |
+| tree | `bridge_rhyme_bee` | Which one rhymes with bee? |
+| tree | `bridge_rhyme_frog` | Which one rhymes with frog? |
+| narrator | `word_tree` | Tree. |
+| narrator | `word_log` | Log. |
+| tree | `hint_bee_1` | Bee, tree. They sound the same at the end! |
+| tree | `hint_bee_2` | Sun does not sound like bee. Try the other one. |
+| tree | `hint_frog_1` | Frog, log. They sound the same at the end! |
+| tree | `hint_frog_2` | Ball does not sound like frog. Try the other one. |
+| tree | `success_rhyme_cat` | Cat and hat! They rhyme! |
+| tree | `success_rhyme_bee` | Bee and tree! They rhyme! |
+| tree | `success_rhyme_frog` | Frog and log! They rhyme! |
+| willa | `bridge_done` | The rhyme bridge is ready. Let us cross! |
+| tree | `story_egg` | Put the pictures in order. What happens first? |
+| tree | `story_day` | Put the pictures in order: night, morning, flowers! |
+| narrator | `word_egg` | Egg. |
+| narrator | `word_chick` | Chick. |
+| narrator | `word_hen` | Hen. |
+| narrator | `word_star` | Star. |
+| tree | `hint_story_1` | First there is an egg. Then a chick. |
+| tree | `hint_story_2` | Egg, chick, hen. Tap them in that order. |
+| tree | `hint_day_1` | First the star. Then the sun. |
+| tree | `hint_day_2` | Star, sun, flower. Tap them in that order. |
+| tree | `success_story_egg` | Egg, chick, hen! What a story! |
+| tree | `success_story_day` | Star, sun, flower! A lovely story! |
+| nana | `garden_intro` | Welcome to the Royal Garden! Pick a seed, plant it, and give it water. |
+| nana | `garden_plant` | Tap a seed packet. Then tap a flower bed. |
+| nana | `garden_water` | Now tap the seed to give it water! |
+| nana | `garden_fountain_hint` | Grow three flowers and the fountain will sing again! |
+| nana | `garden_done` | Look at all your flowers! The garden is so happy. |
+| nana | `fountain_ready` | Lots of flowers! Touch the fountain! |
+| nana | `fountain_back` | The fountain is dancing again! Thank you, Princess! |
+| nana | `fountain_tired` | The fountain is sleepy. Grow three flowers to wake it. |
+| nana | `butterfly_ask` | Butterflies love their own colors. Take each one to the matching flower! |
+| nana | `butterflies_done` | Every butterfly found its flower! |
+| nana | `ladybug_count` | Tap each ladybug to count it. |
+| narrator | `word_ladybug_1` | One! |
+| narrator | `word_ladybug_2` | Two! |
+| narrator | `word_ladybug_3` | Three! |
+| nana | `hint_ladybug_1` | Ladybugs hide near the flowers. |
+| nana | `hint_ladybug_2` | One ladybug is sparkling. Tap it! |
+| nana | `success_ladybugs` | Three ladybugs! Thank you! |
+| narrator | `word_red` | Red. |
+| narrator | `word_blue` | Blue. |
+| narrator | `word_yellow` | Yellow. |
+| narrator | `word_pink` | Pink. |
+| coralie | `river_intro` | Welcome to the river! Swim through the shining rings and listen to its song. |
+| coralie | `river_hint` | Tap the post to start a race. Or swim and play with the shells! |
+| coralie | `river_pearls_hint` | Tap the singing shells with your bubbles. Can you wake four? |
+| coralie | `river_pearls_done` | Listen! The river is singing! Thank you! |
+| narrator | `race_pick` | Choose how to swim: free, friendly, or the star challenge! |
+| narrator | `race_go` | Swim through the shining rings! |
+| narrator | `race_done` | You did it! What a swim! |
+| narrator | `race_stars` | Star Challenge complete! |
+| narrator | `sticker_lanterns` | You lit the magic lanterns! |
+| narrator | `sticker_trees` | The old trees heard you! |
+| narrator | `sticker_rhyme_bridge` | You built the rhyme bridge! |
+| narrator | `sticker_storybook` | You told a story! |
+| narrator | `sticker_woods_gem` | You found a secret treasure in the woods! |
+| narrator | `sticker_garden` | You grew a garden! |
+| narrator | `sticker_butterflies` | You guided the butterflies! |
+| narrator | `sticker_ladybug` | You counted the ladybugs! |
+| narrator | `sticker_fountain` | You woke the garden fountain! |
+| narrator | `sticker_garden_gem` | You found a secret treasure in the garden! |
+| narrator | `sticker_river` | You swam the friendly race! |
+| narrator | `sticker_river_star` | You earned a river star! |
+| narrator | `sticker_river_pearls` | You woke the singing shells! |
+| narrator | `sticker_river_gem` | You found a secret treasure in the river! |
 | narrator | `hint_together` | Let's do it together! |
 | narrator | `retry_gentle` | Let's try again! |

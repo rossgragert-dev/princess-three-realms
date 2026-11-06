@@ -11,6 +11,8 @@ import { getMap } from '../world/maps';
 import { defaultState, sanitize } from '../systems/saveManager';
 
 const manifest = JSON.parse(readFileSync(new URL('../../public/assets/manifest.json', import.meta.url), 'utf8')) as { images: { key: string }[]; sheets: { key: string }[] };
+// v0.4c reward decorations are drawn at runtime (kingdomArt.ts), so they are not in the asset manifest
+const KINGDOM_DECOR_KEYS = new Set(['decor_woodland_plush', 'decor_mushroom_lamp', 'decor_flower_cushion', 'decor_river_fountain', 'decor_lantern_garland']);
 const textures = new Set([...manifest.images.map((i) => i.key), ...manifest.sheets.map((s) => s.key)]);
 const ALL = DECOR_IDS; // every reward unlocked
 const ed = (layout: PlacedItem[] = defaultLayout(), unlocked: readonly string[] = ALL) => new LayoutEditor(layout, () => unlocked);
@@ -26,7 +28,7 @@ const noOverlap = (layout: readonly PlacedItem[]) => {
 describe('furniture catalog', () => {
   it('has every one of the 15 starters and the 12 rewards, each with real art', () => {
     for (const id of [...STARTER_IDS, ...DECOR_IDS]) assert.ok(FURNITURE[id], `${id} is in the catalog`);
-    for (const id of FURNITURE_IDS) { const d = FURNITURE[id]; assert.ok(textures.has(d.key), `${id}: texture ${d.key}`); assert.ok(d.w >= 1 && d.h >= 1 && d.max >= 1); }
+    for (const id of FURNITURE_IDS) { const d = FURNITURE[id]; assert.ok(textures.has(d.key) || KINGDOM_DECOR_KEYS.has(d.key), `${id}: texture ${d.key}`); assert.ok(d.w >= 1 && d.h >= 1 && d.max >= 1); }
   });
   it('gives a generous free set from the first minute: 2+ beds, tables, chairs, flowers, plants, dolls, balls, stuffed animals, lamps', () => {
     const free = (g: Parameters<typeof ownedIn>[0]) => ownedIn(g, []).map((d) => d.id);

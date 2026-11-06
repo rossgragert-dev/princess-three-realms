@@ -15,7 +15,7 @@ describe('spell targets', () => {
     assert.equal(targetsOf(getMap('courtyard')).filter((t) => t.kind === 'fountain').length, 1);
   });
   it('every kind has a reaction, ids are unique, hit boxes are modest (no huge forgiveness radius)', () => {
-    for (const k of ['tree', 'fountain', 'flower', 'glow', 'banner'] as SpellKind[]) assert.ok(REACTIONS[k].ms >= 2000);
+    for (const k of ['tree', 'fountain', 'flower', 'glow', 'banner'] as SpellKind[]) assert.ok(REACTIONS[k as Exclude<SpellKind, 'env'>].ms >= 2000);
     for (const id of ['courtyard', 'woods', 'shore', 'grotto', 'bedroom'] as const) { const t = targetsOf(getMap(id)); assert.equal(new Set(t.map((q) => q.id)).size, t.length); for (const q of t) assert.ok(q.r <= 1.5, `${q.id} r=${q.r}`); }
     for (const q of targetsOf(getMap('courtyard')).filter((t) => t.kind === 'tree')) assert.ok(q.r <= 0.8);
   });

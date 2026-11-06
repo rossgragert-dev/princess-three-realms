@@ -108,7 +108,13 @@ export const FURNITURE: Record<string, FurnitureDef> = Object.fromEntries([
   F('moon_curtain', 'Moon Curtain', 'wall', 'window', 1, 1, 'moon_curtain', 2),
   // v0.4b rewards: a garland from the King's fireworks, a flower cushion from Dapple's meadow
   F('festival_garland', 'Festival Garland', 'wall', 'wall', 2, 1, 'festival_garland', 1),
-  F('meadow_cushion', 'Meadow Cushion', 'toys', 'small', 1, 1, 'meadow_cushion', 1)
+  F('meadow_cushion', 'Meadow Cushion', 'toys', 'small', 1, 1, 'meadow_cushion', 1),
+  // v0.4c rewards from the Kingdom Beyond (drawn at runtime, see src/art/kingdomArt.ts)
+  F('mushroom_lamp', 'Mushroom Lamp', 'lights', 'small', 1, 1, 'decor_mushroom_lamp', 1, { canSit: true }),
+  F('woodland_plush', 'Woodland Plush', 'toys', 'small', 1, 1, 'decor_woodland_plush', 1, { canSit: true }),
+  F('lantern_garland', 'Lantern Garland', 'wall', 'wall', 2, 1, 'decor_lantern_garland', 1),
+  F('flower_cushion', 'Flower Cushion', 'toys', 'small', 1, 1, 'decor_flower_cushion', 1),
+  F('river_fountain', 'River Fountain', 'plants', 'small', 1, 1, 'decor_river_fountain', 1, { canSit: true })
 ].map((d) => [d.id, d]));
 export const FURNITURE_IDS = Object.keys(FURNITURE);
 export const furnitureById = (id: string): FurnitureDef | undefined => FURNITURE[id];

@@ -1,70 +1,8 @@
 import type { SceneId } from '../types/game';
 import { ITEM, TILE, type TileName } from '../content/frameIndex';
-import type { Gate, MapDef, ObjDef, PropDef, Tile } from './types';
-
-// ---------------------------------------------------------------- tiny deterministic builder
-function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-class Grid {
-  cells: TileName[][];
-  constructor(public w: number, public h: number, fill: TileName) {
-    this.cells = Array.from({ length: h }, () => Array<TileName>(w).fill(fill));
-  }
-  set(x: number, y: number, t: TileName) {
-    if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.cells[y][x] = t;
-  }
-  get(x: number, y: number): TileName {
-    return this.cells[y][x];
-  }
-  rect(x: number, y: number, w: number, h: number, t: TileName) {
-    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.set(x + i, y + j, t);
-  }
-  /** Fill a rectangle choosing randomly (seeded) from `tiles`. */
-  mix(x: number, y: number, w: number, h: number, tiles: TileName[], seed: number) {
-    const r = mulberry32(seed);
-    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.set(x + i, y + j, tiles[Math.floor(r() * tiles.length)]);
-  }
-  /** Replace cells currently in `over` with a random pick from `tiles` at probability `p`. */
-  scatter(x: number, y: number, w: number, h: number, tiles: TileName[], p: number, seed: number, over: (t: TileName) => boolean) {
-    const r = mulberry32(seed);
-    for (let j = 0; j < h; j++)
-      for (let i = 0; i < w; i++) {
-        const cx = x + i, cy = y + j;
-        if (cx < 0 || cy < 0 || cx >= this.w || cy >= this.h) continue;
-        const roll = r(), pick = r();
-        if (roll < p && over(this.get(cx, cy))) this.set(cx, cy, tiles[Math.floor(pick * tiles.length)]);
-      }
-  }
-  ellipse(cx: number, cy: number, rx: number, ry: number, t: TileName | ((d: number) => TileName)) {
-    for (let y = 0; y < this.h; y++)
-      for (let x = 0; x < this.w; x++) {
-        const d = ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2;
-        if (d <= 1) this.set(x, y, typeof t === 'function' ? t(d) : t);
-      }
-  }
-}
-
-const isGrass = (t: TileName) => t.startsWith('grass');
-const isSand = (t: TileName) => t.startsWith('sand');
-const item = (name: keyof typeof ITEM) => ({ key: 'items', frame: ITEM[name] });
-const npc = (name: string) => ({ key: `npc_${name}`, anim: `${name}_idle` });
-const tile = (x: number, y: number): Tile => ({ x, y });
-const col = (x: number, y0: number, y1: number): Tile[] => Array.from({ length: y1 - y0 + 1 }, (_, i) => tile(x, y0 + i));
-
-const TREE_BLOCK: [number, number][] = [[0, 0]];
-
-function trees(list: [number, number, 'a' | 'b'][]): PropDef[] {
-  return list.map(([x, y, k]) => ({ key: k === 'a' ? 'tree_a' : 'tree_b', x, y, blocks: TREE_BLOCK }));
-}
+import type { Gate, MapDef, ObjDef, PropDef } from './types';
+import { Grid, col, isGrass, isSand, item, npc, tile, trees } from './mapKit';
+import { enchanted, garden, river } from './kingdomMaps';
 
 // ---------------------------------------------------------------- 1. Starfall Courtyard (40x30)
 function courtyard(): MapDef {
@@ -98,6 +36,7 @@ function courtyard(): MapDef {
   g.mix(38, 6, 2, 24, ['tree_wall0', 'tree_wall1'], 15);
   g.mix(0, 28, 40, 2, ['tree_wall0', 'tree_wall1'], 16);
   g.rect(0, 11, 2, 3, 'path0'); // v0.4b: west path to the Festival Garden
+  g.rect(38, 11, 2, 3, 'path0'); // v0.4c: east path to the Royal Magic Garden
   g.set(31, 5, 'cobble0'); // v0.4b: the Queen's conservatory door
   g.rect(36, 14, 4, 3, 'path0'); // east exit path
   g.scatter(36, 14, 4, 3, ['path1'], 0.4, 17, () => true);
@@ -133,12 +72,13 @@ function courtyard(): MapDef {
     { id: 'wand_pedestal', kind: 'ability', x: 6, y: 12, sprite: { key: 'pedestal', frame: 0 }, blocks: true, radius: 1.8 },
     { id: 'door_bedroom', kind: 'warp', x: 8, y: 5, tiles: [tile(8, 5)], to: { scene: 'bedroom', spawn: 'from_courtyard' }, radius: 1.5 },
     { id: 'warp_woods', kind: 'warp', x: 39, y: 15, tiles: col(39, 14, 16), to: { scene: 'woods', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'warp_garden', kind: 'warp', x: 39, y: 12, tiles: col(39, 11, 13), to: { scene: 'garden', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'warp_festival', kind: 'warp', x: 0, y: 12, tiles: col(0, 11, 13), to: { scene: 'festival', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'door_conservatory', kind: 'warp', x: 31, y: 5, tiles: [tile(31, 5)], to: { scene: 'conservatory', spawn: 'from_courtyard' }, radius: 1.5 },
   ];
   return {
     id: 'courtyard', w: 40, h: 30, medium: 'air', mermaidAllowed: false, bg: '#8fd3ff', ground: g.cells, props, objects, gates: [],
-    spawns: { start: tile(12, 10), from_woods: tile(37, 15), from_bedroom: tile(8, 7), from_festival: tile(3, 12), from_conservatory: tile(31, 7) }, music: 'sunlit'
+    spawns: { start: tile(12, 10), from_woods: tile(37, 15), from_bedroom: tile(8, 7), from_festival: tile(3, 12), from_conservatory: tile(31, 7), from_garden: tile(37, 12) }, music: 'sunlit'
   };
 }
 
@@ -163,6 +103,8 @@ function woods(): MapDef {
   g.mix(27, 14, 14, 3, ['path0', 'path1'], 33);
   // v0.4b: the north trail to Unicorn Meadow (cuts through the north tree wall)
   g.mix(13, 0, 3, 14, ['path0', 'path1'], 35);
+  // v0.4c: the south trail to the Enchanted Woods (cuts through the south tree wall)
+  g.mix(30, 24, 3, 6, ['path0', 'path1'], 36);
   // the river
   g.rect(41, 3, 1, 24, 'water_edge0'); g.rect(42, 3, 1, 24, 'water0'); g.rect(43, 3, 1, 24, 'water_edge0');
   g.rect(41, 14, 3, 3, 'bridge_ghost');
@@ -195,6 +137,7 @@ function woods(): MapDef {
     { id: 'warp_courtyard', kind: 'warp', x: 0, y: 15, tiles: col(0, 14, 16), to: { scene: 'courtyard', spawn: 'from_woods' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'warp_shore', kind: 'warp', x: 47, y: 15, tiles: col(47, 14, 16), to: { scene: 'shore', spawn: 'from_woods' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'warp_meadow', kind: 'warp', x: 14, y: 0, tiles: [13, 14, 15].map((x) => tile(x, 0)), to: { scene: 'meadow', spawn: 'from_woods' }, showWhen: 'WILLA_MET', sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'warp_enchanted', kind: 'warp', x: 31, y: 29, tiles: [30, 31, 32].map((x) => tile(x, 29)), to: { scene: 'enchanted', spawn: 'from_woods' }, showWhen: 'WILLA_MET', sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'fairy_dust_spot', kind: 'find', hideWhen: 'FAIRY_DUST_FOUND', x: 3, y: 4, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.6 },
   ];
   const gates: Gate[] = [
@@ -203,7 +146,7 @@ function woods(): MapDef {
   ];
   return {
     id: 'woods', w: 48, h: 30, medium: 'air', mermaidAllowed: false, bg: '#2f7a4a', ground: g.cells, props, objects, gates,
-    spawns: { from_courtyard: tile(2, 15), from_shore: tile(45, 15), from_meadow: tile(14, 3) }, music: 'wilds'
+    spawns: { from_courtyard: tile(2, 15), from_shore: tile(45, 15), from_meadow: tile(14, 3), from_enchanted: tile(31, 26) }, music: 'wilds'
   };
 }
 
@@ -235,13 +178,14 @@ function shore(): MapDef {
     { id: 'willa_shore', kind: 'npc', x: 12, y: 11, sprite: npc('willa'), blocks: true, radius: 1.8 },
     { id: 'shimmer', kind: 'portal', x: 16, y: 13, sprite: { key: 'shimmer', anim: 'shimmer_glow' }, radius: 2.2 },
     { id: 'dive', kind: 'warp', x: 28, y: 13, tiles: [tile(28, 13)], to: { scene: 'grotto', spawn: 'from_shore' }, sprite: { key: 'whirlpool', anim: 'whirlpool_spin' }, forms: ['mermaid'], radius: 1.5 },
+    { id: 'river_mouth', kind: 'warp', x: 36, y: 13, tiles: [tile(36, 13)], to: { scene: 'river', spawn: 'from_shore' }, sprite: { key: 'whirlpool', anim: 'whirlpool_spin' }, forms: ['mermaid'], radius: 1.5, showWhen: 'MARINA_HELPED' },
     { id: 'chest_shore', kind: 'chest', x: 6, y: 4, sprite: item('chest'), radius: 1.6, reward: 'sticker_shell' },
     { id: 'warp_woods', kind: 'warp', x: 0, y: 13, tiles: col(0, 12, 14), to: { scene: 'woods', spawn: 'from_shore' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'moonstone_spot', kind: 'find', hideWhen: 'MOONSTONE_FOUND', x: 30, y: 2, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.6 },
   ];
   return {
     id: 'shore', w: 40, h: 26, medium: 'air', mermaidAllowed: true, bg: '#3aa0e8', ground: g.cells, props, objects, gates: [],
-    spawns: { from_woods: tile(2, 13), from_grotto: tile(27, 13) }, music: 'seas'
+    spawns: { from_woods: tile(2, 13), from_grotto: tile(27, 13), from_river: tile(35, 13) }, music: 'seas'
   };
 }
 
@@ -354,6 +298,7 @@ function conservatory(): MapDef {
   g.rect(0, 0, 18, 1, 'wall_top_int'); g.rect(0, 1, 18, 2, 'wall_lavender'); g.rect(0, 3, 18, 1, 'base_lavender');
   g.rect(0, 4, 1, 9, 'wall_lavender'); g.rect(17, 4, 1, 9, 'wall_lavender'); g.rect(0, 12, 18, 1, 'wall_lavender');
   g.rect(8, 12, 2, 1, 'floor_cream_tile1');
+  g.rect(17, 7, 1, 2, 'floor_cream_tile0'); // v0.4c: the glass door to the Royal Magic Garden
   const props: PropDef[] = [
     { key: 'window_night', x: 4, y: 2, ox: 8, depthBias: -2 }, { key: 'window_night', x: 13, y: 2, ox: 8, depthBias: -2 },
     { key: 'door_small', x: 8, y: 12, ox: 8, depthBias: -2 },
@@ -366,8 +311,9 @@ function conservatory(): MapDef {
     { id: 'queen', kind: 'npc', x: 7, y: 6, sprite: npc('queen'), blocks: true, radius: 1.9 },
     { id: 'wand_station', kind: 'station', x: 10, y: 7, radius: 2.0 },
     { id: 'door_exit', kind: 'warp', x: 8, y: 12, tiles: [tile(8, 12), tile(9, 12)], to: { scene: 'courtyard', spawn: 'from_conservatory' }, radius: 1.5 },
+    { id: 'door_garden', kind: 'warp', x: 17, y: 8, tiles: [tile(17, 7), tile(17, 8)], to: { scene: 'garden', spawn: 'from_conservatory' }, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.5 },
   ];
-  return { id: 'conservatory', w: 18, h: 13, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(8, 10) }, music: 'sunlit' };
+  return { id: 'conservatory', w: 18, h: 13, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(8, 10), from_garden: tile(15, 8) }, music: 'sunlit' };
 }
 
 // ---------------------------------------------------------------- 8. Unicorn Meadow (36x26): tag with Dapple
@@ -400,7 +346,7 @@ function meadow(): MapDef {
 
 let cache: Record<SceneId, MapDef> | null = null;
 export function getMaps(): Record<SceneId, MapDef> {
-  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow() };
+  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river() };
   return cache;
 }
 export const getMap = (id: SceneId) => getMaps()[id];

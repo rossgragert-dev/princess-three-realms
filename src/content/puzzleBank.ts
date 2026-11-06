@@ -99,4 +99,21 @@ export const PUZZLES: PuzzleDef[] = [
   }
 ];
 
+const kp = (id: string, o: Partial<PuzzleDef> & Pick<PuzzleDef, 'type' | 'narrationKey' | 'promptVisual' | 'choices' | 'correctAnswer' | 'hintKeys' | 'successEvent'>): PuzzleDef =>
+  ({ id, realm: 'wilds', difficultyTier: 1, mandatory: false, replayAllowed: true, reward: null, ...o });
+
+/** v0.4c: replayable early-learning activities of the Enchanted Woods and the Garden. Pictures only; replay after success. */
+export const KINGDOM_PUZZLES: PuzzleDef[] = [
+  kp('sound_s', { type: 'sound-picture', narrationKey: 'atree_sound_s', promptVisual: 'icon_tree', letter: 'S', choices: [c('sun'), c('ball'), c('hat')], correctAnswer: 'sun', hintKeys: ['hint_atree_s_1', 'hint_atree_s_2', 'hint_together'], successEvent: 'TREES_HEARD' }),
+  kp('sound_c', { type: 'sound-picture', narrationKey: 'atree_sound_c', promptVisual: 'icon_tree', letter: 'C', choices: [c('cat'), c('sun'), c('fish')], correctAnswer: 'cat', hintKeys: ['hint_atree_c_1', 'hint_atree_c_2', 'hint_together'], successEvent: 'TREES_HEARD' }),
+  kp('sound_f', { type: 'sound-picture', narrationKey: 'atree_sound_f', promptVisual: 'icon_tree', letter: 'F', choices: [c('fish'), c('ball'), c('hat')], correctAnswer: 'fish', hintKeys: ['hint_atree_f_1', 'hint_atree_f_2', 'hint_together'], successEvent: 'TREES_HEARD' }),
+  kp('rhyme_cat', { type: 'matching', narrationKey: 'shell_rhyme_cat', promptVisual: 'cat', choices: [c('hat'), c('fish')], correctAnswer: 'hat', hintKeys: ['hint_rhyme_1', 'hint_rhyme_2', 'hint_together'], successEvent: 'RHYME_BRIDGE' }),
+  kp('rhyme_bee', { type: 'matching', narrationKey: 'bridge_rhyme_bee', promptVisual: 'px_bee', choices: [c('tree', 'px_treepic'), c('sun')], correctAnswer: 'tree', hintKeys: ['hint_bee_1', 'hint_bee_2', 'hint_together'], successEvent: 'RHYME_BRIDGE' }),
+  kp('rhyme_frog', { type: 'matching', narrationKey: 'bridge_rhyme_frog', promptVisual: 'px_frog', choices: [c('log', 'px_log'), c('ball')], correctAnswer: 'log', hintKeys: ['hint_frog_1', 'hint_frog_2', 'hint_together'], successEvent: 'RHYME_BRIDGE' }),
+  kp('story_egg', { type: 'sequence', narrationKey: 'story_egg', promptVisual: 'px_egg', choices: [c('egg', 'px_egg'), c('chick', 'px_chick'), c('hen', 'px_hen')], correctAnswer: ['egg', 'chick', 'hen'], hintKeys: ['hint_story_1', 'hint_story_2', 'hint_together'], successEvent: 'STUMP_STORY' }),
+  kp('story_day', { type: 'sequence', narrationKey: 'story_day', promptVisual: 'star', choices: [c('star'), c('sun'), c('flower')], correctAnswer: ['star', 'sun', 'flower'], hintKeys: ['hint_day_1', 'hint_day_2', 'hint_together'], successEvent: 'STUMP_STORY' }),
+  kp('ladybugs', { type: 'count', realm: 'sunlit', narrationKey: 'ladybug_count', promptVisual: 'px_ladybug', choices: [c('ladybug_1', 'px_ladybug'), c('ladybug_2', 'px_ladybug'), c('ladybug_3', 'px_ladybug')], correctAnswer: 3, hintKeys: ['hint_ladybug_1', 'hint_ladybug_2', 'hint_together'], successEvent: 'GARDEN_COUNTED' })
+];
+PUZZLES.push(...KINGDOM_PUZZLES);
+
 export const puzzleById = (id: string) => PUZZLES.find((p) => p.id === id);

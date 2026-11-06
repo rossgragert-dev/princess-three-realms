@@ -1,5 +1,6 @@
 import type { QuestFlag, SceneId } from '../types/game';
 import type { TileName } from '../content/frameIndex';
+import type { EnvDef } from './envMagic';
 
 export interface Tile {
   x: number;
@@ -77,6 +78,8 @@ export interface MapDef {
   props: PropDef[];
   objects: ObjDef[];
   gates: Gate[];
+  /** v0.4c: magic-reactive scenery (see envMagic.ts) */
+  env?: EnvDef[];
   spawns: Record<string, Tile>;
   /** Which music loop plays here. */
   music: 'sunlit' | 'wilds' | 'seas';

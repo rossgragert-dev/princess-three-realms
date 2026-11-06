@@ -15,9 +15,9 @@ const memStore = (): KV & { m: Map<string, string> } => {
 };
 
 describe('puzzle bank', () => {
-  it('has 4 mandatory and 2 optional puzzles', () => {
+  it('has 4 mandatory and 11 optional puzzles', () => {
     assert.equal(PUZZLES.filter((p) => p.mandatory).length, 4);
-    assert.equal(PUZZLES.filter((p) => !p.mandatory).length, 2);
+    assert.equal(PUZZLES.filter((p) => !p.mandatory).length, 11); // 2 earlier + 9 Kingdom Beyond activities
   });
   it('every narration key a puzzle needs exists in the manifest (T06)', () => {
     for (const p of PUZZLES) for (const k of narrationKeysFor(p)) assert.ok(narrationByKey(k), `missing narration: ${k} (${p.id})`);

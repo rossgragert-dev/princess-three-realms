@@ -71,7 +71,8 @@ describe('activity rewards', () => {
     const s = { unlockedDecor: [] as string[] };
     assert.equal(grantDecor(s, ACTIVITY_REWARD.fireworks), true); assert.equal(grantDecor(s, ACTIVITY_REWARD.fireworks), false);
     assert.equal(grantDecor(s, ACTIVITY_REWARD.tag), true); assert.equal(grantDecor(s, 'not_a_reward'), false);
-    assert.deepEqual([...s.unlockedDecor].sort(), [...EXTRA_DECOR].sort());
+    assert.deepEqual([...s.unlockedDecor].sort(), [ACTIVITY_REWARD.fireworks, ACTIVITY_REWARD.tag].sort());
+    assert.ok(EXTRA_DECOR.includes(ACTIVITY_REWARD.fireworks) && EXTRA_DECOR.includes(ACTIVITY_REWARD.tag));
   });
   it('earned rewards survive sanitize and cannot be forged by a bad value', () => {
     const r = sanitize({ version: 1, unlockedDecor: ['festival_garland', 'meadow_cushion', 'junk'] });

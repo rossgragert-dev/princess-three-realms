@@ -2,9 +2,10 @@ import type { PlacedItem } from '../content/furniture';
 import type { RoomTheme } from '../content/roomThemes';
 import type { PrincessAppearance, WardrobeState } from '../content/appearance';
 import type { Activities, EquippedWand } from '../content/family';
+import type { Kingdom } from '../content/kingdom';
 
 export type Form = 'princess' | 'unicorn' | 'mermaid';
-export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow';
+export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow' | 'enchanted' | 'garden' | 'river';
 
 export type QuestFlag =
   | 'INTRO_DONE'
@@ -26,7 +27,29 @@ export type QuestFlag =
   | 'SHORE_CHEST'
   | 'GROTTO_CHEST'
   | 'FAIRY_DUST_FOUND'
-  | 'MOONSTONE_FOUND';
+  | 'MOONSTONE_FOUND'
+  // v0.4c: The Kingdom Beyond
+  | 'KINGDOM_TOLD'
+  | 'WOODS_SEEN'
+  | 'TREES_HEARD'
+  | 'RHYME_BRIDGE'
+  | 'LANTERNS_LIT'
+  | 'STUMP_STORY'
+  | 'WOODS_TREASURE'
+  | 'GARDEN_SEEN'
+  | 'GARDEN_GROWN'
+  | 'BUTTERFLIES_GUIDED'
+  | 'GARDEN_COUNTED'
+  | 'FOUNTAIN_RESTORED'
+  | 'GARDEN_TREASURE'
+  | 'RIVER_SEEN'
+  | 'RIVER_FRIENDLY'
+  | 'RIVER_STAR'
+  | 'RIVER_PEARLS'
+  | 'RIVER_TREASURE'
+  | 'WOODS_SECRET'
+  | 'GARDEN_SECRET'
+  | 'RIVER_SECRET';
 
 export type PuzzleType = 'count' | 'sound-picture' | 'pattern' | 'matching' | 'sequence';
 
@@ -91,6 +114,8 @@ export interface GameState {
   unlockedWand: string[];
   /** v0.4b: optional-activity progress (fireworks, wand workshop, unicorn tag). Never gates Chapter 1. */
   activities: Activities;
+  /** v0.4c: garden plots, revealed secret paths and race records. Always sanitized on load. */
+  kingdom: Kingdom;
   puzzles: Record<string, PuzzleProgress>;
   settings: {
     musicVolume: number;

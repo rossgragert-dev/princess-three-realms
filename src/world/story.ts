@@ -7,6 +7,7 @@ import { puzzleById } from '../content/puzzleBank';
 import { newProgress, countTap } from '../systems/puzzleEngine';
 import { nextObjective } from '../systems/questEngine';
 import { services } from '../systems/services';
+import { kingdomInteract, onKingdomArrive, resetKingdomSession } from './kingdomStory';
 import { OBJECTIVE_NARRATION } from './guide';
 import { PEARL_LANE_X, PEARL_Y, isSocketX, nextLaneX } from './pearl';
 import type { PuzzleResult } from '../ui/puzzlePanel';
@@ -37,6 +38,10 @@ export interface StoryCtx {
   addSticker(id: string): boolean;
   sparkle(tile: Tile): void;
   /** v0.3: open the full-screen Royal Wardrobe or Enchanted Vanity; resolves when she comes back to the room. */
+  /** v0.4c: Kingdom Beyond interactive systems (garden, lanterns, race) and a big picture chooser. */
+  readonly k: import('./kingdomStory').KingdomApi;
+  pickOne(options: readonly import('./kingdomStory').PickOption[]): Promise<string | null>;
+  save(): void;
   openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop'): Promise<void>;
 }
 
@@ -55,6 +60,7 @@ export function resetSession() {
   session.bloomed = new Set();
   session.nanaGreeted = false;
   session.introSpoken = false;
+  resetKingdomSession();
 }
 
 
@@ -79,12 +85,14 @@ export async function onArrive(ctx: StoryCtx) {
     await ctx.say(SCRIPT.nanaReturn);
   }
   if (ctx.mapId === 'grotto' && !f.GROTTO_SEEN) ctx.complete('GROTTO_SEEN');
+  await onKingdomArrive(ctx);
 }
 
 export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
   const f = ctx.state.flags;
   const id = obj.id;
   ctx.face(obj);
+  if (await kingdomInteract(ctx, obj)) return;
 
   // ---------------------------------------------------------------- counting (carrots, starfish)
   const countKind = id.startsWith('carrot_') ? 'carrots' : id.startsWith('starfish_') ? 'starfish' : null;
@@ -137,6 +145,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       ctx.react('king');
       const again = ctx.state.activities.fireworks.sessions > 0;
       await ctx.say(again ? SCRIPT.kingAgain : SCRIPT.kingHello);
+      if (f.WILLA_MET && !f.KINGDOM_TOLD) { await ctx.say(SCRIPT.kingFading); ctx.complete('KINGDOM_TOLD'); }
       return ctx.openStation('Fireworks');
     }
 
@@ -150,6 +159,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
     case 'queen': {
       ctx.react('queen');
       await ctx.say(ctx.state.activities.workshop.made > 0 ? SCRIPT.queenAgain : SCRIPT.queenHello);
+      if (f.WILLA_MET && !f.KINGDOM_TOLD) { await ctx.say(SCRIPT.queenFading); ctx.complete('KINGDOM_TOLD'); }
       return ctx.openStation('WandWorkshop');
     }
 
@@ -294,7 +304,7 @@ async function bloom(ctx: StoryCtx, obj: ObjDef) {
 
 /** Which flag each world chest / hidden spot sets (each flag unlocks one room item, see decorCatalog). */
 export const CHEST_FLAG: Record<string, QuestFlag> = { chest_creek: 'CREEK_CHEST', chest_shore: 'SHORE_CHEST', chest_grotto: 'GROTTO_CHEST' };
-export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND', fairy_dust_spot: 'FAIRY_DUST_FOUND', moonstone_spot: 'MOONSTONE_FOUND' };
+export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND', fairy_dust_spot: 'FAIRY_DUST_FOUND', moonstone_spot: 'MOONSTONE_FOUND', treasure_woods: 'WOODS_TREASURE', treasure_garden: 'GARDEN_TREASURE', treasure_river: 'RIVER_TREASURE' };
 
 async function chest(ctx: StoryCtx, obj: ObjDef) {
   const reward = obj.reward!;
