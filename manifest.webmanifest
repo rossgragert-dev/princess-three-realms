@@ -4,8 +4,8 @@
   "description": "A cozy storybook adventure.",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
-  "orientation": "landscape",
+  "display": "standalone",
+  "orientation": "any",
   "background_color": "#1a1033",
   "theme_color": "#1a1033",
   "icons": [
