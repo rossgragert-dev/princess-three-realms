@@ -29,7 +29,8 @@ await go('dive', 2000); await waitScene(page,'grotto',40000); await settleTalk()
 await go('marina'); await settleTalk(); await shot(page,'marina_talk');
 for (const s of ['starfish_1','starfish_2','starfish_3']) { await go(s); await settleTalk(); await shot(page,s); }
 await F('starfish');
-for (let i=0;i<4;i++){ await go('pearl', 2000); await settleTalk(); await shot(page,'pearl'+i); }
+await go('pearl', 2000); await settleTalk(); // A explains the puzzle
+for (let i=0;i<4;i++){ const px=(await ptr(page,'pearl')).x; await ptr(page,'teleportPlayer',{x:px-4,y:20}); await ptr(page,'faceDir','right'); await sleep(250); await ptr(page,'magic'); await sleep(1800); await settleTalk(); await shot(page,'pearl'+i); }
 await F('pearl');
 await go('chest_grotto', 2500); await settleTalk(); console.log('grotto chest ->', (await flags(page)).GROTTO_CHEST);
 await go('shell_puzzle', 2500); console.log('shell panel', await talkUntilPuzzle(page)); await shot(page,'rhyme_puzzle'); await solveChoice(page,'hat'); await sleep(1500); await settleTalk();

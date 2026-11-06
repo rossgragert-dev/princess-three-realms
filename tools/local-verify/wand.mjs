@@ -80,7 +80,7 @@ try {
   await page.evaluate(() => window.__ptr.changeForm('unicorn')); await sleep(1500); await waitIdle(page);
   check('unicorn form still available', (await ptr(page, 'form')) === 'unicorn');
   const u0 = (await shots()).length; await fire(); await sleep(800); await waitIdle(page);
-  check('unicorn magic does not shoot the wand projectile', (await shots()).length === u0);
+  { const s = await shots(); check('unicorn magic casts horn magic, not the princess wand projectile', s.length === u0 + 1 && String(s[s.length - 1].kind).startsWith('horn') && !s[s.length - 1].wand); }
   check('no page errors', (await page.evaluate(() => window.__errs)).length === 0, JSON.stringify(await page.evaluate(() => window.__errs)));
 } catch (e) { check('driver ran to the end', false, String(e.stack || e)); }
 console.log(logs.filter((l) => !/favicon/.test(l)).slice(0, 12).join('\n'));

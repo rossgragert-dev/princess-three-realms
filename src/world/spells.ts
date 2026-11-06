@@ -7,6 +7,8 @@ export interface SpellTarget { id: string; kind: SpellKind; x: number; y: number
 export interface Pt { x: number; y: number }
 
 export const RANGE_TILES = 6;
+/** The unicorn's horn beam is short and sweet. */
+export const HORN_RANGE = 3;
 export const COOLDOWN_MS = 420;
 export const SHOT_TILES_PER_SEC = 16;
 

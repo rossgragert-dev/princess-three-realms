@@ -17,7 +17,10 @@ export async function launch(vp = { width: 1024, height: 768 }) {
 }
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export async function tapL(page, x, y) {
+  // x,y are authored 512x384 "stage" coordinates; on screens that are not 4:3 the stage is centred in the expanded game (v0.4b.2)
+  const g = await page.evaluate(() => ({ w: window.__game.scale.gameSize.width, h: window.__game.scale.gameSize.height }));
   const b = await (await page.$('canvas')).boundingBox();
-  await page.mouse.click(b.x + (x / 512) * b.width, b.y + (y / 384) * b.height);
+  const gx = x + Math.max(0, Math.floor((g.w - 512) / 2)), gy = y + Math.max(0, Math.floor((g.h - 384) / 2));
+  await page.mouse.click(b.x + (gx / g.w) * b.width, b.y + (gy / g.h) * b.height);
 }
 export const ptr = (page, fn, ...a) => page.evaluate((f, args) => window.__ptr[f](...args), fn, a);

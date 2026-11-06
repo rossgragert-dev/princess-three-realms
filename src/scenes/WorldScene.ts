@@ -9,7 +9,11 @@ import {
   approachTile, blockKey, effectiveTile, findPath, makeGrid, nearestPassable, safeSpawn, visibleObjects, withinRadius, type NavGrid
 } from '../world/navigation';
 import { guideTarget, OBJECTIVE_NARRATION } from '../world/guide';
-import { interact, lampPlaced, onArrive, session, type StoryCtx } from '../world/story';
+import { interact, lampPlaced, onArrive, pearlBubbleHit, session, type StoryCtx } from '../world/story';
+import { bubbleShot } from '../world/pearl';
+import { SlotPool, TRAIL, TrailPlanner, flowerLook, isGrassTile } from '../world/trail';
+import { ensureTrailTextures, flowerKey, hornOffset } from '../art/unicornFx';
+import { bubbleTexture, ensureMermaidTextures, wandPose } from '../art/mermaidFx';
 import { Player, tilePos } from '../actors/player';
 import { narrationForPlan, planFormChange } from '../actors/transformations';
 import { completeFlag, nextObjective } from '../systems/questEngine';
@@ -17,7 +21,7 @@ import { services, applySettingsToAudio } from '../systems/services';
 import { reducedEffects, sparkleCount, dur } from '../systems/accessibility';
 import { ACTIVITY_REWARD, TAG_SESSION_STARS, WAND_TINT, grantDecor, syncWandUnlocks } from '../content/family';
 import { newTag, stepTag, type TagState } from '../world/tag';
-import { COOLDOWN_MS, Effects, REACTIONS, SHOT_TILES_PER_SEC, facingVector, fly, ready, targetsOf, type SpellTarget } from '../world/spells';
+import { COOLDOWN_MS, HORN_RANGE, Effects, REACTIONS, SHOT_TILES_PER_SEC, facingVector, fly, ready, targetsOf, type SpellTarget } from '../world/spells';
 import { FURNITURE, LayoutEditor, furnitureBlockedTiles, hasItem, spot, tableUnder, type PlacedItem } from '../content/furniture';
 import { ITEM, TILE, UI } from '../content/frameIndex';
 import type { UIScene } from './UIScene';
@@ -62,6 +66,8 @@ export class WorldScene extends Phaser.Scene {
     this.leaving = false;
     this.busy = false;
     this.idleMs = 0;
+    this.trailSprites = []; this.trailPool = new SlotPool(TRAIL.max); this.trailPlan.reset();
+    this.merWand = undefined; this.pearlCue = undefined; this.pearlCueKey = ''; this.pearlBusy = false;
     this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.furnBlocked = new Set(); this.revealQueue = []; this.waterCells = [];
     this.treeSprite = undefined;
     this.waterTick = 0;
@@ -606,8 +612,18 @@ export class WorldScene extends Phaser.Scene {
     this.idleMs = 0;
     const me = this.player.tile;
     if (this.player.form === 'unicorn') {
+      if (!ready(performance.now(), this.lastShot)) return;
       const bloom = visibleObjects(this.map, this.state.flags).find((o) => o.id.startsWith('bloom_') && withinRadius(me, this.live(o)));
+      this.castHorn(!bloom);
       if (bloom) { void this.goTo(bloom); return; }
+      if (!this.player.steering && !this.player.moving) void this.player.cast();
+      return;
+    }
+    if (this.player.form === 'mermaid') {
+      if (!ready(performance.now(), this.lastShot)) return;
+      this.shootBubble();
+      if (!this.player.steering && !this.player.moving) void this.player.cast();
+      return;
     }
     if (this.player.form === 'princess') {
       if (!ready(performance.now(), this.lastShot)) return;
@@ -615,7 +631,7 @@ export class WorldScene extends Phaser.Scene {
       // she keeps walking while she zaps with the other thumb; standing still she waves the wand (not blocking, so zaps stay snappy)
       if (!this.player.steering && !this.player.moving) void this.player.cast();
       return;
-    } else { services.audio.sfx(this.player.form === 'mermaid' ? 'splash' : 'sparkle'); this.sparkleAt(me.x, me.y - 1, 10); }
+    } else { services.audio.sfx('sparkle'); this.sparkleAt(me.x, me.y - 1, 10); }
     this.busy = true;
     try { await this.player.cast(); } finally { this.busy = false; }
   }
@@ -662,6 +678,186 @@ export class WorldScene extends Phaser.Scene {
         if (f.hit) this.spellReact(f.hit); else this.sparkleAt(Math.floor(f.end.x), Math.floor(f.end.y), 5);
       }
     });
+  }
+
+  // ------------------------------------------------------------------ unicorn: flower trail + horn magic (v0.4b.3)
+  private trailPlan = new TrailPlanner();
+  private trailPool = new SlotPool(TRAIL.max);
+  private trailSprites: { flower: Phaser.GameObjects.Image; spark: Phaser.GameObjects.Image }[] = [];
+  private lastHornGlint = 0;
+  /** Visible flowers right now (for tests). */
+  trailCount() { return this.trailPool.count(performance.now()); }
+
+  private hornTip() { const o = hornOffset(this.player.dir), s = this.player.sprite; return { x: s.x + o.x, y: s.y + o.y }; }
+
+  private tileNameAt(px: number, py: number): string {
+    const tx = Math.floor(px / T), ty = Math.floor(py / T);
+    if (tx < 0 || ty < 0 || tx >= this.map.w || ty >= this.map.h) return '';
+    return effectiveTile(this.map, this.state.flags, tx, ty);
+  }
+
+  /** Flowers bloom where the unicorn has just been, only on grass; pooled, temporary, no tiles, no collision, no save data. */
+  private updateTrail(dt: number) {
+    const now = performance.now(), reduced = reducedEffects();
+    if (this.trailSprites.length) {
+      for (let i = 0; i < this.trailSprites.length; i++) {
+        const sp = this.trailSprites[i];
+        if (!this.trailPool.alive(i, now)) { if (sp.flower.visible) { sp.flower.setVisible(false); sp.spark.setVisible(false); } continue; }
+        const t = now - this.trailPool.born[i], look = flowerLook(t, this.trailPool.life[i], reduced);
+        sp.flower.setScale(look.scale).setAlpha(look.alpha);
+        sp.spark.setVisible(look.spark > 0).setAlpha(look.spark).setScale(0.6 + look.spark * 0.7).setPosition(sp.flower.x, sp.flower.y - 3 - look.spark * 8);
+      }
+    }
+    if (this.player.form !== 'unicorn' || this.leaving || this.map.id === 'bedroom') { this.trailPlan.reset(); return; }
+    if (!this.player.moving) { this.trailPlan.reset(); this.hornGlint(now); return; }
+    const foot = this.player.foot, v = facingVector(this.player.dir);
+    const pts = this.trailPlan.step(foot, isGrassTile(this.tileNameAt(foot.x, foot.y)), this.player.isGalloping, reduced, { x: -v.x * 7, y: -v.y * 4 });
+    if (!pts.length) return;
+    ensureTrailTextures(this);
+    if (!this.trailSprites.length) {
+      for (let i = 0; i < TRAIL.max; i++) this.trailSprites.push({ flower: this.add.image(0, 0, flowerKey(0)).setVisible(false).setDepth(-4), spark: this.add.image(0, 0, 'horn_spark').setVisible(false).setDepth(9000) });
+    }
+    for (const p of pts) {
+      const jx = Phaser.Math.Between(-3, 3), jy = Phaser.Math.Between(-2, 2), x = p.x + jx, y = p.y + jy;
+      if (!isGrassTile(this.tileNameAt(x, y))) continue; // never over the edge of the grass
+      const life = Phaser.Math.Between(TRAIL.lifeMin, TRAIL.lifeMax);
+      const i = this.trailPool.acquire(now, life, reduced ? TRAIL.maxReduced : TRAIL.max);
+      const sp = this.trailSprites[i];
+      sp.flower.setTexture(flowerKey(Phaser.Math.Between(0, 4))).setPosition(x, y).setVisible(true).setAngle(Phaser.Math.Between(-15, 15)).setScale(reduced ? 1 : 0.2).setAlpha(1).setDepth(-4);
+    }
+  }
+
+  /** A soft twinkle that gathers at the horn while she stands. */
+  private hornGlint(now: number) {
+    if (reducedEffects() || now - this.lastHornGlint < 1700 || this.busy) return;
+    this.lastHornGlint = now;
+    const tip = this.hornTip();
+    ensureTrailTextures(this);
+    const g = this.add.image(tip.x, tip.y, 'horn_spark').setDepth(9999).setScale(0.3).setAlpha(0);
+    this.tweens.add({ targets: g, alpha: 1, scale: 0.8, duration: 260, yoyo: true, onComplete: () => g.destroy() });
+  }
+
+  /**
+   * Horn magic: energy gathers at the horn tip, then a short rainbow beam leaves from the tip straight the way she faces.
+   * `hitScenery` lets the beam wake flowers, trees, mushrooms etc. it reaches (Chapter 1 bloom spots are handled by the caller).
+   */
+  private castHorn(hitScenery: boolean) {
+    this.lastShot = performance.now();
+    ensureTrailTextures(this);
+    const dir = this.player.dir, v = facingVector(dir), tip = this.hornTip(), reduced = reducedEffects();
+    services.audio.sfx('sparkle');
+    // 1. gather: motes converge on the horn
+    const motes = reduced ? 3 : 8;
+    for (let i = 0; i < motes; i++) {
+      const a = (i / motes) * Math.PI * 2, m = this.add.image(tip.x + Math.cos(a) * 15, tip.y + Math.sin(a) * 15, 'horn_spark').setDepth(9999).setScale(0.5).setAlpha(0.2);
+      this.tweens.add({ targets: m, x: tip.x, y: tip.y, alpha: 1, scale: 0.9, duration: dur(210), ease: 'Quad.In', onComplete: () => m.destroy() });
+    }
+    // 2. beam + burst, from the tip along the facing
+    const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T };
+    const targets = hitScenery ? targetsOf(this.map) : [];
+    const f = fly(from, v, targets, (x, y) => !this.grid.passable(x, y), HORN_RANGE);
+    this.shots.push({ id: f.hit?.id, kind: f.hit ? `horn-${f.hit.kind}` : 'horn', dist: f.dist, blocked: f.blocked, dir });
+    if (this.shots.length > 40) this.shots.shift();
+    const len = Math.max(12, f.dist * T);
+    const g = this.add.graphics().setDepth(9999).setAlpha(0);
+    const bands = [0xff7ec3, 0xffe14d, 0x7be3ff];
+    bands.forEach((c, i) => { const off = (i - 1) * 1.6; g.lineStyle(2, c, 0.95).lineBetween(tip.x + (v.y !== 0 ? off : 0), tip.y + (v.x !== 0 ? off : 0), tip.x + v.x * len + (v.y !== 0 ? off : 0), tip.y + v.y * len + (v.x !== 0 ? off : 0)); });
+    const glow = this.add.image(tip.x, tip.y, 'fx_glow').setDepth(9998).setScale(0.3).setAlpha(0);
+    this.tweens.add({ targets: g, alpha: { from: 1, to: 0 }, delay: dur(200), duration: dur(320), onComplete: () => g.destroy() });
+    this.tweens.add({ targets: glow, alpha: { from: 0.95, to: 0 }, scale: 1.2, delay: dur(200), duration: dur(360), onComplete: () => glow.destroy() });
+    const burst = reduced ? 3 : 7;
+    this.time.delayedCall(dur(200), () => {
+      for (let i = 0; i < burst; i++) {
+        const sp = this.add.image(tip.x + v.x * len * (0.25 + 0.75 * (i / burst)), tip.y + v.y * len * (0.25 + 0.75 * (i / burst)), 'horn_spark').setDepth(9999).setTint(bands[i % 3]).setScale(0.8);
+        this.tweens.add({ targets: sp, x: sp.x + Phaser.Math.Between(-10, 10), y: sp.y - Phaser.Math.Between(4, 16), alpha: 0, duration: dur(520), onComplete: () => sp.destroy() });
+      }
+      if (f.hit) this.spellReact(f.hit);
+    });
+  }
+
+  // ------------------------------------------------------------------ mermaid bubble wand (v0.4b.3)
+  private merWand?: Phaser.GameObjects.Image;
+  private pearlBusy = false;
+  private pearlCue?: Phaser.GameObjects.Graphics;
+  private pearlCueKey = '';
+
+  private pearlObj(): ObjDef | undefined { return this.map.id === 'grotto' ? this.map.objects.find((o) => o.id === 'pearl') : undefined; }
+  private pearlActive(): boolean { const f = this.state.flags; return !!this.pearlObj() && !!f.MARINA_HELPED && !f.PEARL_PLACED; }
+  private mermaidColor(): number { return WAND_TINT[this.state.equippedWand.colorId][0]; }
+
+  /** Keeps the underwater wand in her hand, in front of or behind her depending on which way she faces. */
+  private updateMerWand() {
+    const on = this.player.form === 'mermaid' && !this.leaving;
+    if (!on) { this.merWand?.setVisible(false); return; }
+    ensureMermaidTextures(this, this.state.equippedWand.colorId);
+    const key = `mer_wand_${this.state.equippedWand.colorId}`;
+    if (!this.merWand) this.merWand = this.add.image(0, 0, key).setOrigin(0.1, 0.5);
+    const pose = wandPose(this.player.dir);
+    const sp = this.player.sprite;
+    this.merWand.setTexture(key).setVisible(true).setPosition(sp.x + pose.hx, sp.y + pose.hy).setAngle(pose.angle).setFlipY(pose.flipY).setDepth(sp.y + (pose.front ? 1 : -1));
+  }
+
+  /** Where the wand tip is right now (world pixels). */
+  private wandTip() {
+    const pose = wandPose(this.player.dir), sp = this.player.sprite, a = (pose.angle * Math.PI) / 180;
+    return { x: sp.x + pose.hx + Math.cos(a) * pose.len, y: sp.y + pose.hy + Math.sin(a) * pose.len };
+  }
+
+  /** One bubble: flies straight the way she faces, touches the pearl only if it really passes through it. */
+  private shootBubble() {
+    this.lastShot = performance.now();
+    const foot = this.player.foot, from = { x: foot.x / T, y: foot.y / T }, dir = this.player.dir;
+    const po = this.pearlObj(), pp = po ? (this.objPos.get('pearl') ?? po) : null;
+    const pearlLive = this.pearlActive() && !this.pearlBusy && !!pp;
+    const r = bubbleShot(from, dir, pearlLive ? pp : null, (x, y) => !this.grid.passable(x, y));
+    const wand = this.state.equippedWand;
+    this.shots.push({ id: r.hitPearl ? 'pearl' : undefined, kind: r.hitPearl ? (r.push ? 'pearl-push' : 'pearl-touch') : undefined, dist: r.dist, blocked: r.blocked, wand: `${wand.headId}/${wand.colorId}/${wand.trailId}`, dir });
+    if (this.shots.length > 40) this.shots.shift();
+    services.audio.sfx('splash');
+    const tip = this.wandTip(), col = this.mermaidColor();
+    ensureMermaidTextures(this, wand.colorId);
+    const b = this.add.image(tip.x, tip.y, bubbleTexture(this, col)).setDepth(9999);
+    if (!reducedEffects()) this.tweens.add({ targets: b, scale: { from: 0.8, to: 1.2 }, duration: 160, yoyo: true, repeat: -1 });
+    const ex = r.end.x * T, ey = r.end.y * T - 8;
+    let last = 0;
+    this.tweens.add({
+      targets: b, x: ex, y: ey, duration: Math.max(90, (r.dist / SHOT_TILES_PER_SEC) * 1000), ease: 'Sine.Out',
+      onUpdate: () => {
+        if (reducedEffects() || performance.now() - last < 45) return;
+        last = performance.now();
+        const t = this.add.image(b.x + Phaser.Math.Between(-3, 3), b.y + Phaser.Math.Between(-3, 3), bubbleTexture(this, col)).setScale(0.35).setAlpha(0.8).setDepth(9998);
+        this.tweens.add({ targets: t, alpha: 0, y: t.y - 10, scale: 0.15, duration: 420, onComplete: () => t.destroy() });
+      },
+      onComplete: () => {
+        b.destroy();
+        this.sparkleAt(Math.floor(r.end.x), Math.floor(r.end.y), 3);
+        if (!r.hitPearl || !po) return;
+        const ps = this.objSprites.get('pearl');
+        if (ps && !reducedEffects()) this.tweens.add({ targets: ps, angle: { from: -10, to: 10 }, duration: 80, yoyo: true, repeat: 2, onComplete: () => ps.setAngle(0) });
+        if (!r.push) return;
+        this.pearlBusy = true;
+        const cur = this.objPos.get('pearl') ?? po;
+        void pearlBubbleHit(this.ctx, po, cur.x).finally(() => { this.pearlBusy = false; });
+      }
+    });
+  }
+
+  /** A soft "stand here, face this way" glow beside the pearl: it only guides, it never steers the bubble. */
+  private updatePearlCue() {
+    const want = this.player.form === 'mermaid' && this.pearlActive() && !this.ui?.modal && !this.leaving;
+    if (!want) { this.pearlCue?.setVisible(false); this.pearlCueKey = ''; return; }
+    const po = this.pearlObj()!, pp = this.objPos.get('pearl') ?? po;
+    const key = `${pp.x}`;
+    if (!this.pearlCue) {
+      this.pearlCue = this.add.graphics().setDepth(40);
+      if (!reducedEffects()) this.tweens.add({ targets: this.pearlCue, alpha: { from: 0.35, to: 0.95 }, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    }
+    this.pearlCue.setVisible(true);
+    if (key === this.pearlCueKey) return;
+    this.pearlCueKey = key;
+    const g = this.pearlCue.clear(), y = pp.y * T + T / 2 + 2, sx = (pp.x - 2) * T + T / 2;
+    g.fillStyle(0xffffff, 0.22).fillEllipse(sx, y + 4, 22, 9).lineStyle(2, 0xbff3ff, 0.9).strokeEllipse(sx, y + 4, 22, 9);
+    for (let i = 0; i < 3; i++) { const cx = sx + 14 + i * 9; g.lineStyle(2, 0xffffff, 0.9).beginPath().moveTo(cx - 3, y - 2).lineTo(cx + 2, y + 4).lineTo(cx - 3, y + 10).strokePath(); }
   }
 
   private propSpriteFor(t: SpellTarget): Phaser.GameObjects.Sprite | undefined {
@@ -954,6 +1150,9 @@ export class WorldScene extends Phaser.Scene {
     }
     if (this.tagGame) this.tagTick(dt);
     this.updateCue(dt);
+    this.updateMerWand();
+    this.updateTrail(dt);
+    this.updatePearlCue();
     const idle = !this.busy && !this.tagGame && !this.player.moving && !(this.ui && this.ui.modal);
     this.idleMs = idle ? this.idleMs + dt : 0;
     if (this.idleMs > 12000 && this.idleMs - dt <= 12000) { void this.hint(false); this.ui?.pulseHint(true); }
@@ -989,6 +1188,14 @@ export class WorldScene extends Phaser.Scene {
       action: () => this.actionPress(),
       magic: () => void this.magicPress(),
       shots: () => this.shots.map((q) => ({ ...q })),
+      trail: () => ({ count: this.trailCount(), cap: reducedEffects() ? TRAIL.maxReduced : TRAIL.max, flowers: this.trailSprites.map((s, i) => ({ i, on: this.trailPool.alive(i, performance.now()), x: s.flower.x, y: s.flower.y, a: s.flower.alpha })).filter((q) => q.on) }),
+      hornTip: () => this.hornTip(),
+      trailOffGrass: () => this.trailSprites.filter((q, i) => this.trailPool.alive(i, performance.now()) && !isGrassTile(this.tileNameAt(q.flower.x, q.flower.y))).length,
+      tileName: (x: number, y: number) => this.tileNameAt(x * T + 1, y * T + 1),
+      pearl: () => ({ ...(this.objPos.get('pearl') ?? { x: -1, y: -1 }), busy: this.pearlBusy, placed: !!this.state.flags.PEARL_PLACED }),
+      mermaidFoot: () => ({ ...this.player.foot }),
+      teleportPlayer: (t: Tile) => this.player.teleport(t),
+      faceDir: (d: 'up' | 'down' | 'left' | 'right') => { this.player.dir = d; this.player.idle(); },
       tag: () => (this.tagGame ? { phase: this.tagGame.s.phase, stars: this.tagGame.s.stars, pal: { ...this.tagGame.s.pal }, t: this.tagGame.s.t, ended: this.tagGame.ended, tally: this.ui.tallyState, exit: this.ui.exitPos } : null),
       sprayOn: () => !!this.fountainSpray,
       effectsOn: () => this.spellFx.count(performance.now()),

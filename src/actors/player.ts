@@ -64,6 +64,8 @@ export class Player {
     if (!this.moving) { this.idle(); onDone?.(); }
   }
 
+  get isGalloping() { return this.gallop; }
+
   /** Sprite y minus feet y: the collision point is the princess's feet, not her sprite anchor. */
   private get footLift() { return this.form === 'mermaid' ? 8 : 6; }
   get foot() { return { x: this.sprite.x, y: this.sprite.y - this.footLift }; }

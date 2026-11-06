@@ -8,6 +8,7 @@ import { newProgress, countTap } from '../systems/puzzleEngine';
 import { nextObjective } from '../systems/questEngine';
 import { services } from '../systems/services';
 import { OBJECTIVE_NARRATION } from './guide';
+import { PEARL_LANE_X, PEARL_Y, isSocketX, nextLaneX } from './pearl';
 import type { PuzzleResult } from '../ui/puzzlePanel';
 
 /** What the story needs from the running world and HUD. WorldScene implements it; tests can fake it. */
@@ -56,8 +57,6 @@ export function resetSession() {
   session.introSpoken = false;
 }
 
-const PEARL_LANE_X = [22, 24, 26, 28]; // 4 bubble pushes; the last one lands in the shell socket
-const PEARL_Y = 20;
 
 /** Speak the reminder for whatever the next main-path goal is. */
 export async function remind(ctx: StoryCtx) {
@@ -310,20 +309,32 @@ async function chest(ctx: StoryCtx, obj: ObjDef) {
   await ctx.say(SCRIPT.chestFound);
 }
 
+/** A on the pearl only explains the puzzle: the push itself comes from a bubble (see pearlBubbleHit). */
 async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
   if (!ctx.state.flags.MARINA_HELPED) { await ctx.say(SCRIPT.marinaIntro); return; }
   if (ctx.state.flags.PEARL_PLACED) return;
-  if (session.pearlStep === 0) await ctx.say(SCRIPT.pearlHint);
-  await ctx.cast(); // a bubble bounces the pearl two tiles along the glowing lane
-  const x = PEARL_LANE_X[Math.min(session.pearlStep, PEARL_LANE_X.length - 1)];
-  session.pearlStep++;
+  ctx.hop(obj.id);
+  await ctx.say(SCRIPT.pearlHint);
+}
+
+/**
+ * A bubble travelling to the right touched the pearl: it rolls on to the next resting spot on its glowing lane.
+ * The step comes from where the pearl actually is, so it stays right even if the scene was re-entered.
+ * Returns true if the pearl moved.
+ */
+export async function pearlBubbleHit(ctx: StoryCtx, obj: ObjDef, curX: number): Promise<boolean> {
+  if (!ctx.state.flags.MARINA_HELPED || ctx.state.flags.PEARL_PLACED) return false;
+  const x = nextLaneX(curX);
+  if (x === undefined) return false;
+  session.pearlStep = PEARL_LANE_X.indexOf(x) + 1;
   services.audio.sfx('pop');
   await ctx.moveObject(obj.id, { x, y: PEARL_Y });
-  if (session.pearlStep < PEARL_LANE_X.length) return;
+  if (!isSocketX(x)) return true;
   ctx.complete('PEARL_PLACED');
   services.audio.sfx('chime');
   ctx.celebrate('pearl');
   await ctx.say(SCRIPT.pearlPushed);
+  return true;
 }
 
 /**
