@@ -95,7 +95,9 @@ export class UIScene extends Phaser.Scene {
     this.decorBtn = makeButton(this, 156, 30, 'icon_decorate', 1, tap(() => this.handlers.decorate?.()));
     this.hintBtn = makeButton(this, 476, 30, 'icon_hint', 1, tap(() => this.handlers.hint?.()));
     this.objBubble = this.add.container(416, 30);
-    const crownImg = this.add.image(222, 26, 'crown_hud').setScale(1);
+    const crownImg = this.add.image(222, 26, 'crown_hud').setScale(1).setInteractive({ useHandCursor: true });
+    // The crown used to look tappable without doing anything. It now opens the Royal Stickerbook.
+    crownImg.on('pointerdown', tap(() => this.handlers.book?.()));
     this.crown = crownImg;
     this.starsTxt = this.add.text(244, 16, '', { fontFamily: 'Trebuchet MS, Arial, sans-serif', fontSize: '20px', color: '#fff2a8', stroke: '#40255a', strokeThickness: 4 });
     // ---- bottom centre: the wand opens a small tray of forms (never overlaps the pad or the two big buttons)
@@ -310,6 +312,7 @@ export class UIScene extends Phaser.Scene {
   /** WorldScene calls this first on every pointerdown; true means the UI owns the tap. */
   blocksPointer(x: number, y: number): boolean {
     if (this.modal) return true;
+    if (this.crown?.visible && this.crown.getBounds().contains(x, y)) return true;
     if (this.hud.some((b) => b.container.visible && b.hit(x, y))) return true;
     if (this.heldId >= 0 || this.inPad(x, y)) return true;
     for (const b of this.formBtns.values()) if (b.container.visible && b.hit(x, y)) return true;
