@@ -1,4 +1,9 @@
 # Changelog
+## 0.4.0d.6.5 (preview) — Pet homes and ice cream fix
+- Each pet now has its own home in the bedroom's front-right corner, matching the animal she chose: cat tree, dog house, bird cage, pony stable (new pixel art). The corner is reserved floor so furniture can't cover it, and pets sometimes wander over to rest beside their home. Changing animal at the Pet Keeper changes the home.
+- Ice cream fix: the first scoop used to float high above the cone. Scoops now sit in the cone rim and stack from there (editor and kitchen stand).
+- Tests: 384 unit tests; `v04d6-pets.mjs` checks the home for all four animals; kitchen driver re-run.
+
 ## 0.4.0d.6.4 (preview) — Pet care
 - Tap the bedroom pet for a picture menu: food bowl, water bowl, toy. Each species has its own foods, toy, speed and reaction (cat chases yarn, dog fetches a ball, pony trots after a ribbon, bird flutters to a feather). Feeding and water play a walk-up and eat/drink animation; play lets her tap the floor to throw the toy (8 throws, or the back button, ends it). Nothing is ever consumed or required and there are no penalties.
 - Cared-for pets are cheerful and hop on their own now and then. Care counts are saved (`kingdom.petCare`, old saves load fine); changing animal at the Pet Keeper starts a fresh count, a new look for the same animal keeps it. Pet customization is untouched.

@@ -268,6 +268,41 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
     P(c, 3, 22, 26, 9, '#c98a4a'); P(c, 3, 22, 26, 2, '#e0a860'); P(c, 6, 17, 5, 5, '#ffd93d'); P(c, 14, 18, 4, 4, '#3ea6ff'); P(c, 21, 17, 5, 5, '#ff5a6e');
   });
 
+  // v0.4d.6.5 pet homes (bedroom corner): one per animal, 32x32, base at the bottom edge
+  m('px_home_cat', 32, 32, (c) => {
+    P(c, 12, 4, 8, 28, '#c9a27a'); for (let y = 6; y < 30; y += 3) P(c, 12, y, 8, 1, '#a07a50'); // sisal post
+    P(c, 2, 28, 28, 4, '#b86a9c'); P(c, 2, 28, 28, 1, '#d98ac0'); // base
+    P(c, 1, 15, 12, 3, '#b86a9c'); P(c, 1, 15, 12, 1, '#d98ac0'); // low platform
+    P(c, 8, 1, 18, 3, '#b86a9c'); P(c, 8, 1, 18, 1, '#d98ac0'); // top perch
+    P(c, 20, 18, 10, 10, '#d98ac0'); P(c, 22, 20, 6, 6, '#6a3a5a'); P(c, 23, 21, 4, 4, '#3a1f35'); // cosy cubby
+    disc(c, 4, 12, 2.4, '#ffd93d'); P(c, 4, 15, 1, 2, '#c9a27a'); // hanging ball
+  });
+  m('px_home_dog', 32, 32, (c) => {
+    P(c, 3, 14, 26, 18, '#c0553a'); P(c, 3, 14, 26, 2, '#d96f50'); for (let x = 5; x < 29; x += 5) P(c, x, 18, 1, 14, '#a8452e');
+    c.fillStyle = '#7a3a2a'; c.beginPath(); c.moveTo(0, 15); c.lineTo(16, 1); c.lineTo(32, 15); c.closePath(); c.fill();
+    c.fillStyle = '#9a4a34'; c.beginPath(); c.moveTo(4, 15); c.lineTo(16, 4); c.lineTo(28, 15); c.closePath(); c.fill();
+    disc(c, 16, 25, 6.5, '#3a1f1a'); P(c, 9.5, 25, 13, 7, '#3a1f1a'); // arched doorway
+    P(c, 13, 9, 6, 4, '#fff6e4'); P(c, 14, 10, 4, 2, '#e8624a'); // little bone sign
+    P(c, 1, 31, 30, 1, '#7a3a2a');
+  });
+  m('px_home_bird', 32, 32, (c) => {
+    P(c, 14, 25, 4, 4, '#8f5c1a'); P(c, 8, 29, 16, 3, '#8f5c1a'); P(c, 8, 29, 16, 1, '#b07a2a'); // stand
+    P(c, 4, 22, 24, 3, '#e0b84a'); // tray
+    disc(c, 16, 12, 12, 'rgba(255,230,140,.25)'); P(c, 4, 12, 24, 10, 'rgba(255,230,140,.25)');
+    for (let x = 4; x <= 27; x += 4) P(c, x, 10, 1, 12, '#e0b84a'); // bars
+    P(c, 3, 3, 26, 1, '#e0b84a'); c.strokeStyle = '#e0b84a'; c.lineWidth = 1; c.beginPath(); c.arc(16, 12, 12, Math.PI, 2 * Math.PI); c.stroke();
+    P(c, 15, 0, 2, 3, '#e0b84a'); disc(c, 16, 0.5, 2, '#e0b84a'); // hook
+    P(c, 6, 17, 20, 1, '#a07a50'); disc(c, 24, 21, 1.6, '#e8624a'); // perch + berry
+  });
+  m('px_home_pony', 32, 32, (c) => {
+    P(c, 1, 12, 30, 20, '#b07a4a'); for (let x = 1; x < 31; x += 4) P(c, x, 12, 1, 20, '#8f5c36'); P(c, 1, 12, 30, 2, '#cfa06a');
+    c.fillStyle = '#8f3a30'; c.beginPath(); c.moveTo(0, 13); c.lineTo(16, 1); c.lineTo(32, 13); c.closePath(); c.fill();
+    c.fillStyle = '#b4503f'; c.beginPath(); c.moveTo(4, 13); c.lineTo(16, 4); c.lineTo(28, 13); c.closePath(); c.fill();
+    P(c, 6, 16, 20, 16, '#4a2f20'); P(c, 6, 16, 20, 2, '#6a4430'); // open stall
+    P(c, 8, 26, 16, 6, '#e8c85a'); for (let x = 8; x < 24; x += 3) P(c, x, 25, 1, 3, '#f2de88'); // hay
+    P(c, 12, 7, 8, 4, '#fff6e4'); P(c, 15, 8, 2, 2, '#ff7ec3'); // heart sign
+  });
+
   // ------------------------------------------------------------ River
   m('px_lily', 16, 16, (c) => { disc(c, 8, 9, 6, '#3fb27c'); P(c, 8, 4, 1, 5, '#2f9a6a'); disc(c, 10, 7, 2.4, '#ff9ad2'); disc(c, 10, 7, 1, '#ffe14d'); });
   m('px_reed', 16, 32, (c) => { for (const [x, h] of [[4, 28], [8, 32], [12, 24]]) { P(c, x, 32 - h, 2, h, '#4a9a5a'); P(c, x - 1, 32 - h, 4, 6, '#8a5a2e'); } });
@@ -369,4 +404,4 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
 }
 
 /** Names of every runtime texture (for tests). */
-export const KINGDOM_KEYS = ['px_shape_circle_red', 'px_shape_square_red', 'px_shape_triangle_red', 'px_shape_star_red', 'px_shape_heart_red', 'px_shape_diamond_red', 'px_shape_circle_blue', 'px_shape_square_blue', 'px_shape_triangle_blue', 'px_shape_star_blue', 'px_shape_heart_blue', 'px_shape_diamond_blue', 'px_shape_circle_yellow', 'px_shape_square_yellow', 'px_shape_triangle_yellow', 'px_shape_star_yellow', 'px_shape_heart_yellow', 'px_shape_diamond_yellow', 'px_shape_circle_pink', 'px_shape_square_pink', 'px_shape_triangle_pink', 'px_shape_star_pink', 'px_shape_heart_pink', 'px_shape_diamond_pink', 'px_cnt_star1', 'px_cnt_star2', 'px_cnt_star3', 'px_cnt_star4', 'px_cnt_star5', 'px_cnt_star6', 'px_cnt_heart1', 'px_cnt_heart2', 'px_cnt_heart3', 'px_cnt_heart4', 'px_cnt_heart5', 'px_cnt_heart6', 'px_cnt_flower1', 'px_cnt_flower2', 'px_cnt_flower3', 'px_cnt_flower4', 'px_cnt_flower5', 'px_cnt_flower6', 'px_cnt_ball1', 'px_cnt_ball2', 'px_cnt_ball3', 'px_cnt_ball4', 'px_cnt_ball5', 'px_cnt_ball6', 'px_gd_rose', 'px_gd_tulip', 'px_gd_bluebell', 'px_gd_daisy', 'px_gd_sunflower', 'px_gd_lavender', 'px_gd_tree', 'px_gd_blossom', 'px_gd_bush', 'px_gd_rosebush', 'px_gd_hedge', 'px_gd_topiary', 'px_gd_birdbath', 'px_gd_fountain', 'px_gd_stones', 'px_gd_gnome', 'px_gd_pinwheel', 'px_gd_pot', 'px_gd_crystal', 'px_gd_mushrooms', 'px_bed_cozy', 'px_bed_sunny', 'px_bed_canopy', 'px_sleeper', 'px_keeper', 'px_petstall', 'px_bowl_food', 'px_bowl_water', 'px_food_kibble', 'px_food_bone', 'px_food_carrot', 'px_food_apple', 'px_food_seeds', 'px_food_berry', 'px_toy_ball', 'px_toy_yarn', 'px_toy_ribbon', 'px_toy_feather', 'px_pet_cat0', 'px_pet_cat1', 'px_pet_cat2', 'px_pet_cat3', 'px_pet_dog0', 'px_pet_dog1', 'px_pet_dog2', 'px_pet_dog3', 'px_pet_pony0', 'px_pet_pony1', 'px_pet_pony2', 'px_pet_pony3', 'px_pet_bird0', 'px_pet_bird1', 'px_pet_bird2', 'px_pet_bird3', 'px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_rock', 'px_pearl', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;
+export const KINGDOM_KEYS = ['px_shape_circle_red', 'px_shape_square_red', 'px_shape_triangle_red', 'px_shape_star_red', 'px_shape_heart_red', 'px_shape_diamond_red', 'px_shape_circle_blue', 'px_shape_square_blue', 'px_shape_triangle_blue', 'px_shape_star_blue', 'px_shape_heart_blue', 'px_shape_diamond_blue', 'px_shape_circle_yellow', 'px_shape_square_yellow', 'px_shape_triangle_yellow', 'px_shape_star_yellow', 'px_shape_heart_yellow', 'px_shape_diamond_yellow', 'px_shape_circle_pink', 'px_shape_square_pink', 'px_shape_triangle_pink', 'px_shape_star_pink', 'px_shape_heart_pink', 'px_shape_diamond_pink', 'px_cnt_star1', 'px_cnt_star2', 'px_cnt_star3', 'px_cnt_star4', 'px_cnt_star5', 'px_cnt_star6', 'px_cnt_heart1', 'px_cnt_heart2', 'px_cnt_heart3', 'px_cnt_heart4', 'px_cnt_heart5', 'px_cnt_heart6', 'px_cnt_flower1', 'px_cnt_flower2', 'px_cnt_flower3', 'px_cnt_flower4', 'px_cnt_flower5', 'px_cnt_flower6', 'px_cnt_ball1', 'px_cnt_ball2', 'px_cnt_ball3', 'px_cnt_ball4', 'px_cnt_ball5', 'px_cnt_ball6', 'px_gd_rose', 'px_gd_tulip', 'px_gd_bluebell', 'px_gd_daisy', 'px_gd_sunflower', 'px_gd_lavender', 'px_gd_tree', 'px_gd_blossom', 'px_gd_bush', 'px_gd_rosebush', 'px_gd_hedge', 'px_gd_topiary', 'px_gd_birdbath', 'px_gd_fountain', 'px_gd_stones', 'px_gd_gnome', 'px_gd_pinwheel', 'px_gd_pot', 'px_gd_crystal', 'px_gd_mushrooms', 'px_bed_cozy', 'px_bed_sunny', 'px_bed_canopy', 'px_sleeper', 'px_keeper', 'px_petstall', 'px_home_cat', 'px_home_dog', 'px_home_bird', 'px_home_pony', 'px_bowl_food', 'px_bowl_water', 'px_food_kibble', 'px_food_bone', 'px_food_carrot', 'px_food_apple', 'px_food_seeds', 'px_food_berry', 'px_toy_ball', 'px_toy_yarn', 'px_toy_ribbon', 'px_toy_feather', 'px_pet_cat0', 'px_pet_cat1', 'px_pet_cat2', 'px_pet_cat3', 'px_pet_dog0', 'px_pet_dog1', 'px_pet_dog2', 'px_pet_dog3', 'px_pet_pony0', 'px_pet_pony1', 'px_pet_pony2', 'px_pet_pony3', 'px_pet_bird0', 'px_pet_bird1', 'px_pet_bird2', 'px_pet_bird3', 'px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_rock', 'px_pearl', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;

@@ -16,13 +16,15 @@ export interface SpeciesCare {
   play: 'fetch' | 'chase' | 'trot' | 'flutter';
   /** The sound that goes with a happy pet (names from the audio manager). */
   happy: 'pop' | 'chime' | 'sparkle';
+  /** The pet's own home in the bedroom corner (texture key). */
+  home: string;
 }
 
 export const SPECIES_CARE: Record<Species, SpeciesCare> = {
-  cat: { foods: ['px_fish_orange', 'px_food_kibble'], toy: 'px_toy_yarn', msPerTile: 150, eat: 'munch', play: 'chase', happy: 'sparkle' },
-  dog: { foods: ['px_food_bone', 'px_food_kibble'], toy: 'px_toy_ball', msPerTile: 110, eat: 'munch', play: 'fetch', happy: 'pop' },
-  pony: { foods: ['px_food_carrot', 'px_food_apple'], toy: 'px_toy_ribbon', msPerTile: 130, eat: 'nuzzle', play: 'trot', happy: 'chime' },
-  bird: { foods: ['px_food_seeds', 'px_food_berry'], toy: 'px_toy_feather', msPerTile: 90, eat: 'peck', play: 'flutter', happy: 'chime' }
+  cat: { home: 'px_home_cat', foods: ['px_fish_orange', 'px_food_kibble'], toy: 'px_toy_yarn', msPerTile: 150, eat: 'munch', play: 'chase', happy: 'sparkle' },
+  dog: { home: 'px_home_dog', foods: ['px_food_bone', 'px_food_kibble'], toy: 'px_toy_ball', msPerTile: 110, eat: 'munch', play: 'fetch', happy: 'pop' },
+  pony: { home: 'px_home_pony', foods: ['px_food_carrot', 'px_food_apple'], toy: 'px_toy_ribbon', msPerTile: 130, eat: 'nuzzle', play: 'trot', happy: 'chime' },
+  bird: { home: 'px_home_bird', foods: ['px_food_seeds', 'px_food_berry'], toy: 'px_toy_feather', msPerTile: 90, eat: 'peck', play: 'flutter', happy: 'chime' }
 };
 export const FOOD_PICS = ['px_fish_orange', 'px_food_kibble', 'px_food_bone', 'px_food_carrot', 'px_food_apple', 'px_food_seeds', 'px_food_berry'] as const;
 export const CARE_PICS = ['px_bowl_food', 'px_bowl_water', 'px_toy_yarn', 'px_toy_ball', 'px_toy_ribbon', 'px_toy_feather'] as const;

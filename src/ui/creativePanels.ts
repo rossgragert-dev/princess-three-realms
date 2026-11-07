@@ -2,7 +2,7 @@
 // Picture-only (no reading, no money, no failing). Both are drag-or-tap and always replayable.
 import Phaser from 'phaser';
 import { UI } from '../content/frameIndex';
-import { MAX_SCOOPS, TOPPING_SCALE, place, radiusOf, spotFromOffset, toppingOffset, type FoodSpec, type Topping } from '../world/foodDesign';
+import { MAX_SCOOPS, SCOOP_REST, SCOOP_STEP, TOPPING_SCALE, place, radiusOf, spotFromOffset, toppingOffset, type FoodSpec, type Topping } from '../world/foodDesign';
 import { makeButton, pic, roundedPanel } from './touchTargets';
 import { services } from '../systems/services';
 import { dur } from '../systems/accessibility';
@@ -74,8 +74,8 @@ export function runBake(scene: Phaser.Scene, L: Layout, spec: BakeSpec, initial:
     });
     sel(selected);
     // ---- tap a spot on the food
-    const zw = spec.stack ? 110 : radiusOf(spec) * 2 + 20, zh = spec.stack ? spec.baseScale * 20 + 22 + MAX_SCOOPS * 16 + spec.baseScale * 20 : radiusOf(spec) * 1.6 + 20;
-    const zcy = spec.stack ? by - (zh / 2 - spec.baseScale * 20) : by;
+    const zw = spec.stack ? 110 : radiusOf(spec) * 2 + 20, zh = spec.stack ? SCOOP_REST * spec.baseScale + MAX_SCOOPS * SCOOP_STEP + spec.baseScale * 20 : radiusOf(spec) * 1.6 + 20;
+    const zcy = spec.stack ? by + (spec.baseScale * 20 - SCOOP_REST * spec.baseScale - MAX_SCOOPS * SCOOP_STEP) / 2 : by;
     const zone = scene.add.zone(cx, zcy, zw, zh).setInteractive(); root.add(zone);
     bakeProbe.food = { cx, cy: by, rx: radiusOf(spec), stack: !!spec.stack };
     zone.on('pointerdown', (p: Phaser.Input.Pointer) => { if (!add(selected, p.x - cx, p.y - by)) wiggle(); });

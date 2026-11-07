@@ -122,3 +122,24 @@ describe('v0.4d.6 stage 4: pet care', () => {
     assert.equal(k.petCare.fed, 0);
   });
 });
+
+import { KINGDOM_KEYS } from '../art/kingdomArt';
+import { bedroomBase } from '../content/furniture';
+import { SCOOP_REST } from '../world/foodDesign';
+
+describe('v0.4d.6.5 pet homes and ice cream', () => {
+  it('each animal has its own home texture, registered', () => {
+    const homes = PET_TYPES.map((t) => SPECIES_CARE[t].home);
+    assert.equal(new Set(homes).size, 4);
+    for (const h of homes) assert.ok((KINGDOM_KEYS as readonly string[]).includes(h), h);
+  });
+  it('the home corner is reserved floor in the bedroom, so furniture can never sit on it', () => {
+    const b = bedroomBase();
+    for (const x of [20, 21]) { assert.ok(!b.floor.has(15 * 64 + x), `tile ${x},15 must not be floor`); assert.ok(b.blocked.has(15 * 64 + x)); }
+    assert.ok(getMap('bedroom').props.some((p) => p.key === 'none'));
+  });
+  it('the first ice cream scoop sits in the cone rim, not floating above it', () => {
+    const o = toppingOffset(FOODS.cook_icecream, { key: 'px_t_pink', u: 0, v: 0 }, 0);
+    assert.ok(o.dy > -(SCOOP_REST + 1) * FOODS.cook_icecream.baseScale && o.dy < 0);
+  });
+});

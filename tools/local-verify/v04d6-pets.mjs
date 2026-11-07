@@ -17,6 +17,8 @@ for (let type = 0; type < 4; type++) {
   await enter();
   const nm = names[type];
   let p0 = await pet(); ok(`${nm}: pet present in bedroom`, p0.visible && p0.type === type, JSON.stringify(p0.tile));
+  ok(`${nm}: its own home is in the bedroom corner`, (await pet()).home);
+  await shot(page, `v04d6_pet_${nm}_home`);
   ok(`${nm}: tap opens care menu`, await tapPet());
   await shot(page, `v04d6_pet_${nm}_menu`);
   // feed with food 0 then food 1

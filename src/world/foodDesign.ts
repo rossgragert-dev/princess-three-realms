@@ -17,6 +17,9 @@ export const FOOD_IDS = Object.keys(FOODS) as FoodId[];
 export const MAX_TOPPINGS = 40;
 export const MAX_SCOOPS = 5;
 export const TOPPING_SCALE = 2.2;
+// The cone image has its rim at the image centre (the top half is empty), so the first scoop is centred just above the rim and sinks into the cone.
+export const SCOOP_REST = 5;
+export const SCOOP_STEP = 20;
 const SQUASH = 0.8; // the dish is seen from a slight angle
 
 export const capFor = (spec: FoodSpec) => (spec.stack ? MAX_SCOOPS : MAX_TOPPINGS);
@@ -29,7 +32,7 @@ export const onFood = (u: number, v: number) => Number.isFinite(u) && Number.isF
 
 /** Offset of a topping from the base image centre, in editor px (multiply by the world factor when drawn smaller). */
 export function toppingOffset(spec: FoodSpec, t: Topping, index: number): { dx: number; dy: number } {
-  if (spec.stack) return { dx: 0, dy: -(spec.baseScale * 20 + 6 + index * 16) };
+  if (spec.stack) return { dx: 0, dy: -(SCOOP_REST * spec.baseScale + index * SCOOP_STEP) };
   const r = radiusOf(spec);
   return { dx: t.u * r, dy: t.v * r * SQUASH };
 }
@@ -38,7 +41,7 @@ export function toppingOffset(spec: FoodSpec, t: Topping, index: number): { dx: 
 export function spotFromOffset(spec: FoodSpec, dx: number, dy: number): { u: number; v: number } | null {
   if (spec.stack) {
     // the cone and the scoops above it form one tall target
-    const top = -(spec.baseScale * 20 + 6 + MAX_SCOOPS * 16), bottom = spec.baseScale * 20;
+    const top = -(SCOOP_REST * spec.baseScale + MAX_SCOOPS * SCOOP_STEP), bottom = spec.baseScale * 20;
     return Math.abs(dx) <= 46 && dy >= top && dy <= bottom ? { u: 0, v: 0 } : null;
   }
   const r = radiusOf(spec);

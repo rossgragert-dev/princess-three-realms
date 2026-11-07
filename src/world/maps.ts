@@ -258,6 +258,8 @@ function bedroom(): MapDef {
     { key: 'vanity_prop', anim: 'vanity_glow', x: 20, y: 5, ox: 8, blocks: [[-1, -1], [0, -1], [1, -1], [2, -1], [-1, 0], [0, 0], [1, 0], [2, 0]] },
     // v0.4a: the paintbrush easel opens the room designer (wallpaper + floor)
     { key: 'paint_prop', anim: 'paint_glow', x: 6, y: 15, blocks: [[0, 0]] },
+    // v0.4d.6.5: the pet's home lives in the front-right corner (art is drawn by WorldScene for the chosen animal; the two tiles are always reserved)
+    { key: 'none', x: 21, y: 15, blocks: [[-1, 0], [0, 0]] },
   ];
   const objects: ObjDef[] = [
     { id: 'nana', kind: 'npc', x: 10, y: 9, sprite: npc('nana'), blocks: true, radius: 1.8 },

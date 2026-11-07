@@ -31,7 +31,7 @@ import type { KingdomApi } from '../world/kingdomStory';
 import { bakeProbe } from '../ui/creativePanels';
 import { PetCareStage } from './petCareStage';
 import { PET_TYPES } from '../content/kingdom';
-import { isCheerful, record as recordCare, type CareKind } from '../world/petCare';
+import { SPECIES_CARE, isCheerful, record as recordCare, type CareKind } from '../world/petCare';
 import { FOODS, toppingOffset, TOPPING_SCALE, type FoodId } from '../world/foodDesign';
 import { KITCHEN_STATIONS } from '../world/castleMaps';
 import { petKey } from '../content/kingdom';
@@ -190,6 +190,7 @@ export class WorldScene extends Phaser.Scene {
 
   private buildProps() {
     for (const p of this.map.props) {
+      if (p.key === 'none') continue; // reserved floor only (the pet-home corner)
       const s = this.makeSprite(p.key, p.x * T + T / 2 + (p.ox ?? 0), (p.y + 1) * T, p.frame, p.anim);
       s.setDepth((p.y + 1) * T + (p.depthBias ?? 0));
       this.props.push({ def: p, sprite: s });
@@ -359,6 +360,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private petBusy = false;
+  private petHome?: Phaser.GameObjects.Image;
   private petFree = (t: Tile) => this.grid.passable(t.x, t.y) && t.x >= 1 && t.x <= 22 && t.y >= 4 && t.y <= 15 && !(t.x >= 10 && t.x <= 13 && t.y >= 14) && !(t.x === this.player?.tile.x && t.y === this.player?.tile.y);
   private petStage?: PetCareStage;
   petCareLog() { return this.petStage?.log ?? null; }
@@ -393,6 +395,7 @@ export class WorldScene extends Phaser.Scene {
     const pet = this.state.kingdom.pet;
     this.petTimers.forEach((t) => t.remove(false)); this.petTimers = [];
     this.petSprite?.destroy(); this.petSprite = undefined;
+    this.petHome?.destroy(); this.petHome = undefined;
     this.objPos.set('bedroom_pet', { x: -9, y: -9 });
     if (!pet || this.map.id !== 'bedroom') return;
     const free = (t: Tile) => this.grid.passable(t.x, t.y) && !(t.x >= 10 && t.x <= 13 && t.y >= 14) && !(t.x === this.player?.tile.x && t.y === this.player?.tile.y);
@@ -400,6 +403,7 @@ export class WorldScene extends Phaser.Scene {
       const t = nearestPassable(this.grid, { x: 14, y: 13 }, 6);
       if (t) this.petTile = t;
     }
+    this.petHome = this.add.image(21 * T, 16 * T, SPECIES_CARE[PET_TYPES[pet.type]].home).setOrigin(0.5, 1).setDepth(16 * T);
     const key = petKey(pet);
     const s = this.add.sprite(this.petTile.x * T + T / 2, (this.petTile.y + 1) * T, key, 0).setOrigin(0.5, 1);
     s.setDepth(s.y); this.petSprite = s;
@@ -416,7 +420,7 @@ export class WorldScene extends Phaser.Scene {
     if (!s || !s.active || this.editing || this.sleeping || this.busy || this.petBusy) return;
     if (isCheerful(this.state.kingdom.petCare) && Math.random() < 0.35) { this.petHappy(); return; }
     for (let i = 0; i < 12; i++) {
-      const t = { x: this.petTile.x + Phaser.Math.Between(-3, 3), y: this.petTile.y + Phaser.Math.Between(-2, 2) };
+      const t = i === 0 && Math.random() < 0.25 ? { x: Phaser.Math.Between(20, 21), y: 14 } : { x: this.petTile.x + Phaser.Math.Between(-3, 3), y: this.petTile.y + Phaser.Math.Between(-2, 2) };
       if (t.x < 1 || t.x > 22 || t.y < 4 || t.y > 15 || !free(t) || (t.x === this.petTile.x && t.y === this.petTile.y)) continue;
       this.petTile = t; this.objPos.set('bedroom_pet', { ...t });
       s.setFlipX(t.x < s.x / T);
@@ -1629,7 +1633,7 @@ export class WorldScene extends Phaser.Scene {
       teleportPlayer: (t: Tile) => this.player.teleport(t),
       faceDir: (d: 'up' | 'down' | 'left' | 'right') => { this.player.dir = d; this.player.idle(); },
       tag: () => (this.tagGame ? { phase: this.tagGame.s.phase, stars: this.tagGame.s.stars, pal: { ...this.tagGame.s.pal }, t: this.tagGame.s.t, ended: this.tagGame.ended, tally: this.ui.tallyState, exit: this.ui.exitPos } : null),
-      pet: () => ({ tile: { ...this.petTile }, x: this.petSprite?.x ?? 0, y: this.petSprite?.y ?? 0, visible: !!this.petSprite?.visible, busy: this.petBusy, care: { ...this.state.kingdom.petCare }, log: this.petStage?.log ?? null, type: this.state.kingdom.pet?.type ?? -1 }),
+      pet: () => ({ home: !!this.petHome?.visible, tile: { ...this.petTile }, x: this.petSprite?.x ?? 0, y: this.petSprite?.y ?? 0, visible: !!this.petSprite?.visible, busy: this.petBusy, care: { ...this.state.kingdom.petCare }, log: this.petStage?.log ?? null, type: this.state.kingdom.pet?.type ?? -1 }),
       bake: () => ({ ...bakeProbe, cards: bakeProbe.cards.map((c) => ({ ...c })) }),
       foods: () => ({ layers: this.foodLayers.map((i) => ({ key: i.texture.key, x: i.x, y: i.y, s: i.scale })), dishes: (Object.keys(FOODS) as FoodId[]).map((id) => { const q = this.foodSprite(id); return { id, visible: !!q?.visible, x: q?.x ?? 0, y: q?.y ?? 0 }; }) }),
       kingdom: () => this.kingdom?.debug() ?? null,
