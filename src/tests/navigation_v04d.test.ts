@@ -83,8 +83,8 @@ describe('v0.4d courtyard / castle / woods topology', () => {
     assert.ok(east.length >= 1);
     for (const o of east) assert.equal(o.to!.scene, 'woods', o.id);
   });
-  it('the west border leads to one place, the garden has its own archway, the castle gate is a real door', () => {
-    assert.equal(c.objects.filter((o) => o.kind === 'warp' && (o.tiles ?? []).some((t) => t.x <= 1)).map((o) => o.to!.scene).join(), 'festival');
+  it('the west border leads to the festival and the castle moat, the garden has its own archway, the castle gate is a real door', () => {
+    assert.equal(c.objects.filter((o) => o.kind === 'warp' && (o.tiles ?? []).some((t) => t.x <= 1)).map((o) => o.to!.scene).sort().join(), 'festival,moat');
     const gate = c.objects.find((o) => o.id === 'gate_throne')!;
     assert.equal(gate.to!.scene, 'throne');
     const arch = c.objects.find((o) => o.id === 'warp_garden')!;

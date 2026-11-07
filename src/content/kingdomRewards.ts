@@ -17,7 +17,12 @@ export const KINGDOM_REWARDS: Partial<Record<QuestFlag, KingdomReward>> = {
   RIVER_FRIENDLY: { sticker: 'sticker_river', decor: 'river_fountain' },
   RIVER_STAR: { sticker: 'sticker_river_star' },
   RIVER_PEARLS: { sticker: 'sticker_river_pearls' },
-  RIVER_TREASURE: { sticker: 'sticker_river_gem' }
+  RIVER_TREASURE: { sticker: 'sticker_river_gem' },
+  MOAT_CRAB: { sticker: 'sticker_moat_crab' },
+  MOAT_TREASURE: { sticker: 'sticker_moat_gem' },
+  CORAL_OCTO: { sticker: 'sticker_coral_octo' },
+  CORAL_SONG: { sticker: 'sticker_coral_song' },
+  CORAL_TREASURE: { sticker: 'sticker_coral_gem' }
 };
 
 /** Pure, idempotent. Returns true if anything new was given. */

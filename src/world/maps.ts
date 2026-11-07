@@ -4,6 +4,7 @@ import type { Gate, MapDef, ObjDef, PropDef } from './types';
 import { Grid, col, isGrass, isSand, item, npc, tile, trees } from './mapKit';
 import { enchanted, garden, river } from './kingdomMaps';
 import { gallery, kitchen, labyrinth } from './castleMaps';
+import { moat, moatDepths, coralGarden } from './moatMaps';
 
 // ---------------------------------------------------------------- 1. Starfall Courtyard (40x30)
 function courtyard(): MapDef {
@@ -43,6 +44,7 @@ function courtyard(): MapDef {
   g.scatter(36, 11, 4, 6, ['path1'], 0.4, 17, () => true);
   for (const x of [18, 19, 20]) g.set(x, 5, 'cobble0'); // v0.4d: the great castle gate is a real door to the Throne Room
   g.set(25, 5, 'cobble0'); // v0.4d: the Royal Garden archway
+  g.rect(0, 24, 2, 3, 'path0'); g.mix(2, 24, 4, 3, ['path0', 'path1'], 81); // v0.4d.6: the path down to the Castle Moat
   // hedge between plaza and garden, with a stair gap
   g.rect(2, 21, 36, 1, 'hedge');
   g.rect(18, 21, 4, 1, 'path0');
@@ -80,12 +82,13 @@ function courtyard(): MapDef {
     { id: 'warp_woods', kind: 'warp', x: 39, y: 13, tiles: col(39, 11, 16), to: { scene: 'woods', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'warp_garden', kind: 'warp', x: 25, y: 5, tiles: [tile(25, 5)], to: { scene: 'garden', spawn: 'from_courtyard' }, radius: 1.5 },
     { id: 'gate_throne', kind: 'warp', x: 19, y: 5, tiles: [tile(18, 5), tile(19, 5), tile(20, 5)], to: { scene: 'throne', spawn: 'from_courtyard' }, radius: 1.5 },
+    { id: 'warp_moat', kind: 'warp', x: 0, y: 25, tiles: col(0, 24, 26), to: { scene: 'moat', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'warp_festival', kind: 'warp', x: 0, y: 12, tiles: col(0, 11, 13), to: { scene: 'festival', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'door_conservatory', kind: 'warp', x: 31, y: 5, tiles: [tile(31, 5)], to: { scene: 'conservatory', spawn: 'from_courtyard' }, radius: 1.5 },
   ];
   return {
     id: 'courtyard', w: 40, h: 30, medium: 'air', mermaidAllowed: false, bg: '#8fd3ff', ground: g.cells, props, objects, gates: [],
-    spawns: { start: tile(12, 10), from_woods: tile(37, 15), from_bedroom: tile(8, 7), from_festival: tile(3, 12), from_conservatory: tile(31, 7), from_garden: tile(25, 7), from_throne: tile(19, 7) }, music: 'sunlit'
+    spawns: { start: tile(12, 10), from_woods: tile(37, 15), from_bedroom: tile(8, 7), from_festival: tile(3, 12), from_conservatory: tile(31, 7), from_garden: tile(25, 7), from_throne: tile(19, 7), from_moat: tile(3, 25) }, music: 'sunlit'
   };
 }
 
@@ -409,7 +412,7 @@ function greenhouse(): MapDef {
 
 let cache: Record<SceneId, MapDef> | null = null;
 export function getMaps(): Record<SceneId, MapDef> {
-  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river(), throne: throne(), greenhouse: greenhouse(), kitchen: kitchen(), gallery: gallery(), labyrinth: labyrinth() };
+  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river(), throne: throne(), greenhouse: greenhouse(), kitchen: kitchen(), gallery: gallery(), labyrinth: labyrinth(), moat: moat(), moat_depths: moatDepths(), coral_garden: coralGarden() };
   return cache;
 }
 export const getMap = (id: SceneId) => getMaps()[id];

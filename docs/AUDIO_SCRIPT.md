@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 346 (80 required)
+- Total lines: 376 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -56,6 +56,14 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | woods | `bloom_cheer` | Flowers bloom wherever you trot! |  | yes |
 | shore | `transform_mermaid` | You are a mermaid! You can swim anywhere in the water. |  | yes |
 | shore | `obj_lake` | Tap the sparkly water to become a mermaid. |  | yes |
+| shore | `form_go_moat` | Mermaids swim in water. Follow the sparkles to the castle moat! |  | no |
+| shore | `seahorse_hi` | Wheee! Seahorses love to dance! |  | no |
+| shore | `word_shell` | Shell. |  | no |
+| shore | `sticker_moat_crab` | You helped Pebble the crab! |  | no |
+| shore | `sticker_moat_gem` | You found the castle's hidden treasure! |  | no |
+| shore | `sticker_coral_octo` | You played with Inky the octopus! |  | no |
+| shore | `sticker_coral_song` | You woke the singing coral! |  | no |
+| shore | `sticker_coral_gem` | You found the pearl vault treasure! |  | no |
 | grotto | `word_starfish_1` | One! |  | yes |
 | grotto | `word_starfish_2` | Two! |  | yes |
 | grotto | `word_starfish_3` | Three! |  | yes |
@@ -64,6 +72,25 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | grotto | `word_fish` | Fish. |  | yes |
 | grotto | `obj_marina` | Swim down and help Marina the turtle. |  | yes |
 | grotto | `obj_star` | Take the wishing star from the shiny stand. |  | yes |
+| grotto | `crab_intro` | Click clack! I am Pebble the crab. Can you help me? |  | no |
+| grotto | `crab_sound_c` | Listen carefully. Which picture begins with the kuh sound? |  | no |
+| grotto | `success_crab_sound_c` | Yes! Cat starts with kuh. Click clack! |  | no |
+| grotto | `crab_rhyme_hat` | Hat! Which picture sounds like hat? |  | no |
+| grotto | `success_crab_rhyme_hat` | Hat, cat! They sound the same. Click clack! |  | no |
+| grotto | `hint_crab_rhyme_1` | Hat, cat. They sound the same at the end! |  | no |
+| grotto | `hint_crab_rhyme_2` | Sun does not sound like hat. Try the other one. |  | no |
+| grotto | `crab_done` | Thank you, friend! The castle's secrets are shining for you. |  | no |
+| grotto | `inky_intro` | Bloop bloop! I am Inky the octopus. Can you copy my patterns? |  | no |
+| grotto | `inky_pattern` | Blue, red, blue, red... what comes next? |  | no |
+| grotto | `success_inky_pattern` | Yes! Blue, red, blue, red. Bloop! |  | no |
+| grotto | `hint_inky_p1` | Blue, red, blue, red... what comes next? |  | no |
+| grotto | `hint_inky_p2` | It goes blue, then red, again and again. |  | no |
+| grotto | `inky_sequence` | Watch! First the star, then the fish, then the shell. Can you copy me? |  | no |
+| grotto | `success_inky_sequence` | Star, fish, shell! You copied me. Bloop bloop! |  | no |
+| grotto | `hint_inky_s1` | First the star. Then the fish. |  | no |
+| grotto | `hint_inky_s2` | The shell comes last. |  | no |
+| grotto | `inky_done` | You are so clever! Splash and play in the coral garden. |  | no |
+| grotto | `secret_open` | A secret way! Swim inside! |  | no |
 | bedroom | `decor_tutorial` | Let's decorate your room! Tap a spot, then tap a picture. |  | yes |
 | bedroom | `obj_home` | Tap the little house to go home and decorate your room. |  | yes |
 | bedroom | `chapter_done` | More adventures are coming soon! |  | no |
@@ -139,7 +166,6 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `word_ladybug` | Ladybug. |  | no |
 | anywhere | `word_heart` | Heart. |  | no |
 | anywhere | `word_cake` | Cake. |  | no |
-| anywhere | `word_shell` | Shell. |  | no |
 | anywhere | `word_sprout` | Sprout. |  | no |
 | anywhere | `word_mound` | Soil. |  | no |
 | anywhere | `word_packet` | Seed packet. |  | no |
@@ -358,6 +384,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 
 | Scene | Key | Line | Direction | Req |
 |---|---|---|---|---|
+| shore | `throne_moat` | The castle moat! Go out the courtyard, down the path to the water. |  | no |
 | anywhere | `queen_hello` | Welcome to my wand workshop! Come and make your very own wand. |  | no |
 | anywhere | `queen_again` | What a lovely wand! Would you like to change it? |  | no |
 | anywhere | `queen_fading` | The Enchanted Woods, the Royal Garden and the Shimmering River are waiting for you! |  | no |
@@ -397,8 +424,11 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 
 | Scene | Key | Line | Direction | Req |
 |---|---|---|---|---|
+| shore | `moat_intro` | Welcome to the castle moat! Swim as a mermaid and find the whirlpool! |  | no |
+| shore | `moat_hint` | A secret world sleeps under the castle. Dive into the whirlpool! |  | no |
 | grotto | `pearl_prompt` | Use your bubbles to push the pearl to the shiny shell. |  | yes |
 | grotto | `pearl_pushed` | Pop! Bubbles can push the pearl. One more! |  | yes |
+| grotto | `coral_song_done` | Listen! The coral garden is singing! |  | no |
 | anywhere | `river_intro` | Welcome to the river! Swim through the shining rings and listen to its song. |  | no |
 | anywhere | `river_hint` | Tap the post to start a race. Or swim and play with the shells! |  | no |
 | anywhere | `river_pearls_hint` | Tap the singing shells with your bubbles. Can you wake four? |  | no |
@@ -488,7 +518,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `bloom_cheer` | Flowers bloom wherever you trot! |
 | willa | `need_unicorn` | Only a unicorn can fix this. Tap the magic wand and choose the unicorn! |
 
-## shore (4)
+## shore (15)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -496,8 +526,19 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | willa | `form_wrong_terrain` | Let us go to the glowing spot first. Follow the sparkles! |
 | willa | `shore_intro` | Look! Sparkly water. Tap it to become a mermaid! |
 | narrator | `obj_lake` | Tap the sparkly water to become a mermaid. |
+| queen | `throne_moat` | The castle moat! Go out the courtyard, down the path to the water. |
+| narrator | `form_go_moat` | Mermaids swim in water. Follow the sparkles to the castle moat! |
+| coralie | `moat_intro` | Welcome to the castle moat! Swim as a mermaid and find the whirlpool! |
+| coralie | `moat_hint` | A secret world sleeps under the castle. Dive into the whirlpool! |
+| narrator | `seahorse_hi` | Wheee! Seahorses love to dance! |
+| narrator | `word_shell` | Shell. |
+| narrator | `sticker_moat_crab` | You helped Pebble the crab! |
+| narrator | `sticker_moat_gem` | You found the castle's hidden treasure! |
+| narrator | `sticker_coral_octo` | You played with Inky the octopus! |
+| narrator | `sticker_coral_song` | You woke the singing coral! |
+| narrator | `sticker_coral_gem` | You found the pearl vault treasure! |
 
-## grotto (19)
+## grotto (39)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -520,6 +561,26 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_marina` | Swim down and help Marina the turtle. |
 | narrator | `obj_star` | Take the wishing star from the shiny stand. |
 | coralie | `pearl_pushed` | Pop! Bubbles can push the pearl. One more! |
+| narrator | `crab_intro` | Click clack! I am Pebble the crab. Can you help me? |
+| narrator | `crab_sound_c` | Listen carefully. Which picture begins with the kuh sound? |
+| narrator | `success_crab_sound_c` | Yes! Cat starts with kuh. Click clack! |
+| narrator | `crab_rhyme_hat` | Hat! Which picture sounds like hat? |
+| narrator | `success_crab_rhyme_hat` | Hat, cat! They sound the same. Click clack! |
+| narrator | `hint_crab_rhyme_1` | Hat, cat. They sound the same at the end! |
+| narrator | `hint_crab_rhyme_2` | Sun does not sound like hat. Try the other one. |
+| narrator | `crab_done` | Thank you, friend! The castle's secrets are shining for you. |
+| narrator | `inky_intro` | Bloop bloop! I am Inky the octopus. Can you copy my patterns? |
+| narrator | `inky_pattern` | Blue, red, blue, red... what comes next? |
+| narrator | `success_inky_pattern` | Yes! Blue, red, blue, red. Bloop! |
+| narrator | `hint_inky_p1` | Blue, red, blue, red... what comes next? |
+| narrator | `hint_inky_p2` | It goes blue, then red, again and again. |
+| narrator | `inky_sequence` | Watch! First the star, then the fish, then the shell. Can you copy me? |
+| narrator | `success_inky_sequence` | Star, fish, shell! You copied me. Bloop bloop! |
+| narrator | `hint_inky_s1` | First the star. Then the fish. |
+| narrator | `hint_inky_s2` | The shell comes last. |
+| narrator | `inky_done` | You are so clever! Splash and play in the coral garden. |
+| coralie | `coral_song_done` | Listen! The coral garden is singing! |
+| narrator | `secret_open` | A secret way! Swim inside! |
 
 ## bedroom (5)
 
@@ -531,7 +592,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (280)
+## anywhere (279)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -811,7 +872,6 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `word_ladybug` | Ladybug. |
 | narrator | `word_heart` | Heart. |
 | narrator | `word_cake` | Cake. |
-| narrator | `word_shell` | Shell. |
 | narrator | `word_sprout` | Sprout. |
 | narrator | `word_mound` | Soil. |
 | narrator | `word_packet` | Seed packet. |

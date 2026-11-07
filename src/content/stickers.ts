@@ -24,5 +24,10 @@ export const STICKERS: StickerDef[] = [
   { id: 'sticker_river', sheet: 'ui', frame: 'icon_mermaid', narrationKey: 'sticker_river' },
   { id: 'sticker_river_star', sheet: 'items', frame: 'star', narrationKey: 'sticker_river_star' },
   { id: 'sticker_river_pearls', sheet: 'items', frame: 'pearl', narrationKey: 'sticker_river_pearls' },
-  { id: 'sticker_river_gem', sheet: 'items', frame: 'sparkle2', narrationKey: 'sticker_river_gem' }
+  { id: 'sticker_river_gem', sheet: 'items', frame: 'sparkle2', narrationKey: 'sticker_river_gem' },
+  { id: 'sticker_moat_crab', sheet: 'items', frame: 'shell', narrationKey: 'sticker_moat_crab' },
+  { id: 'sticker_moat_gem', sheet: 'items', frame: 'sparkle0', narrationKey: 'sticker_moat_gem' },
+  { id: 'sticker_coral_octo', sheet: 'items', frame: 'fish', narrationKey: 'sticker_coral_octo' },
+  { id: 'sticker_coral_song', sheet: 'items', frame: 'bubble', narrationKey: 'sticker_coral_song' },
+  { id: 'sticker_coral_gem', sheet: 'items', frame: 'sparkle3', narrationKey: 'sticker_coral_gem' }
 ];

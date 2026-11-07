@@ -7,7 +7,7 @@ import { availableForms } from '../actors/transformations';
 describe('v0.4d.6 stage 1', () => {
   it('every mission picture lands on a real spawn of a real map', () => {
     for (const [k, m] of Object.entries(MISSIONS)) assert.ok(getMap(m.scene).spawns[m.spawn], `${k} -> ${m.scene}/${m.spawn}`);
-    assert.deepEqual(Object.keys(MISSIONS).sort(), ['garden', 'meadow', 'race', 'shore', 'woods']);
+    assert.deepEqual(Object.keys(MISSIONS).sort(), ['garden', 'meadow', 'moat', 'race', 'shore', 'woods']);
   });
   it('transformations are free from the beginning and never depend on flags', () => {
     assert.deepEqual(availableForms({}), ['princess', 'unicorn', 'mermaid']);
@@ -141,5 +141,36 @@ describe('v0.4d.6.5 pet homes and ice cream', () => {
   it('the first ice cream scoop sits in the cone rim, not floating above it', () => {
     const o = toppingOffset(FOODS.cook_icecream, { key: 'px_t_pink', u: 0, v: 0 }, 0);
     assert.ok(o.dy > -(SCOOP_REST + 1) * FOODS.cook_icecream.baseScale && o.dy < 0);
+  });
+});
+
+import { narrationForPlan, planFormChange } from '../actors/transformations';
+import { getMaps as getAllMaps } from '../world/maps';
+import { terrainOf } from '../world/terrain';
+
+describe('v0.4d.6 castle moat and underwater realm', () => {
+  const all = getAllMaps();
+  it('every warp between courtyard, moat, depths and coral garden has a way back', () => {
+    const pairs: [string, string][] = [['courtyard', 'moat'], ['moat', 'moat_depths'], ['moat_depths', 'coral_garden']];
+    for (const [a, b] of pairs) {
+      const ab = all[a as 'moat'].objects.find((o) => o.kind === 'warp' && o.to?.scene === b);
+      const ba = all[b as 'moat'].objects.find((o) => o.kind === 'warp' && o.to?.scene === a);
+      assert.ok(ab && ba, `${a} <-> ${b}`);
+      assert.ok(all[b as 'moat'].spawns[ab!.to!.spawn], `${a}->${b} spawn`);
+      assert.ok(all[a as 'moat'].spawns[ba!.to!.spawn], `${b}->${a} spawn`);
+    }
+  });
+  it('the underwater regions are water maps; the moat is a land map with water the mermaid can use', () => {
+    assert.equal(all.moat_depths.medium, 'water');
+    assert.equal(all.coral_garden.medium, 'water');
+    assert.equal(all.moat.medium, 'air');
+    assert.ok(all.moat.ground.some((r) => r.some((t) => terrainOf(t) === 'water')));
+  });
+  it('a mermaid change far from water points to the moat, and works in the moat', () => {
+    const far = planFormChange(all.bedroom, {}, { x: 5, y: 5 }, 'princess', 'mermaid');
+    assert.equal(far.mode, 'unavailable');
+    assert.equal(narrationForPlan(far, 'mermaid'), 'form_go_moat');
+    const shore = planFormChange(all.moat, {}, { x: 10, y: 14 }, 'princess', 'mermaid');
+    assert.notEqual(shore.mode, 'unavailable');
   });
 });

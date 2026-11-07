@@ -7,7 +7,8 @@ export const SCENE_ORDER: NarrationScene[] = ['courtyard', 'woods', 'shore', 'gr
 const RULES: [RegExp, NarrationScene][] = [
   [/^(word_carrot_|hint_carrots_|success_carrots|obj_pip|pip_|wand_lit|garden_sequence|word_(seed|water|flower)$|hint_sequence_|success_garden_grow)/, 'courtyard'],
   [/^(tree_|hint_tree_|success_tree_sound|obj_tree|word_(ball|cat|sun)$|willa_intro|bramble_|word_tile_|hint_pattern_|success_bridge_pattern|bridge_bloom_prompt|need_unicorn|obj_bridge|bloom_cheer|transform_unicorn|chest_found)/, 'woods'],
-  [/^(shore_intro|obj_lake|transform_mermaid|form_wrong_terrain)/, 'shore'],
+  [/^(shore_intro|obj_lake|transform_mermaid|form_wrong_terrain|form_go_moat|throne_moat|moat_|seahorse_|word_shell$|sticker_moat|sticker_coral)/, 'shore'],
+  [/^(crab_|success_crab|hint_crab|inky_|success_inky|hint_inky|coral_song|secret_open)/, 'grotto'],
   [/^(marina_|word_starfish_|hint_starfish_|success_starfish|obj_marina|pearl_|obj_star|star_found|shell_rhyme_cat|word_(hat|fish)$|hint_rhyme_|success_shell_rhyme)/, 'grotto'],
   [/^(nana_return|decor_tutorial|lamp_placed|chapter_done|obj_home)/, 'bedroom']
 ];

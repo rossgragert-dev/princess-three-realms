@@ -64,6 +64,6 @@ export function planFormChange(map: MapDef, flags: Flags, at: Tile, current: For
 
 /** Narration key to speak for a given outcome. */
 export function narrationForPlan(plan: FormPlan, target: Form): string | null {
-  if (plan.mode === 'unavailable') return plan.reason === 'no_water' || plan.reason === 'underwater' ? 'form_wrong_terrain' : null;
+  if (plan.mode === 'unavailable') return plan.reason === 'no_water' ? 'form_go_moat' : plan.reason === 'underwater' ? 'form_wrong_terrain' : null;
   return target === 'unicorn' ? 'transform_unicorn' : target === 'mermaid' ? 'transform_mermaid' : 'transform_princess';
 }

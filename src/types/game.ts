@@ -5,7 +5,7 @@ import type { Activities, EquippedWand } from '../content/family';
 import type { Kingdom } from '../content/kingdom';
 
 export type Form = 'princess' | 'unicorn' | 'mermaid';
-export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow' | 'enchanted' | 'garden' | 'river' | 'throne' | 'greenhouse' | 'kitchen' | 'gallery' | 'labyrinth';
+export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow' | 'enchanted' | 'garden' | 'river' | 'throne' | 'greenhouse' | 'kitchen' | 'gallery' | 'labyrinth' | 'moat' | 'moat_depths' | 'coral_garden';
 
 export type QuestFlag =
   | 'INTRO_DONE'
@@ -49,7 +49,15 @@ export type QuestFlag =
   | 'RIVER_TREASURE'
   | 'WOODS_SECRET'
   | 'GARDEN_SECRET'
-  | 'RIVER_SECRET';
+  | 'RIVER_SECRET'
+  | 'MOAT_SEEN'
+  | 'MOAT_CRAB'
+  | 'MOAT_SECRET'
+  | 'MOAT_TREASURE'
+  | 'CORAL_OCTO'
+  | 'CORAL_SONG'
+  | 'CORAL_SECRET'
+  | 'CORAL_TREASURE';
 
 export type PuzzleType = 'count' | 'sound-picture' | 'pattern' | 'matching' | 'sequence';
 

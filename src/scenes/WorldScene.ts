@@ -8,7 +8,7 @@ import { getMap } from '../world/maps';
 import {
   approachTile, blockKey, effectiveTile, findPath, makeGrid, nearestPassable, safeSpawn, visibleObjects, withinRadius, type NavGrid
 } from '../world/navigation';
-import { guideTarget, OBJECTIVE_NARRATION } from '../world/guide';
+import { EXITS, guideTarget, OBJECTIVE_NARRATION, sceneRoute } from '../world/guide';
 import { interact, lampPlaced, onArrive, pearlBubbleHit, session, type StoryCtx } from '../world/story';
 import { BUBBLE_RANGE, PEARL_LANE_X, bubbleShot, isSocketX } from '../world/pearl';
 import { SlotPool, TRAIL, TrailPlanner, flowerLook, isGrassTile } from '../world/trail';
@@ -332,7 +332,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** v0.4c: the Enchanted Woods, Royal Magic Garden and Shimmering River carry a living layer; other maps skip it. */
   private buildKingdom() {
-    if (!this.map.env?.length && this.map.id !== 'gallery') return;
+    if (!this.map.env?.length && this.map.id !== 'gallery' && this.map.id !== 'moat') return;
     this.kingdom = new KingdomLayer({
       scene: this, map: this.map, state: () => this.state, props: this.props,
       objSprite: (id) => this.objSprites.get(id),
@@ -1410,6 +1410,8 @@ export class WorldScene extends Phaser.Scene {
     if (plan.mode === 'unavailable') {
       if (key) void services.audio.speak(key);
       this.bonk();
+      // far from water: a trail of sparkles leads her to the nearest shoreline (the castle moat, or the lake)
+      if (plan.reason === 'no_water') this.guideToWater();
       return;
     }
     const wasBusy = this.busy;
@@ -1468,6 +1470,22 @@ export class WorldScene extends Phaser.Scene {
     const dest = obj.kind === 'warp' ? (obj.tiles?.[0] ?? p) : p;
     const to = obj.kind === 'warp' ? dest : approachTile(this.grid, this.player.tile, p);
     const path = to ? findPath(this.grid, this.player.tile, to) : null;
+    this.drawTrail(path ?? this.line(this.player.tile, dest));
+    this.drawBounce(dest);
+  }
+
+  /** Draws the sparkle trail towards the way out of this place that leads to the nearest water (moat or shore). */
+  private guideToWater() {
+    const here = this.map.id;
+    const goals: SceneId[] = ['moat', 'shore'];
+    let best: SceneId[] | null = null;
+    for (const goal of goals) { const r = sceneRoute(here, goal); if (r && (!best || r.length < best.length)) best = r; }
+    if (!best || best.length < 2) return;
+    const exitId = EXITS[here][best[1]];
+    const obj = exitId ? this.map.objects.find((o) => o.id === exitId) : undefined;
+    if (!obj) return;
+    const dest = obj.tiles?.[0] ?? { x: obj.x, y: obj.y };
+    const path = findPath(this.grid, this.player.tile, dest);
     this.drawTrail(path ?? this.line(this.player.tile, dest));
     this.drawBounce(dest);
   }

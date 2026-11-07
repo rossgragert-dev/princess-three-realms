@@ -1,4 +1,13 @@
 # Changelog
+## 0.4.0d.6.7 (preview) — The Castle Moat and the underwater realm
+- Castle Moat: a new south-west gate in the courtyard opens onto a pixel-art moat below the castle wall: stone bridges and an island, lily pads, reeds, ducks, a mermaid friend (Coralie) and two whirlpools. A princess can walk the banks and bridges; a mermaid swims the water.
+- Moat Depths (underwater region 1): a sunken castle with Pebble the crab (a sound game and a rhyme game, one per visit), singing shells, a kelp curtain a bubble can part, and a hidden treasure chamber.
+- Coral Gardens (underwater region 2): reached through a glowing passage; Inky the octopus (a pattern game and a story-order game), seahorse friends, five shells that sing together, a second kelp secret and treasure.
+- Two-way exits everywhere (courtyard, moat, depths, coral gardens); all three places are reload-safe and cannot trap her. Underwater always keeps the mermaid form.
+- Mermaid help: asking for the mermaid tail far from water now says (in picture-and-voice) to go to the moat, and draws a sparkle trail to the nearest water gate.
+- The King and Queen's mission pictures include the moat (water lily). New stickers/rewards are granted once. Old saves load unchanged.
+- Tests: 403 unit tests (new maps, spawns, two-way links, reachability with each form, puzzle/glyph/narration coverage, mermaid guidance); `v04d6-moat.mjs` ran the full route in landscape and in portrait phone shape. Narration manifest and audio script regenerated.
+
 ## 0.4.0d.6.6 (preview) — Tree, pearl and race fixes from your videos
 - Talking tree (real cause found): a second, static copy of the tree was drawn on the trail, so the one that slid aside left another standing in the way. The duplicate is gone, and the tree now walks four tiles up into the forest wall so the whole trail is clear (he used to slide along the trail toward the princess). Tested in a phone-shaped portrait viewport.
 - Pearl game: it works from the very start, with no starfish needed. The main-path order was also enforcing hidden prerequisites (the pearl could not be marked finished before the starfish), so every quest step can now be earned in any order; rewards are still given once. A bubble from any side now rolls the pearl along its lane, which is easier for small hands.

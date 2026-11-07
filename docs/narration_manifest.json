@@ -1863,6 +1863,347 @@
     ]
   },
   {
+    "key": "throne_moat",
+    "speaker": "queen",
+    "text": "The castle moat! Go out the courtyard, down the path to the water.",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/throne_moat.m4a",
+      "assets/audio/narration/throne_moat.ogg"
+    ]
+  },
+  {
+    "key": "form_go_moat",
+    "speaker": "narrator",
+    "text": "Mermaids swim in water. Follow the sparkles to the castle moat!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/form_go_moat.m4a",
+      "assets/audio/narration/form_go_moat.ogg"
+    ]
+  },
+  {
+    "key": "moat_intro",
+    "speaker": "coralie",
+    "text": "Welcome to the castle moat! Swim as a mermaid and find the whirlpool!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/moat_intro.m4a",
+      "assets/audio/narration/moat_intro.ogg"
+    ]
+  },
+  {
+    "key": "moat_hint",
+    "speaker": "coralie",
+    "text": "A secret world sleeps under the castle. Dive into the whirlpool!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/moat_hint.m4a",
+      "assets/audio/narration/moat_hint.ogg"
+    ]
+  },
+  {
+    "key": "crab_intro",
+    "speaker": "narrator",
+    "text": "Click clack! I am Pebble the crab. Can you help me?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/crab_intro.m4a",
+      "assets/audio/narration/crab_intro.ogg"
+    ]
+  },
+  {
+    "key": "crab_sound_c",
+    "speaker": "narrator",
+    "text": "Listen carefully. Which picture begins with the kuh sound?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/crab_sound_c.m4a",
+      "assets/audio/narration/crab_sound_c.ogg"
+    ]
+  },
+  {
+    "key": "success_crab_sound_c",
+    "speaker": "narrator",
+    "text": "Yes! Cat starts with kuh. Click clack!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/success_crab_sound_c.m4a",
+      "assets/audio/narration/success_crab_sound_c.ogg"
+    ]
+  },
+  {
+    "key": "crab_rhyme_hat",
+    "speaker": "narrator",
+    "text": "Hat! Which picture sounds like hat?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/crab_rhyme_hat.m4a",
+      "assets/audio/narration/crab_rhyme_hat.ogg"
+    ]
+  },
+  {
+    "key": "success_crab_rhyme_hat",
+    "speaker": "narrator",
+    "text": "Hat, cat! They sound the same. Click clack!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/success_crab_rhyme_hat.m4a",
+      "assets/audio/narration/success_crab_rhyme_hat.ogg"
+    ]
+  },
+  {
+    "key": "hint_crab_rhyme_1",
+    "speaker": "narrator",
+    "text": "Hat, cat. They sound the same at the end!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_crab_rhyme_1.m4a",
+      "assets/audio/narration/hint_crab_rhyme_1.ogg"
+    ]
+  },
+  {
+    "key": "hint_crab_rhyme_2",
+    "speaker": "narrator",
+    "text": "Sun does not sound like hat. Try the other one.",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_crab_rhyme_2.m4a",
+      "assets/audio/narration/hint_crab_rhyme_2.ogg"
+    ]
+  },
+  {
+    "key": "crab_done",
+    "speaker": "narrator",
+    "text": "Thank you, friend! The castle's secrets are shining for you.",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/crab_done.m4a",
+      "assets/audio/narration/crab_done.ogg"
+    ]
+  },
+  {
+    "key": "inky_intro",
+    "speaker": "narrator",
+    "text": "Bloop bloop! I am Inky the octopus. Can you copy my patterns?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/inky_intro.m4a",
+      "assets/audio/narration/inky_intro.ogg"
+    ]
+  },
+  {
+    "key": "inky_pattern",
+    "speaker": "narrator",
+    "text": "Blue, red, blue, red... what comes next?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/inky_pattern.m4a",
+      "assets/audio/narration/inky_pattern.ogg"
+    ]
+  },
+  {
+    "key": "success_inky_pattern",
+    "speaker": "narrator",
+    "text": "Yes! Blue, red, blue, red. Bloop!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/success_inky_pattern.m4a",
+      "assets/audio/narration/success_inky_pattern.ogg"
+    ]
+  },
+  {
+    "key": "hint_inky_p1",
+    "speaker": "narrator",
+    "text": "Blue, red, blue, red... what comes next?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_inky_p1.m4a",
+      "assets/audio/narration/hint_inky_p1.ogg"
+    ]
+  },
+  {
+    "key": "hint_inky_p2",
+    "speaker": "narrator",
+    "text": "It goes blue, then red, again and again.",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_inky_p2.m4a",
+      "assets/audio/narration/hint_inky_p2.ogg"
+    ]
+  },
+  {
+    "key": "inky_sequence",
+    "speaker": "narrator",
+    "text": "Watch! First the star, then the fish, then the shell. Can you copy me?",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/inky_sequence.m4a",
+      "assets/audio/narration/inky_sequence.ogg"
+    ]
+  },
+  {
+    "key": "success_inky_sequence",
+    "speaker": "narrator",
+    "text": "Star, fish, shell! You copied me. Bloop bloop!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/success_inky_sequence.m4a",
+      "assets/audio/narration/success_inky_sequence.ogg"
+    ]
+  },
+  {
+    "key": "hint_inky_s1",
+    "speaker": "narrator",
+    "text": "First the star. Then the fish.",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_inky_s1.m4a",
+      "assets/audio/narration/hint_inky_s1.ogg"
+    ]
+  },
+  {
+    "key": "hint_inky_s2",
+    "speaker": "narrator",
+    "text": "The shell comes last.",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/hint_inky_s2.m4a",
+      "assets/audio/narration/hint_inky_s2.ogg"
+    ]
+  },
+  {
+    "key": "inky_done",
+    "speaker": "narrator",
+    "text": "You are so clever! Splash and play in the coral garden.",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/inky_done.m4a",
+      "assets/audio/narration/inky_done.ogg"
+    ]
+  },
+  {
+    "key": "seahorse_hi",
+    "speaker": "narrator",
+    "text": "Wheee! Seahorses love to dance!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/seahorse_hi.m4a",
+      "assets/audio/narration/seahorse_hi.ogg"
+    ]
+  },
+  {
+    "key": "coral_song_done",
+    "speaker": "coralie",
+    "text": "Listen! The coral garden is singing!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/coral_song_done.m4a",
+      "assets/audio/narration/coral_song_done.ogg"
+    ]
+  },
+  {
+    "key": "secret_open",
+    "speaker": "narrator",
+    "text": "A secret way! Swim inside!",
+    "required": false,
+    "scene": "grotto",
+    "files": [
+      "assets/audio/narration/secret_open.m4a",
+      "assets/audio/narration/secret_open.ogg"
+    ]
+  },
+  {
+    "key": "word_shell",
+    "speaker": "narrator",
+    "text": "Shell.",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/word_shell.m4a",
+      "assets/audio/narration/word_shell.ogg"
+    ]
+  },
+  {
+    "key": "sticker_moat_crab",
+    "speaker": "narrator",
+    "text": "You helped Pebble the crab!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/sticker_moat_crab.m4a",
+      "assets/audio/narration/sticker_moat_crab.ogg"
+    ]
+  },
+  {
+    "key": "sticker_moat_gem",
+    "speaker": "narrator",
+    "text": "You found the castle's hidden treasure!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/sticker_moat_gem.m4a",
+      "assets/audio/narration/sticker_moat_gem.ogg"
+    ]
+  },
+  {
+    "key": "sticker_coral_octo",
+    "speaker": "narrator",
+    "text": "You played with Inky the octopus!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/sticker_coral_octo.m4a",
+      "assets/audio/narration/sticker_coral_octo.ogg"
+    ]
+  },
+  {
+    "key": "sticker_coral_song",
+    "speaker": "narrator",
+    "text": "You woke the singing coral!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/sticker_coral_song.m4a",
+      "assets/audio/narration/sticker_coral_song.ogg"
+    ]
+  },
+  {
+    "key": "sticker_coral_gem",
+    "speaker": "narrator",
+    "text": "You found the pearl vault treasure!",
+    "required": false,
+    "scene": "shore",
+    "files": [
+      "assets/audio/narration/sticker_coral_gem.m4a",
+      "assets/audio/narration/sticker_coral_gem.ogg"
+    ]
+  },
+  {
     "key": "river_hint",
     "speaker": "coralie",
     "text": "Tap the post to start a race. Or swim and play with the shells!",
@@ -3763,17 +4104,6 @@
     "files": [
       "assets/audio/narration/word_cake.m4a",
       "assets/audio/narration/word_cake.ogg"
-    ]
-  },
-  {
-    "key": "word_shell",
-    "speaker": "narrator",
-    "text": "Shell.",
-    "required": false,
-    "scene": "anywhere",
-    "files": [
-      "assets/audio/narration/word_shell.m4a",
-      "assets/audio/narration/word_shell.ogg"
     ]
   },
   {

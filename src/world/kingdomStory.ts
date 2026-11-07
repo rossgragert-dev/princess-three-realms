@@ -8,6 +8,7 @@ import type { ObjDef } from './types';
 import type { StoryCtx } from './story';
 import { SCRIPT, type Line } from '../content/dialogue';
 import { puzzleById } from '../content/puzzleBank';
+import { offerOne } from './libraryPlay';
 import { newProgress, countTap } from '../systems/puzzleEngine';
 import { services } from '../systems/services';
 import { GITEM } from '../content/gardenCatalog';
@@ -75,9 +76,9 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
   if (id === 'throne_king' || id === 'throne_queen') {
     ctx.react(id);
     await ctx.say(id === 'throne_king' ? SCRIPT.throneKing : SCRIPT.throneQueen);
-    const pick = await ctx.pickOne([{ id: 'woods', picture: 'icon_tree' }, { id: 'meadow', picture: 'icon_unicorn' }, { id: 'shore', picture: 'icon_mermaid' }, { id: 'garden', picture: 'px_flower_red' }, { id: 'race', picture: 'px_startpost' }]);
+    const pick = await ctx.pickOne([{ id: 'woods', picture: 'icon_tree' }, { id: 'meadow', picture: 'icon_unicorn' }, { id: 'shore', picture: 'icon_mermaid' }, { id: 'garden', picture: 'px_flower_red' }, { id: 'moat', picture: 'px_lily' }, { id: 'race', picture: 'px_startpost' }]);
     if (!pick || !MISSIONS[pick]) return true; // cancel / back: she stays in the throne room
-    await ctx.say(pick === 'woods' ? SCRIPT.throneWoods : pick === 'meadow' ? SCRIPT.throneMeadow : pick === 'shore' ? SCRIPT.throneShore : pick === 'race' ? SCRIPT.throneRace : SCRIPT.throneGarden);
+    await ctx.say(pick === 'woods' ? SCRIPT.throneWoods : pick === 'meadow' ? SCRIPT.throneMeadow : pick === 'shore' ? SCRIPT.throneShore : pick === 'race' ? SCRIPT.throneRace : pick === 'moat' ? SCRIPT.throneMoat : SCRIPT.throneGarden);
     ctx.travelTo(MISSIONS[pick].scene, MISSIONS[pick].spawn);
     return true;
   }
@@ -274,6 +275,21 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
   }
   if (/^goal_(red|blue|yellow)$/.test(id)) { ctx.sparkle({ x: obj.x, y: obj.y }); ctx.hop(id); return true; }
 
+  // ------------------------------------------------------------ the Castle Moat and the realm beneath it
+  if (id.startsWith('duck_')) { ctx.hop(id); services.audio.sfx('pop'); ctx.sparkle({ x: obj.x, y: obj.y }); return true; }
+  if (id.startsWith('seahorse_')) {
+    ctx.hop(id); services.audio.sfx('chime'); ctx.sparkle({ x: obj.x, y: obj.y });
+    if (once('seahorse_hi')) await ctx.say(SCRIPT.seahorseHi);
+    return true;
+  }
+  if (id === 'coralie_m') {
+    ctx.react(id); ctx.complete('MOAT_SEEN');
+    await ctx.say(once('moat_intro') ? SCRIPT.moatIntro : SCRIPT.moatHint);
+    return true;
+  }
+  if (id === 'pebble') { await friend(ctx, 'pebble', obj); return true; }
+  if (id === 'inky') { await friend(ctx, 'inky', obj); return true; }
+
   // ------------------------------------------------------------ the Shimmering River
   if (id === 'coralie_r') {
     ctx.react(id);
@@ -291,6 +307,33 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     return true;
   }
   return false;
+}
+
+const FRIENDS = {
+  pebble: { set: ['crab_sound_c', 'crab_rhyme_hat'], flag: 'MOAT_CRAB' as QuestFlag, hi: SCRIPT.crabIntro, done: SCRIPT.crabDone, replay: ['sound', 'rhyme'] as const },
+  inky: { set: ['inky_pattern', 'inky_sequence'], flag: 'CORAL_OCTO' as QuestFlag, hi: SCRIPT.inkyIntro, done: SCRIPT.inkyDone, replay: ['pattern', 'story'] as const }
+};
+
+/** Pebble the crab and Inky the octopus: two picture games each, then "play one more?" for as long as she likes. */
+async function friend(ctx: StoryCtx, who: keyof typeof FRIENDS, obj: ObjDef) {
+  const F = FRIENDS[who], kd = ctx.state.kingdom;
+  ctx.hop(who);
+  if (once(`${who}_hi`)) await ctx.say(F.hi);
+  const next = F.set.find((p) => !kd.done.includes(p));
+  if (!next) { // both done: friendly replay from the picture-game library
+    ctx.sparkle({ x: obj.x, y: obj.y });
+    await offerOne(ctx, F.replay[ksession.storyToggle++ % 2]);
+    return;
+  }
+  const def: PuzzleDef = puzzleById(next)!;
+  freshen(ctx, next);
+  await ctx.say([{ speaker: 'narrator', key: def.narrationKey }]);
+  const r = def.type === 'sequence' || def.type === 'pattern' ? await ctx.sequencePuzzle(def, def.prefix ?? [], false) : await ctx.choicePuzzle(def, false);
+  if (!r.solved) return;
+  markDone(kd, next); ctx.save();
+  ctx.celebrate(typeof def.correctAnswer === 'string' ? (def.choices.find((c) => c.id === def.correctAnswer)?.picture ?? 'heart') : who === 'pebble' ? 'px_crab' : 'px_octopus');
+  await ctx.say([{ speaker: 'narrator', key: `success_${next}` }]);
+  if (allDone(kd, F.set) && !ctx.state.flags[F.flag]) { ctx.complete(F.flag); await ctx.say(F.done); }
 }
 
 /** One early-learning activity (letter sound, rhyme): ask, let her try with hints, celebrate, count it, finish the set. */
@@ -365,6 +408,7 @@ export async function onSecretRevealed(ctx: StoryCtx, flag: QuestFlag) {
   if (ctx.state.flags[flag]) return;
   ctx.complete(flag);
   services.audio.sfx('chime');
+  if (flag === 'MOAT_SECRET' || flag === 'CORAL_SECRET') await ctx.say(SCRIPT.secretOpen);
 }
 
 export async function onButterfliesDone(ctx: StoryCtx) {
@@ -375,7 +419,14 @@ export async function onButterfliesDone(ctx: StoryCtx) {
 
 export async function onShellChime(ctx: StoryCtx, id: string) {
   ksession.chimed.add(id);
-  if (ksession.chimed.size >= 4 && !ctx.state.flags.RIVER_PEARLS) {
+  if (id.startsWith('cshell_')) { // the Coral Gardens sing once four different shells have been woken
+    if ([...ksession.chimed].filter((k) => k.startsWith('cshell_')).length >= 4 && !ctx.state.flags.CORAL_SONG) {
+      ctx.complete('CORAL_SONG'); ctx.celebrate('px_shell'); await ctx.say(SCRIPT.coralSongDone);
+    }
+    return;
+  }
+  if (id.startsWith('dshell_')) return; // the Moat Depths shells just sing
+  if ([...ksession.chimed].filter((k) => k.startsWith('shell_')).length >= 4 && !ctx.state.flags.RIVER_PEARLS) {
     ctx.complete('RIVER_PEARLS');
     ctx.celebrate('pearl');
     await ctx.say(SCRIPT.riverPearlsDone);

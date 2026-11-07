@@ -116,4 +116,13 @@ export const KINGDOM_PUZZLES: PuzzleDef[] = [
 ];
 PUZZLES.push(...KINGDOM_PUZZLES);
 
+/** v0.4d.6: Pebble the crab (Moat Depths) and Inky the octopus (Coral Gardens). Pictures only, replayable. */
+export const MOAT_PUZZLES: PuzzleDef[] = [
+  kp('crab_sound_c', { realm: 'seas', type: 'sound-picture', narrationKey: 'crab_sound_c', promptVisual: 'px_crab', letter: 'C', choices: [c('cat'), c('sun'), c('ball')], correctAnswer: 'cat', hintKeys: ['hint_atree_c_1', 'hint_atree_c_2', 'hint_together'], successEvent: 'MOAT_CRAB' }),
+  kp('crab_rhyme_hat', { realm: 'seas', type: 'matching', narrationKey: 'crab_rhyme_hat', promptVisual: 'hat', choices: [c('cat'), c('sun')], correctAnswer: 'cat', hintKeys: ['hint_crab_rhyme_1', 'hint_crab_rhyme_2', 'hint_together'], successEvent: 'MOAT_CRAB' }),
+  kp('inky_pattern', { realm: 'seas', type: 'pattern', narrationKey: 'inky_pattern', promptVisual: 'px_octopus', prefix: ['tile_blue', 'tile_red', 'tile_blue', 'tile_red'], choices: [c('tile_red'), c('tile_blue')], correctAnswer: ['tile_blue', 'tile_red'], hintKeys: ['hint_inky_p1', 'hint_inky_p2', 'hint_together'], successEvent: 'CORAL_OCTO' }),
+  kp('inky_sequence', { realm: 'seas', type: 'sequence', narrationKey: 'inky_sequence', promptVisual: 'px_octopus', choices: [c('star'), c('fish'), c('shell', 'px_shell')], correctAnswer: ['star', 'fish', 'shell'], hintKeys: ['hint_inky_s1', 'hint_inky_s2', 'hint_together'], successEvent: 'CORAL_OCTO' })
+];
+PUZZLES.push(...MOAT_PUZZLES);
+
 export const puzzleById = (id: string) => PUZZLES.find((p) => p.id === id);

@@ -42,7 +42,7 @@ describe('bedroom decor catalog', () => {
   it('chests and hidden spots exist in the maps', () => {
     const ids = new Set(Object.keys({ ...CHEST_FLAG, ...FIND_FLAG }));
     const found = new Set<string>();
-    for (const sc of ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'enchanted', 'garden', 'river'] as const) for (const o of getMap(sc).objects) if (ids.has(o.id)) found.add(o.id);
+    for (const sc of ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'enchanted', 'garden', 'river', 'moat_depths', 'coral_garden'] as const) for (const o of getMap(sc).objects) if (ids.has(o.id)) found.add(o.id);
     assert.deepEqual([...found].sort(), [...ids].sort());
   });
   it('legacy hotspot table (kept to migrate old saves): at least 8 slots, unique ids and tiles', () => {

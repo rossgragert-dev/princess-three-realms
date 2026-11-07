@@ -321,7 +321,7 @@ async function bloom(ctx: StoryCtx, obj: ObjDef) {
 
 /** Which flag each world chest / hidden spot sets (each flag unlocks one room item, see decorCatalog). */
 export const CHEST_FLAG: Record<string, QuestFlag> = { chest_creek: 'CREEK_CHEST', chest_shore: 'SHORE_CHEST', chest_grotto: 'GROTTO_CHEST' };
-export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND', fairy_dust_spot: 'FAIRY_DUST_FOUND', moonstone_spot: 'MOONSTONE_FOUND', treasure_woods: 'WOODS_TREASURE', treasure_garden: 'GARDEN_TREASURE', treasure_river: 'RIVER_TREASURE' };
+export const FIND_FLAG: Record<string, QuestFlag> = { butterfly_spot: 'BUTTERFLY_FOUND', fairy_dust_spot: 'FAIRY_DUST_FOUND', moonstone_spot: 'MOONSTONE_FOUND', treasure_woods: 'WOODS_TREASURE', treasure_garden: 'GARDEN_TREASURE', treasure_river: 'RIVER_TREASURE', treasure_moat: 'MOAT_TREASURE', treasure_coral: 'CORAL_TREASURE' };
 
 async function chest(ctx: StoryCtx, obj: ObjDef) {
   const reward = obj.reward!;

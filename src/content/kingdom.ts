@@ -27,7 +27,7 @@ export interface RaceRecords {
 }
 
 /** Replayable activities that were completed at least once (replaying never removes a record). */
-export const ACTIVITY_IDS = ['sound_s', 'sound_c', 'sound_f', 'rhyme_cat', 'rhyme_bee', 'rhyme_frog', 'story_egg', 'story_day', 'garden_grow'] as const;
+export const ACTIVITY_IDS = ['sound_s', 'sound_c', 'sound_f', 'rhyme_cat', 'rhyme_bee', 'rhyme_frog', 'story_egg', 'story_day', 'garden_grow', 'crab_sound_c', 'crab_rhyme_hat', 'inky_pattern', 'inky_sequence'] as const;
 
 export interface Kingdom {
   garden: Partial<Record<PlotId, Seed>>;

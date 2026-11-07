@@ -3,7 +3,7 @@
 // Everything here is bounded, forgiving and either flag-driven (secrets) or session-only (spell effects).
 import Phaser from 'phaser';
 import type { GameState, QuestFlag } from '../types/game';
-import type { MapDef, PropDef, Tile } from '../world/types';
+import type { MapDef, ObjDef, PropDef, Tile } from '../world/types';
 import type { SpellTarget } from '../world/spells';
 import type { StoryCtx, } from '../world/story';
 import { Effects } from '../world/spells';
@@ -100,7 +100,7 @@ export class KingdomLayer implements KingdomApi {
   private buildVines() {
     for (const e of this.map.env ?? []) {
       if (e.type !== 'vine') continue;
-      const key = this.map.id === 'river' ? 'px_kelp' : 'px_vine';
+      const key = this.map.medium === 'water' ? 'px_kelp' : 'px_vine';
       const s = this.scene.add.sprite(e.x * T + T / 2, (e.y + 1) * T, key).setOrigin(0.5, 1).setDepth((e.y + 1) * T + 2);
       this.vines.set(e.id, s);
     }
@@ -154,6 +154,13 @@ export class KingdomLayer implements KingdomApi {
         const g = this.scene.add.image(p.sprite.x, p.sprite.y - 6, 'fx_glow').setDepth(8100).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.5).setScale(1.0);
         if (!reduced) this.scene.tweens.add({ targets: g, alpha: 0.25, duration: 1400 + (p.def.x * 90) % 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
       }
+    }
+    // v0.4d.6: the moat's ducks and the underwater friends flap, wiggle and bob (calmer effects: they stay still)
+    const FRIENDS2 = ['px_duck', 'px_crab', 'px_octopus', 'px_seahorse'];
+    const friends = this.map.objects.filter((o) => o.sprite && FRIENDS2.includes(o.sprite.key)).map((o) => ({ o, s: this.h.objSprite(o.id) })).filter((x) => !!x.s) as { o: ObjDef; s: Phaser.GameObjects.Sprite }[];
+    if (friends.length && !reduced) {
+      this.scene.time.addEvent({ delay: 520, loop: true, callback: () => { for (const { s } of friends) if (s.active) s.setFrame(s.frame.name === '0' ? 1 : 0); } });
+      for (const { o, s } of friends) this.scene.tweens.add({ targets: s, y: s.y - (o.sprite!.key === 'px_seahorse' ? 3 : 2), duration: 1100 + (o.x * 61) % 600, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
     }
     // small friends: butterflies flap, fish drift (calmer effects: stay still)
     const flap = this.h.props.filter((p) => p.def.key.startsWith('px_butterfly_'));
