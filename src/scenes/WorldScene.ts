@@ -10,7 +10,7 @@ import {
 } from '../world/navigation';
 import { guideTarget, OBJECTIVE_NARRATION } from '../world/guide';
 import { interact, lampPlaced, onArrive, pearlBubbleHit, session, type StoryCtx } from '../world/story';
-import { BUBBLE_RANGE, bubbleShot } from '../world/pearl';
+import { BUBBLE_RANGE, bubbleShot, isSocketX } from '../world/pearl';
 import { SlotPool, TRAIL, TrailPlanner, flowerLook, isGrassTile } from '../world/trail';
 import { ensureTrailTextures, flowerKey, hornOffset } from '../art/unicornFx';
 import { bubbleTexture, ensureMermaidTextures, wandPose } from '../art/mermaidFx';
@@ -804,7 +804,11 @@ export class WorldScene extends Phaser.Scene {
   private pearlCueKey = '';
 
   private pearlObj(): ObjDef | undefined { return this.map.id === 'grotto' ? this.map.objects.find((o) => o.id === 'pearl') : undefined; }
-  private pearlActive(): boolean { const f = this.state.flags; return !!this.pearlObj() && !!f.MARINA_HELPED && !f.PEARL_PLACED; }
+  private pearlActive(): boolean {
+    // PEARL_PLACED is a permanent achievement, not a lock on future play.
+    const p = this.objPos.get('pearl') ?? this.pearlObj();
+    return !!p && !!this.state.flags.MARINA_HELPED && !isSocketX(p.x);
+  }
   private mermaidColor(): number { return WAND_TINT[this.state.equippedWand.colorId][0]; }
 
   /** Keeps the underwater wand in her hand, in front of or behind her depending on which way she faces. */
