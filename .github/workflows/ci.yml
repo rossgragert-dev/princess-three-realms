@@ -1,7 +1,15 @@
 name: ci
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A branch push should not launch two redundant Playwright jobs.
+concurrency:
+  group: princess-ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test-build:
     runs-on: ubuntu-latest
@@ -13,8 +21,9 @@ jobs:
       - run: npm run test:logic
       - run: npm run build
       - uses: actions/upload-artifact@v4
-        with: { name: dist, path: dist }
+        with: { name: dist, path: dist, retention-days: 3 }
   e2e:
+    if: github.event_name == 'workflow_dispatch'
     needs: test-build
     runs-on: ubuntu-latest
     steps:
@@ -26,4 +35,4 @@ jobs:
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: playwright-report, path: playwright-report }
+        with: { name: playwright-report, path: playwright-report, retention-days: 3 }
