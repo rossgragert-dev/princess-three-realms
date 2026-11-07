@@ -122,7 +122,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
     case 'tree': {
       ctx.react('tree');
       if (f.TREE_GATE_OPEN) { await ctx.say(SCRIPT.treeDone); return; }
-      if (!f.PIP_CARROTS_DONE) { await remind(ctx); return; }
+      // Forest magic is always available; helping Pip is an optional activity.
       await ctx.say(SCRIPT.treeAsk);
       const r = await ctx.choicePuzzle(puzzleById('tree_sound')!, false);
       if (!r.solved) return;
@@ -266,8 +266,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
 async function countObject(ctx: StoryCtx, obj: ObjDef, puzzleId: 'carrots' | 'starfish') {
   const def = puzzleById(puzzleId)!;
   const prog = progOf(ctx, puzzleId);
-  const prereq = puzzleId === 'carrots' ? ctx.state.flags.INTRO_DONE : true;
-  if (!prereq) { await remind(ctx); return; }
+  // No activity depends on first speaking to Pip or following a chapter order.
   const counted = (session.counted[puzzleId] ??= new Set());
   const r = countTap(def, prog, counted, obj.id);
   if (r.result === 'duplicate') { ctx.hop(obj.id); return; } // already counted: a happy hop, never an error
