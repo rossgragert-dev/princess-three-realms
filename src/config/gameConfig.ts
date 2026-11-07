@@ -7,6 +7,7 @@ import { StickerbookScene } from '../scenes/StickerbookScene';
 import { WardrobeScene } from '../scenes/WardrobeScene';
 import { VanityScene } from '../scenes/VanityScene';
 import { RoomDesignerScene } from '../scenes/RoomDesignerScene';
+import { RaceScene } from '../scenes/RaceScene';
 import { FireworksScene } from '../scenes/FireworksScene';
 import { WandWorkshopScene } from '../scenes/WandWorkshopScene';
 import { DecorateScene } from '../scenes/DecorateScene';
@@ -28,6 +29,6 @@ export function makeConfig(parent: string): Phaser.Types.Core.GameConfig {
     // v0.4b.2: EXPAND keeps 512x384 as the always-visible minimum and grows the game to the screen's aspect (see ui/stage.ts)
     scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH, width: LOGICAL_W, height: LOGICAL_H },
     input: { activePointers: 3, touch: { capture: true } },
-    scene: [BootScene, TitleScene, WorldScene, UIScene, StickerbookScene, WardrobeScene, VanityScene, RoomDesignerScene, FireworksScene, WandWorkshopScene, DecorateScene, GardenEditScene, ParentSettingsScene]
+    scene: [BootScene, TitleScene, WorldScene, UIScene, StickerbookScene, WardrobeScene, VanityScene, RoomDesignerScene, FireworksScene, RaceScene, WandWorkshopScene, DecorateScene, GardenEditScene, ParentSettingsScene]
   };
 }

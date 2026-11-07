@@ -5,6 +5,13 @@ import { services } from '../systems/services';
 import { narrationOn } from '../systems/accessibility';
 import { burst, makeButton, pic, roundedPanel, sleep, type Btn } from './touchTargets';
 
+/** Pictures come in many sizes (a 16px carrot, a 40px pizza): never let one overflow its card. */
+function fit<T extends Phaser.GameObjects.Image>(img: T, box: number): T {
+  const m = Math.max(img.width, img.height) || 1;
+  if (m * img.scaleX > box) img.setScale(box / m);
+  return img;
+}
+
 export interface PuzzleResult { solved: boolean; assisted: boolean; cancelled: boolean }
 
 type GO = Phaser.GameObjects.GameObject;
@@ -21,6 +28,8 @@ export class PuzzlePanel {
   isOpen = false;
   /** Card positions on the canvas (browser test drivers use these). */
   cardPos: { id: string; x: number; y: number }[] = [];
+  /** The challenge currently on screen (read by the browser test drivers). */
+  defNow: PuzzleDef | null = null;
   private off = { x: 0, y: 0 };
   /** Centres the authored 512x384 panel on the real screen. */
   setOffset(ox: number, oy: number) { this.off = { x: ox, y: oy }; this.root.setPosition(ox, oy); }
@@ -46,7 +55,7 @@ export class PuzzlePanel {
     this.add(roundedPanel(s, 28, 30, 456, 322));
     if (def.letter) {
       // [who is asking]  [ B ]  [sound waves]  - pictures only, no sentence
-      this.add(pic(s, def.promptVisual, 160, promptY, 2));
+      this.add(fit(pic(s, def.promptVisual, 160, promptY, 2), 64));
       const g = s.add.graphics();
       g.fillStyle(0x40255a, 0.25).fillRoundedRect(256 - 40, promptY - 40 + 4, 80, 84, 14);
       g.fillStyle(0xffffff, 1).fillRoundedRect(256 - 40, promptY - 42, 80, 84, 14);
@@ -57,7 +66,7 @@ export class PuzzlePanel {
       const ear = this.add(pic(s, 'icon_sound', 352, promptY, 1.6));
       s.tweens.add({ targets: ear, x: ear.x + 4, duration: 500, yoyo: true, repeat: -1 });
     } else {
-      const pv = this.add(pic(s, def.promptVisual, 256, promptY, def.promptVisual.startsWith('icon_') ? 2 : 4));
+      const pv = this.add(fit(pic(s, def.promptVisual, 256, promptY, def.promptVisual.startsWith('icon_') ? 2 : 4), 110));
       s.tweens.add({ targets: pv, y: pv.y - 3, duration: 700, yoyo: true, repeat: -1 });
     }
     const hint = makeButton(s, 446, 66, 'icon_hint', 1.2, onHint);
@@ -94,6 +103,7 @@ export class PuzzlePanel {
 
   // ------------------------------------------------------------------ one-of-N picture choice (sounds, rhymes)
   choice(def: PuzzleDef, prog: PuzzleProgress, speakOnOpen = true): Promise<PuzzleResult> {
+    this.defNow = def;
     const s = this.scene;
     return new Promise<PuzzleResult>((resolve) => {
       const speakPrompt = () => void services.audio.speak(def.narrationKey);
@@ -117,7 +127,7 @@ export class PuzzlePanel {
       order.forEach((id, i) => {
         const ch = def.choices.find((c) => c.id === id)!;
         const bg = s.add.graphics(); draw(bg, false);
-        const img = pic(s, ch.picture, 0, 0, 5);
+        const img = fit(pic(s, ch.picture, 0, 0, 5), 96);
         const c = s.add.container(x0 + i * gap, cy, [bg, img]).setSize(116, 116).setInteractive({ useHandCursor: true });
         c.on('pointerdown', () => {
           if (locked) return;
@@ -126,7 +136,7 @@ export class PuzzlePanel {
           selected = id;
           cards.forEach((v, k) => draw(v.bg, k === id));
           tick.setEnabled(true); tick.pulse(true);
-          s.tweens.add({ targets: img, scale: 5.6, duration: 120, yoyo: true });
+          s.tweens.add({ targets: img, scale: img.scale * 1.12, duration: 120, yoyo: true });
           void services.audio.speak(ch.narrationKey); // each picture says its word
         });
         this.add(c);
@@ -199,6 +209,7 @@ export class PuzzlePanel {
 
   // ------------------------------------------------------------------ fill-in-the-order (patterns, sequences)
   sequence(def: PuzzleDef, prog: PuzzleProgress, prefix: string[], speakOnOpen = true): Promise<PuzzleResult> {
+    this.defNow = def;
     const s = this.scene;
     const target = def.correctAnswer as string[];
     const reuse = def.type === 'pattern';
@@ -219,7 +230,7 @@ export class PuzzlePanel {
         g.fillStyle(filled ? 0xffffff : 0xece4ff, 1).fillRoundedRect(x0 + i * sw - 24, sy - 24, 48, 48, 8);
         g.lineStyle(3, filled ? 0xa06bff : 0xc9b8ff, 1).strokeRoundedRect(x0 + i * sw - 24, sy - 24, 48, 48, 8);
         this.add(g);
-        if (filled) this.add(pic(s, prefix[i], x0 + i * sw, sy, 2));
+        if (filled) this.add(fit(pic(s, prefix[i], x0 + i * sw, sy, 2), 42));
         else if (!reuse) for (let d = 0; d <= i - prefix.length; d++) this.add(s.add.circle(x0 + i * sw - (i - prefix.length) * 4 + d * 8, sy + 34, 2.5, 0xa06bff));
         slotImgs.push(undefined);
       }
@@ -233,7 +244,7 @@ export class PuzzlePanel {
         const ch = def.choices.find((c) => c.id === id)!;
         const bg = s.add.graphics();
         bg.fillStyle(0xffffff, 1).fillRoundedRect(-40, -40, 80, 80, 12).lineStyle(4, 0xc9b8ff, 1).strokeRoundedRect(-40, -40, 80, 80, 12);
-        const img = pic(s, ch.picture, 0, 0, 3);
+        const img = fit(pic(s, ch.picture, 0, 0, 3), 66);
         const c = s.add.container(cx0 + i * gap, cy, [bg, img]).setSize(92, 92).setInteractive({ useHandCursor: true });
         c.on('pointerdown', () => { if (!locked && !(!reuse && used.has(id))) place(id, c); });
         this.add(c);

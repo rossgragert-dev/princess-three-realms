@@ -2,6 +2,7 @@
 // Nothing here touches Phaser: every rule is unit tested and every saved value is sanitized on load.
 import type { GameState } from '../types/game';
 import { sanitizeArt, type ArtStroke } from '../ui/paintStrokes';
+import { defaultLibMemory, sanitizeLibMemory, type LibMemory } from './puzzleLibrary';
 import { GITEM, sanitizeGarden, type GPlaced } from './gardenCatalog';
 
 /** The four seed colours: the flower that grows always matches the seed that was planted. */
@@ -42,13 +43,15 @@ export interface Kingdom {
   carry: string | null;
   /** v0.4d.4: the short planting lesson was shown once. */
   gardenTaught: boolean;
+  /** v0.4d.5: activity library memory: recent challenge ids and the gentle tier she is on for each kind of game. */
+  lib: LibMemory;
 }
 
 export const PET_TYPES = ['cat', 'dog', 'pony', 'bird'] as const;
 export interface PetChoice { type: number; look: number }
 export const petKey = (p: PetChoice) => `px_pet_${PET_TYPES[p.type]}${p.look}`;
 
-export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [], pet: null, gardenItems: [], carry: null, gardenTaught: false });
+export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [], pet: null, gardenItems: [], carry: null, gardenTaught: false, lib: defaultLibMemory() });
 
 const int = (v: unknown, max: number) => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(max, Math.floor(v))) : 0);
 
@@ -70,6 +73,7 @@ export function sanitizeKingdom(raw: unknown): Kingdom {
   d.gardenItems = sanitizeGarden(r.gardenItems);
   d.carry = typeof r.carry === 'string' && GITEM[r.carry] ? r.carry : null;
   d.gardenTaught = r.gardenTaught === true;
+  d.lib = sanitizeLibMemory(r.lib);
   if (r.pet && typeof r.pet === 'object') { const pp = r.pet as Partial<PetChoice>; if (typeof pp.type === 'number' && typeof pp.look === 'number') d.pet = { type: int(pp.type, PET_TYPES.length - 1), look: int(pp.look, 3) }; }
   return d;
 }

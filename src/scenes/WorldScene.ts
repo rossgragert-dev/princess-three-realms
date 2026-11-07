@@ -631,6 +631,7 @@ export class WorldScene extends Phaser.Scene {
       sparkle: (t: Tile) => self.sparkleAt(t.x, t.y, 8),
       get k() { return self.kingdom as unknown as KingdomApi; },
       pickOne: (o: readonly { id: string; picture: string }[]) => self.ui.pickOne(o),
+      playRace: (mode) => self.playRace(mode),
       bake: (spec) => self.ui.bake(spec),
       paint: (strokes) => self.ui.paint(strokes),
       save: () => services.save.save(),
@@ -1252,6 +1253,24 @@ export class WorldScene extends Phaser.Scene {
       this.scene.pause('UI');
       this.scene.launch(which);
       this.scene.bringToTop(which);
+    });
+  }
+
+  /** Opens the scrolling River Race over the world; resolves with the best finished run when she leaves. */
+  private playRace(mode: import('./../world/race').RaceMode): Promise<import('./RaceScene').RaceResult> {
+    if (this.stationOpen) return Promise.resolve({ mode, finished: false, stars: 0, ms: 0, rings: 0 });
+    this.stationOpen = true;
+    return new Promise((resolve) => {
+      this.events.once('race-closed', (r: import('./RaceScene').RaceResult) => {
+        this.buttonsLockedUntil = performance.now() + 800;
+        this.stationOpen = false;
+        services.save.save();
+        resolve(r);
+      });
+      this.scene.pause('World');
+      this.scene.pause('UI');
+      this.scene.launch('Race', { mode });
+      this.scene.bringToTop('Race');
     });
   }
 

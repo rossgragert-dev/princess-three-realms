@@ -11,6 +11,7 @@ import { kingdomInteract, onKingdomArrive, resetKingdomSession } from './kingdom
 import { OBJECTIVE_NARRATION } from './guide';
 import { PEARL_LANE_X, PEARL_START_X, PEARL_Y, isSocketX, nextLaneX } from './pearl';
 import type { PuzzleResult } from '../ui/puzzlePanel';
+import { pipGames, offerOne } from './libraryPlay';
 
 /** What the story needs from the running world and HUD. WorldScene implements it; tests can fake it. */
 export interface StoryCtx {
@@ -41,6 +42,7 @@ export interface StoryCtx {
   /** v0.4c: Kingdom Beyond interactive systems (garden, lanterns, race) and a big picture chooser. */
   readonly k: import('./kingdomStory').KingdomApi;
   pickOne(options: readonly import('./kingdomStory').PickOption[]): Promise<string | null>;
+  playRace(mode: import('./race').RaceMode): Promise<import('../scenes/RaceScene').RaceResult>;
   bake(spec: import('../ui/creativePanels').BakeSpec): Promise<import('../ui/creativePanels').BakeResult | null>;
   paint(strokes: readonly import('../ui/paintStrokes').ArtStroke[]): Promise<import('../ui/paintStrokes').ArtStroke[] | null>;
   save(): void;
@@ -121,12 +123,12 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       ctx.react('pip');
       if (!f.INTRO_DONE) { await ctx.say(SCRIPT.pipIntro); ctx.complete('INTRO_DONE'); }
       else if (!f.PIP_CARROTS_DONE) await ctx.say(SCRIPT.pipCount);
-      else await ctx.say(SCRIPT.carrotsDone);
+      else { await ctx.say(SCRIPT.carrotsDone); await pipGames(ctx); }
       return;
 
     case 'tree': {
       ctx.react('tree');
-      if (f.TREE_GATE_OPEN) { await ctx.say(SCRIPT.treeDone); return; }
+      if (f.TREE_GATE_OPEN) { await ctx.say(SCRIPT.treeDone); await offerOne(ctx, 'sound'); return; }
       // Forest magic is always available; helping Pip is an optional activity.
       await ctx.say(SCRIPT.treeAsk);
       const r = await ctx.choicePuzzle(puzzleById('tree_sound')!, false);
@@ -181,7 +183,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
 
     case 'bridge_mark': {
       if (ctx.form !== 'unicorn') { await ctx.say(SCRIPT.needUnicorn); return; }
-      if (f.RAINBOW_BRIDGE_OPEN) return;
+      if (f.RAINBOW_BRIDGE_OPEN) { await offerOne(ctx, 'pattern'); return; }
       await ctx.say(SCRIPT.bridgeAsk);
       // Red, blue shown; the child continues the pattern with red, blue.
       const r = await ctx.sequencePuzzle(puzzleById('bridge_pattern')!, ['tile_red', 'tile_blue'], false);
@@ -204,7 +206,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       return;
 
     case 'garden_plot': {
-      if (f.GARDEN_SEQUENCED) { ctx.sparkle({ x: obj.x, y: obj.y }); return; }
+      if (f.GARDEN_SEQUENCED) { ctx.sparkle({ x: obj.x, y: obj.y }); await offerOne(ctx, 'story'); return; }
       await ctx.say(SCRIPT.gardenAsk);
       const r = await ctx.sequencePuzzle(puzzleById('garden_grow')!, [], false);
       if (!r.solved) return;
@@ -233,7 +235,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       return;
 
     case 'shell_puzzle': {
-      if (f.SHELLS_MATCHED) { await ctx.say(SCRIPT.shellDone); return; }
+      if (f.SHELLS_MATCHED) { await ctx.say(SCRIPT.shellDone); await offerOne(ctx, 'rhyme'); return; }
       await ctx.say(SCRIPT.shellAsk);
       const r = await ctx.choicePuzzle(puzzleById('shell_rhyme')!, false);
       if (!r.solved) return;

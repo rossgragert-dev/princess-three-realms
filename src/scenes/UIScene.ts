@@ -76,6 +76,8 @@ export class UIScene extends Phaser.Scene {
   constructor() { super('UI'); }
 
   get modal() { return this.modalDepth > 0; }
+  /** Test hook: the puzzle on screen and where its picture cards are. */
+  get puzzleInfo() { return { def: this.puzzle?.defNow ?? null, cards: this.puzzle?.cardPos ?? [] }; }
   get panel(): 'dialogue' | 'puzzle' | 'reveal' | null { return this.dialogue?.isOpen ? 'dialogue' : this.puzzle?.isOpen ? 'puzzle' : this.reveal?.isOpen ? 'reveal' : null; }
 
   create() {

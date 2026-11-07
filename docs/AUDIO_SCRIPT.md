@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 192 (80 required)
+- Total lines: 345 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -114,6 +114,35 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `sticker_river_gem` | You found a secret treasure in the river! |  | no |
 | anywhere | `hint_together` | Let's do it together! |  | yes |
 | anywhere | `retry_gentle` | Let's try again! |  | yes |
+| anywhere | `word_n1` | One! |  | no |
+| anywhere | `word_n2` | Two! |  | no |
+| anywhere | `word_n3` | Three! |  | no |
+| anywhere | `word_n4` | Four! |  | no |
+| anywhere | `word_n5` | Five! |  | no |
+| anywhere | `word_n6` | Six! |  | no |
+| anywhere | `word_shape_circle` | Circle. |  | no |
+| anywhere | `word_shape_square` | Square. |  | no |
+| anywhere | `word_shape_triangle` | Triangle. |  | no |
+| anywhere | `word_shape_star` | Star. |  | no |
+| anywhere | `word_shape_heart` | Heart. |  | no |
+| anywhere | `word_shape_diamond` | Diamond. |  | no |
+| anywhere | `word_deer` | Deer. |  | no |
+| anywhere | `word_mushroom` | Mushroom. |  | no |
+| anywhere | `word_pizza` | Pizza. |  | no |
+| anywhere | `word_owl` | Owl. |  | no |
+| anywhere | `word_bee` | Bee. |  | no |
+| anywhere | `word_frog` | Frog. |  | no |
+| anywhere | `word_carrot` | Carrot. |  | no |
+| anywhere | `word_dog` | Dog. |  | no |
+| anywhere | `word_fox` | Fox. |  | no |
+| anywhere | `word_squirrel` | Squirrel. |  | no |
+| anywhere | `word_ladybug` | Ladybug. |  | no |
+| anywhere | `word_heart` | Heart. |  | no |
+| anywhere | `word_cake` | Cake. |  | no |
+| anywhere | `word_shell` | Shell. |  | no |
+| anywhere | `word_sprout` | Sprout. |  | no |
+| anywhere | `word_mound` | Soil. |  | no |
+| anywhere | `word_packet` | Seed packet. |  | no |
 
 ## Pip the bunny (`pip`)
 
@@ -128,6 +157,130 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `pet_chosen` | Your new friend is waiting for you in your bedroom! |  | no |
 | anywhere | `gh_lesson` | Pick a seed! Take it to the garden, tap the grass to plant it, and the rain will make it grow! |  | no |
 | anywhere | `gh_carry` | Now take it to the garden and tap the grass! |  | no |
+| anywhere | `lib_snd_B` | Which one starts with the sound buh? Like the letter B! |  | no |
+| anywhere | `lib_snd_B_h1` | Listen! buh, buh, buh! |  | no |
+| anywhere | `lib_snd_B_h2` | Ball starts with buh! |  | no |
+| anywhere | `lib_snd_C` | Which one starts with the sound kuh? Like the letter C! |  | no |
+| anywhere | `lib_snd_C_h1` | Listen! kuh, kuh, kuh! |  | no |
+| anywhere | `lib_snd_C_h2` | Cat starts with kuh! |  | no |
+| anywhere | `lib_snd_S` | Which one starts with the sound sss? Like the letter S! |  | no |
+| anywhere | `lib_snd_S_h1` | Listen! sss, sss, sss! |  | no |
+| anywhere | `lib_snd_S_h2` | Sun starts with sss! |  | no |
+| anywhere | `lib_snd_F` | Which one starts with the sound fff? Like the letter F! |  | no |
+| anywhere | `lib_snd_F_h1` | Listen! fff, fff, fff! |  | no |
+| anywhere | `lib_snd_F_h2` | Fish starts with fff! |  | no |
+| anywhere | `lib_snd_H` | Which one starts with the sound huh? Like the letter H! |  | no |
+| anywhere | `lib_snd_H_h1` | Listen! huh, huh, huh! |  | no |
+| anywhere | `lib_snd_H_h2` | Hat starts with huh! |  | no |
+| anywhere | `lib_snd_T` | Which one starts with the sound tuh? Like the letter T! |  | no |
+| anywhere | `lib_snd_T_h1` | Listen! tuh, tuh, tuh! |  | no |
+| anywhere | `lib_snd_T_h2` | Tree starts with tuh! |  | no |
+| anywhere | `lib_snd_L` | Which one starts with the sound lll? Like the letter L! |  | no |
+| anywhere | `lib_snd_L_h1` | Listen! lll, lll, lll! |  | no |
+| anywhere | `lib_snd_L_h2` | Log starts with lll! |  | no |
+| anywhere | `lib_snd_E` | Which one starts with the sound eh? Like the letter E! |  | no |
+| anywhere | `lib_snd_E_h1` | Listen! eh, eh, eh! |  | no |
+| anywhere | `lib_snd_E_h2` | Egg starts with eh! |  | no |
+| anywhere | `lib_snd_D` | Which one starts with the sound duh? Like the letter D! |  | no |
+| anywhere | `lib_snd_D_h1` | Listen! duh, duh, duh! |  | no |
+| anywhere | `lib_snd_D_h2` | Deer starts with duh! |  | no |
+| anywhere | `lib_snd_M` | Which one starts with the sound mmm? Like the letter M! |  | no |
+| anywhere | `lib_snd_M_h1` | Listen! mmm, mmm, mmm! |  | no |
+| anywhere | `lib_snd_M_h2` | Mushroom starts with mmm! |  | no |
+| anywhere | `lib_snd_P` | Which one starts with the sound puh? Like the letter P! |  | no |
+| anywhere | `lib_snd_P_h1` | Listen! puh, puh, puh! |  | no |
+| anywhere | `lib_snd_P_h2` | Pizza starts with puh! |  | no |
+| anywhere | `lib_snd_O` | Which one starts with the sound oh? Like the letter O! |  | no |
+| anywhere | `lib_snd_O_h1` | Listen! oh, oh, oh! |  | no |
+| anywhere | `lib_snd_O_h2` | Owl starts with oh! |  | no |
+| anywhere | `lib_rhy_cat` | Which one sounds like Cat? |  | no |
+| anywhere | `lib_rhy_cat_h1` | Say it out loud: Cat! |  | no |
+| anywhere | `lib_rhy_cat_hat_h2` | Cat and Hat sound the same at the end! |  | no |
+| anywhere | `lib_rhy_hat` | Which one sounds like Hat? |  | no |
+| anywhere | `lib_rhy_hat_h1` | Say it out loud: Hat! |  | no |
+| anywhere | `lib_rhy_hat_cat_h2` | Hat and Cat sound the same at the end! |  | no |
+| anywhere | `lib_rhy_bee` | Which one sounds like Bee? |  | no |
+| anywhere | `lib_rhy_bee_h1` | Say it out loud: Bee! |  | no |
+| anywhere | `lib_rhy_bee_tree_h2` | Bee and Tree sound the same at the end! |  | no |
+| anywhere | `lib_rhy_tree` | Which one sounds like Tree? |  | no |
+| anywhere | `lib_rhy_tree_h1` | Say it out loud: Tree! |  | no |
+| anywhere | `lib_rhy_tree_bee_h2` | Tree and Bee sound the same at the end! |  | no |
+| anywhere | `lib_rhy_frog` | Which one sounds like Frog? |  | no |
+| anywhere | `lib_rhy_frog_h1` | Say it out loud: Frog! |  | no |
+| anywhere | `lib_rhy_frog_log_h2` | Frog and Log sound the same at the end! |  | no |
+| anywhere | `lib_rhy_log` | Which one sounds like Log? |  | no |
+| anywhere | `lib_rhy_log_h1` | Say it out loud: Log! |  | no |
+| anywhere | `lib_rhy_log_frog_h2` | Log and Frog sound the same at the end! |  | no |
+| anywhere | `lib_rhy_dog` | Which one sounds like Dog? |  | no |
+| anywhere | `lib_rhy_dog_h1` | Say it out loud: Dog! |  | no |
+| anywhere | `lib_rhy_dog_log_h2` | Dog and Log sound the same at the end! |  | no |
+| anywhere | `lib_rhy_log_dog_h2` | Log and Dog sound the same at the end! |  | no |
+| anywhere | `lib_rhy_frog_dog_h2` | Frog and Dog sound the same at the end! |  | no |
+| anywhere | `lib_rhy_dog_frog_h2` | Dog and Frog sound the same at the end! |  | no |
+| anywhere | `lib_cnt_ask` | Count them! Find the group with the same number. |  | no |
+| anywhere | `lib_cnt_h1` | Touch and count them one by one! |  | no |
+| anywhere | `lib_cnt_h2` | Count the first group. Now count each one that you can pick! |  | no |
+| anywhere | `lib_shp_ask1` | Which one is the same shape? |  | no |
+| anywhere | `lib_shp_ask` | Which one looks exactly the same? |  | no |
+| anywhere | `lib_shp_h1` | Look at the shape. How many corners does it have? |  | no |
+| anywhere | `lib_shp_h2` | Look at the colour too! |  | no |
+| anywhere | `lib_pat_ask` | What comes next? Finish the pattern! |  | no |
+| anywhere | `lib_pat_h1` | Say the pattern out loud. It goes round and round! |  | no |
+| anywhere | `lib_pat_h2` | Look at what came before. It repeats! |  | no |
+| anywhere | `lib_sty_grow` | How does a flower grow? Put the pictures in order! |  | no |
+| anywhere | `lib_sty_grow_h2` | First comes Seed! |  | no |
+| anywhere | `lib_sty_chick` | Put the pictures in order. What happens first? |  | no |
+| anywhere | `lib_sty_chick_h2` | First comes Egg! |  | no |
+| anywhere | `lib_sty_sprout` | A tiny seed grows up. Put the pictures in order! |  | no |
+| anywhere | `lib_sty_sprout_h2` | First comes Seed! |  | no |
+| anywhere | `lib_sty_dig` | Planting day! Put the pictures in order. |  | no |
+| anywhere | `lib_sty_dig_h2` | First comes Seed packet! |  | no |
+| anywhere | `lib_sty_rain` | What helps the soil grow a sprout? Put them in order! |  | no |
+| anywhere | `lib_sty_rain_h2` | First comes Soil! |  | no |
+| anywhere | `lib_sty_cycleh` | The hen starts the story. What comes next? |  | no |
+| anywhere | `lib_sty_cycleh_h2` | First comes Hen! |  | no |
+| anywhere | `lib_sty_cyclec` | The chick starts the story. What comes next? |  | no |
+| anywhere | `lib_sty_cyclec_h2` | First comes Chick! |  | no |
+| anywhere | `lib_sty_cyclef` | The flower starts the story. What comes next? |  | no |
+| anywhere | `lib_sty_cyclef_h2` | First comes Flower! |  | no |
+| anywhere | `lib_sty_plant4` | From seed packet to flower! Put all four in order. |  | no |
+| anywhere | `lib_sty_plant4_h2` | First comes Seed packet! |  | no |
+| anywhere | `lib_sty_plant4b` | A seed goes into the soil. Put all four in order! |  | no |
+| anywhere | `lib_sty_plant4b_h2` | First comes Seed! |  | no |
+| anywhere | `lib_sty_h1` | What happens first? Then what happens next? |  | no |
+| anywhere | `lib_nat_need` | What does a flower need to grow? |  | no |
+| anywhere | `lib_nat_need_h1` | Flowers get thirsty. They need a drink! |  | no |
+| anywhere | `lib_nat_need_h2` | Think about it. The answer is the Water! |  | no |
+| anywhere | `lib_nat_light` | What gives a flower warm light? |  | no |
+| anywhere | `lib_nat_light_h1` | Look up in the sky. It is bright and warm! |  | no |
+| anywhere | `lib_nat_light_h2` | Think about it. The answer is the Sun! |  | no |
+| anywhere | `lib_nat_treehome` | Who lives up in the tree? |  | no |
+| anywhere | `lib_nat_treehome_h1` | Whoo whoo! This one says hoot. |  | no |
+| anywhere | `lib_nat_treehome_h2` | Think about it. The answer is the Owl! |  | no |
+| anywhere | `lib_nat_swim` | Who swims in the water? |  | no |
+| anywhere | `lib_nat_swim_h1` | It has fins and a tail. |  | no |
+| anywhere | `lib_nat_swim_h2` | Think about it. The answer is the Fish! |  | no |
+| anywhere | `lib_nat_visit` | Who buzzes from flower to flower? |  | no |
+| anywhere | `lib_nat_visit_h1` | Bzzz bzzz! It makes honey. |  | no |
+| anywhere | `lib_nat_visit_h2` | Think about it. The answer is the Bee! |  | no |
+| anywhere | `lib_nat_seed` | What grows from a little seed? |  | no |
+| anywhere | `lib_nat_seed_h1` | Plant it, water it, and it blooms! |  | no |
+| anywhere | `lib_nat_seed_h2` | Think about it. The answer is the Flower! |  | no |
+| anywhere | `lib_nat_hatch` | What hatches out of an egg? |  | no |
+| anywhere | `lib_nat_hatch_h1` | Peep peep! It is small and fluffy. |  | no |
+| anywhere | `lib_nat_hatch_h2` | Think about it. The answer is the Chick! |  | no |
+| anywhere | `lib_nat_pond` | Who hops on the lily pad? |  | no |
+| anywhere | `lib_nat_pond_h1` | Ribbit! It is green and it jumps. |  | no |
+| anywhere | `lib_nat_pond_h2` | Think about it. The answer is the Frog! |  | no |
+| anywhere | `lib_nat_nuts` | Who collects nuts in the forest? |  | no |
+| anywhere | `lib_nat_nuts_h1` | It has a big bushy tail. |  | no |
+| anywhere | `lib_nat_nuts_h2` | Think about it. The answer is the Squirrel! |  | no |
+| anywhere | `lib_nat_spots` | Who has red wings with little black spots? |  | no |
+| anywhere | `lib_nat_spots_h1` | It is a tiny bug with spots. |  | no |
+| anywhere | `lib_nat_spots_h2` | Think about it. The answer is the Ladybug! |  | no |
+| anywhere | `lib_win_1` | You did it! |  | no |
+| anywhere | `lib_win_2` | Hooray, great job! |  | no |
+| anywhere | `lib_win_3` | Wow, you are so clever! |  | no |
 
 ## The Talking Tree (`tree`)
 
@@ -377,7 +530,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (126)
+## anywhere (279)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -507,3 +660,156 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `sticker_river_gem` | You found a secret treasure in the river! |
 | narrator | `hint_together` | Let's do it together! |
 | narrator | `retry_gentle` | Let's try again! |
+| pip | `lib_snd_B` | Which one starts with the sound buh? Like the letter B! |
+| pip | `lib_snd_B_h1` | Listen! buh, buh, buh! |
+| pip | `lib_snd_B_h2` | Ball starts with buh! |
+| pip | `lib_snd_C` | Which one starts with the sound kuh? Like the letter C! |
+| pip | `lib_snd_C_h1` | Listen! kuh, kuh, kuh! |
+| pip | `lib_snd_C_h2` | Cat starts with kuh! |
+| pip | `lib_snd_S` | Which one starts with the sound sss? Like the letter S! |
+| pip | `lib_snd_S_h1` | Listen! sss, sss, sss! |
+| pip | `lib_snd_S_h2` | Sun starts with sss! |
+| pip | `lib_snd_F` | Which one starts with the sound fff? Like the letter F! |
+| pip | `lib_snd_F_h1` | Listen! fff, fff, fff! |
+| pip | `lib_snd_F_h2` | Fish starts with fff! |
+| pip | `lib_snd_H` | Which one starts with the sound huh? Like the letter H! |
+| pip | `lib_snd_H_h1` | Listen! huh, huh, huh! |
+| pip | `lib_snd_H_h2` | Hat starts with huh! |
+| pip | `lib_snd_T` | Which one starts with the sound tuh? Like the letter T! |
+| pip | `lib_snd_T_h1` | Listen! tuh, tuh, tuh! |
+| pip | `lib_snd_T_h2` | Tree starts with tuh! |
+| pip | `lib_snd_L` | Which one starts with the sound lll? Like the letter L! |
+| pip | `lib_snd_L_h1` | Listen! lll, lll, lll! |
+| pip | `lib_snd_L_h2` | Log starts with lll! |
+| pip | `lib_snd_E` | Which one starts with the sound eh? Like the letter E! |
+| pip | `lib_snd_E_h1` | Listen! eh, eh, eh! |
+| pip | `lib_snd_E_h2` | Egg starts with eh! |
+| pip | `lib_snd_D` | Which one starts with the sound duh? Like the letter D! |
+| pip | `lib_snd_D_h1` | Listen! duh, duh, duh! |
+| pip | `lib_snd_D_h2` | Deer starts with duh! |
+| pip | `lib_snd_M` | Which one starts with the sound mmm? Like the letter M! |
+| pip | `lib_snd_M_h1` | Listen! mmm, mmm, mmm! |
+| pip | `lib_snd_M_h2` | Mushroom starts with mmm! |
+| pip | `lib_snd_P` | Which one starts with the sound puh? Like the letter P! |
+| pip | `lib_snd_P_h1` | Listen! puh, puh, puh! |
+| pip | `lib_snd_P_h2` | Pizza starts with puh! |
+| pip | `lib_snd_O` | Which one starts with the sound oh? Like the letter O! |
+| pip | `lib_snd_O_h1` | Listen! oh, oh, oh! |
+| pip | `lib_snd_O_h2` | Owl starts with oh! |
+| pip | `lib_rhy_cat` | Which one sounds like Cat? |
+| pip | `lib_rhy_cat_h1` | Say it out loud: Cat! |
+| pip | `lib_rhy_cat_hat_h2` | Cat and Hat sound the same at the end! |
+| pip | `lib_rhy_hat` | Which one sounds like Hat? |
+| pip | `lib_rhy_hat_h1` | Say it out loud: Hat! |
+| pip | `lib_rhy_hat_cat_h2` | Hat and Cat sound the same at the end! |
+| pip | `lib_rhy_bee` | Which one sounds like Bee? |
+| pip | `lib_rhy_bee_h1` | Say it out loud: Bee! |
+| pip | `lib_rhy_bee_tree_h2` | Bee and Tree sound the same at the end! |
+| pip | `lib_rhy_tree` | Which one sounds like Tree? |
+| pip | `lib_rhy_tree_h1` | Say it out loud: Tree! |
+| pip | `lib_rhy_tree_bee_h2` | Tree and Bee sound the same at the end! |
+| pip | `lib_rhy_frog` | Which one sounds like Frog? |
+| pip | `lib_rhy_frog_h1` | Say it out loud: Frog! |
+| pip | `lib_rhy_frog_log_h2` | Frog and Log sound the same at the end! |
+| pip | `lib_rhy_log` | Which one sounds like Log? |
+| pip | `lib_rhy_log_h1` | Say it out loud: Log! |
+| pip | `lib_rhy_log_frog_h2` | Log and Frog sound the same at the end! |
+| pip | `lib_rhy_dog` | Which one sounds like Dog? |
+| pip | `lib_rhy_dog_h1` | Say it out loud: Dog! |
+| pip | `lib_rhy_dog_log_h2` | Dog and Log sound the same at the end! |
+| pip | `lib_rhy_log_dog_h2` | Log and Dog sound the same at the end! |
+| pip | `lib_rhy_frog_dog_h2` | Frog and Dog sound the same at the end! |
+| pip | `lib_rhy_dog_frog_h2` | Dog and Frog sound the same at the end! |
+| pip | `lib_cnt_ask` | Count them! Find the group with the same number. |
+| pip | `lib_cnt_h1` | Touch and count them one by one! |
+| pip | `lib_cnt_h2` | Count the first group. Now count each one that you can pick! |
+| pip | `lib_shp_ask1` | Which one is the same shape? |
+| pip | `lib_shp_ask` | Which one looks exactly the same? |
+| pip | `lib_shp_h1` | Look at the shape. How many corners does it have? |
+| pip | `lib_shp_h2` | Look at the colour too! |
+| pip | `lib_pat_ask` | What comes next? Finish the pattern! |
+| pip | `lib_pat_h1` | Say the pattern out loud. It goes round and round! |
+| pip | `lib_pat_h2` | Look at what came before. It repeats! |
+| pip | `lib_sty_grow` | How does a flower grow? Put the pictures in order! |
+| pip | `lib_sty_grow_h2` | First comes Seed! |
+| pip | `lib_sty_chick` | Put the pictures in order. What happens first? |
+| pip | `lib_sty_chick_h2` | First comes Egg! |
+| pip | `lib_sty_sprout` | A tiny seed grows up. Put the pictures in order! |
+| pip | `lib_sty_sprout_h2` | First comes Seed! |
+| pip | `lib_sty_dig` | Planting day! Put the pictures in order. |
+| pip | `lib_sty_dig_h2` | First comes Seed packet! |
+| pip | `lib_sty_rain` | What helps the soil grow a sprout? Put them in order! |
+| pip | `lib_sty_rain_h2` | First comes Soil! |
+| pip | `lib_sty_cycleh` | The hen starts the story. What comes next? |
+| pip | `lib_sty_cycleh_h2` | First comes Hen! |
+| pip | `lib_sty_cyclec` | The chick starts the story. What comes next? |
+| pip | `lib_sty_cyclec_h2` | First comes Chick! |
+| pip | `lib_sty_cyclef` | The flower starts the story. What comes next? |
+| pip | `lib_sty_cyclef_h2` | First comes Flower! |
+| pip | `lib_sty_plant4` | From seed packet to flower! Put all four in order. |
+| pip | `lib_sty_plant4_h2` | First comes Seed packet! |
+| pip | `lib_sty_plant4b` | A seed goes into the soil. Put all four in order! |
+| pip | `lib_sty_plant4b_h2` | First comes Seed! |
+| pip | `lib_sty_h1` | What happens first? Then what happens next? |
+| pip | `lib_nat_need` | What does a flower need to grow? |
+| pip | `lib_nat_need_h1` | Flowers get thirsty. They need a drink! |
+| pip | `lib_nat_need_h2` | Think about it. The answer is the Water! |
+| pip | `lib_nat_light` | What gives a flower warm light? |
+| pip | `lib_nat_light_h1` | Look up in the sky. It is bright and warm! |
+| pip | `lib_nat_light_h2` | Think about it. The answer is the Sun! |
+| pip | `lib_nat_treehome` | Who lives up in the tree? |
+| pip | `lib_nat_treehome_h1` | Whoo whoo! This one says hoot. |
+| pip | `lib_nat_treehome_h2` | Think about it. The answer is the Owl! |
+| pip | `lib_nat_swim` | Who swims in the water? |
+| pip | `lib_nat_swim_h1` | It has fins and a tail. |
+| pip | `lib_nat_swim_h2` | Think about it. The answer is the Fish! |
+| pip | `lib_nat_visit` | Who buzzes from flower to flower? |
+| pip | `lib_nat_visit_h1` | Bzzz bzzz! It makes honey. |
+| pip | `lib_nat_visit_h2` | Think about it. The answer is the Bee! |
+| pip | `lib_nat_seed` | What grows from a little seed? |
+| pip | `lib_nat_seed_h1` | Plant it, water it, and it blooms! |
+| pip | `lib_nat_seed_h2` | Think about it. The answer is the Flower! |
+| pip | `lib_nat_hatch` | What hatches out of an egg? |
+| pip | `lib_nat_hatch_h1` | Peep peep! It is small and fluffy. |
+| pip | `lib_nat_hatch_h2` | Think about it. The answer is the Chick! |
+| pip | `lib_nat_pond` | Who hops on the lily pad? |
+| pip | `lib_nat_pond_h1` | Ribbit! It is green and it jumps. |
+| pip | `lib_nat_pond_h2` | Think about it. The answer is the Frog! |
+| pip | `lib_nat_nuts` | Who collects nuts in the forest? |
+| pip | `lib_nat_nuts_h1` | It has a big bushy tail. |
+| pip | `lib_nat_nuts_h2` | Think about it. The answer is the Squirrel! |
+| pip | `lib_nat_spots` | Who has red wings with little black spots? |
+| pip | `lib_nat_spots_h1` | It is a tiny bug with spots. |
+| pip | `lib_nat_spots_h2` | Think about it. The answer is the Ladybug! |
+| narrator | `word_n1` | One! |
+| narrator | `word_n2` | Two! |
+| narrator | `word_n3` | Three! |
+| narrator | `word_n4` | Four! |
+| narrator | `word_n5` | Five! |
+| narrator | `word_n6` | Six! |
+| narrator | `word_shape_circle` | Circle. |
+| narrator | `word_shape_square` | Square. |
+| narrator | `word_shape_triangle` | Triangle. |
+| narrator | `word_shape_star` | Star. |
+| narrator | `word_shape_heart` | Heart. |
+| narrator | `word_shape_diamond` | Diamond. |
+| pip | `lib_win_1` | You did it! |
+| pip | `lib_win_2` | Hooray, great job! |
+| pip | `lib_win_3` | Wow, you are so clever! |
+| narrator | `word_deer` | Deer. |
+| narrator | `word_mushroom` | Mushroom. |
+| narrator | `word_pizza` | Pizza. |
+| narrator | `word_owl` | Owl. |
+| narrator | `word_bee` | Bee. |
+| narrator | `word_frog` | Frog. |
+| narrator | `word_carrot` | Carrot. |
+| narrator | `word_dog` | Dog. |
+| narrator | `word_fox` | Fox. |
+| narrator | `word_squirrel` | Squirrel. |
+| narrator | `word_ladybug` | Ladybug. |
+| narrator | `word_heart` | Heart. |
+| narrator | `word_cake` | Cake. |
+| narrator | `word_shell` | Shell. |
+| narrator | `word_sprout` | Sprout. |
+| narrator | `word_mound` | Soil. |
+| narrator | `word_packet` | Seed packet. |

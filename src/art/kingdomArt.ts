@@ -78,6 +78,8 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
     P(c, 7, 0, 2, 32, '#3a9a5f'); P(c, 3, 6, 4, 2, '#4fb872'); P(c, 9, 12, 4, 2, '#4fb872'); P(c, 3, 18, 4, 2, '#4fb872'); P(c, 9, 24, 4, 2, '#4fb872');
     disc(c, 4, 7, 2, '#7bd88f'); disc(c, 12, 13, 2, '#7bd88f'); disc(c, 4, 19, 2, '#7bd88f'); disc(c, 12, 25, 2, '#7bd88f'); P(c, 5, 27, 6, 2, '#2e7d4f'); P(c, 6, 29, 4, 2, '#2e7d4f');
   });
+  m('px_rock', 32, 24, (c) => { disc(c, 16, 14, 10, '#7a8794'); P(c, 4, 12, 24, 10, '#7a8794'); disc(c, 12, 11, 5, '#9aa7b3'); P(c, 6, 20, 20, 3, '#5d6975'); P(c, 10, 14, 3, 2, '#b5c1cc'); });
+  m('px_pearl', 16, 16, (c) => { disc(c, 8, 8, 6, '#fff4fa'); disc(c, 6, 6, 2.5, '#ffffff'); P(c, 9, 10, 3, 2, '#e6c8e8'); });
   m('px_kelp', 16, 32, (c) => {
     P(c, 5, 0, 3, 32, '#2f9a6a'); P(c, 9, 4, 3, 28, '#3fb27c'); P(c, 3, 8, 2, 16, '#2f9a6a'); P(c, 12, 10, 2, 18, '#2f9a6a');
   });
@@ -320,7 +322,36 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
   m('px_gd_crystal', 16, 20, (c) => { P(c, 4, 14, 8, 6, '#a06bff'); P(c, 3, 18, 10, 2, '#7a4acf'); disc(c, 8, 9, 7, '#c9b8ff'); disc(c, 8, 9, 5.5, '#e8dcff'); disc(c, 6, 7, 2, '#ffffff'); P(c, 9, 10, 2, 2, '#ff9ccd'); });
   m('px_gd_mushrooms', 16, 12, (c) => { for (const [x, y, r] of [[4, 6, 3], [11, 7, 3.5], [8, 3, 2.6]] as const) { P(c, x - 1, y + 2, 2, 5, '#fff6e4'); disc(c, x, y, r, '#ff5a6e'); P(c, x - 1, y - 1, 1, 1, '#ffffff'); P(c, x + 1, y, 1, 1, '#ffffff'); } });
 
+  // ------------------------------------------------------------ v0.4d.5: shape cards and counting groups for the activity library
+  const SHAPE_COL: Record<string, [string, string]> = { red: ['#ff5a6e', '#c23a4e'], blue: ['#3ea6ff', '#2a72bd'], yellow: ['#ffd93d', '#d9a91f'], pink: ['#ff7ec3', '#cf4f94'] };
+  const shapePath = (c: CanvasRenderingContext2D, s: string, cx: number, cy: number, r: number) => {
+    c.beginPath();
+    if (s === 'circle') c.arc(cx, cy, r, 0, Math.PI * 2);
+    else if (s === 'square') c.rect(cx - r * 0.85, cy - r * 0.85, r * 1.7, r * 1.7);
+    else if (s === 'triangle') { c.moveTo(cx, cy - r); c.lineTo(cx + r, cy + r * 0.8); c.lineTo(cx - r, cy + r * 0.8); c.closePath(); }
+    else if (s === 'diamond') { c.moveTo(cx, cy - r); c.lineTo(cx + r * 0.8, cy); c.lineTo(cx, cy + r); c.lineTo(cx - r * 0.8, cy); c.closePath(); }
+    else if (s === 'star') { for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r; c.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } c.closePath(); }
+    else if (s === 'heart') { c.moveTo(cx, cy + r * 0.9); c.bezierCurveTo(cx - r * 1.5, cy - r * 0.2, cx - r * 0.6, cy - r * 1.1, cx, cy - r * 0.35); c.bezierCurveTo(cx + r * 0.6, cy - r * 1.1, cx + r * 1.5, cy - r * 0.2, cx, cy + r * 0.9); c.closePath(); }
+    else if (s === 'flower') { for (let i = 0; i < 5; i++) { const a = i * Math.PI * 2 / 5; c.moveTo(cx + Math.cos(a) * r * 0.5 + r * 0.45, cy + Math.sin(a) * r * 0.5); c.arc(cx + Math.cos(a) * r * 0.5, cy + Math.sin(a) * r * 0.5, r * 0.45, 0, Math.PI * 2); } }
+  };
+  for (const [col, [main, dark]] of Object.entries(SHAPE_COL)) for (const s of ['circle', 'square', 'triangle', 'star', 'heart', 'diamond']) {
+    m(`px_shape_${s}_${col}`, 28, 28, (c) => { shapePath(c, s, 14, 14, 11); c.fillStyle = main; c.fill(); c.lineWidth = 2; c.strokeStyle = dark; c.stroke(); });
+  }
+  const CNT_COL: Record<string, string> = { star: '#ffd93d', heart: '#ff5a6e', flower: '#ff7ec3', ball: '#3ea6ff' };
+  const SPOTS: Record<number, [number, number][]> = {
+    1: [[24, 24]], 2: [[14, 24], [34, 24]], 3: [[24, 12], [12, 34], [36, 34]], 4: [[13, 13], [35, 13], [13, 35], [35, 35]],
+    5: [[12, 12], [36, 12], [24, 24], [12, 36], [36, 36]], 6: [[12, 12], [24, 12], [36, 12], [12, 34], [24, 34], [36, 34]]
+  };
+  for (const [s, col] of Object.entries(CNT_COL)) for (let n = 1; n <= 6; n++) {
+    m(`px_cnt_${s}${n}`, 48, 48, (c) => {
+      for (const [x, y] of SPOTS[n]) {
+        if (s === 'ball') { disc(c, x, y, 6.5, col); disc(c, x - 2, y - 2, 2, '#cdeaff'); }
+        else { shapePath(c, s, x, y, 6.5); c.fillStyle = col; c.fill(); c.lineWidth = 1.5; c.strokeStyle = 'rgba(0,0,0,0.25)'; c.stroke(); }
+      }
+    });
+  }
+
 }
 
 /** Names of every runtime texture (for tests). */
-export const KINGDOM_KEYS = ['px_gd_rose', 'px_gd_tulip', 'px_gd_bluebell', 'px_gd_daisy', 'px_gd_sunflower', 'px_gd_lavender', 'px_gd_tree', 'px_gd_blossom', 'px_gd_bush', 'px_gd_rosebush', 'px_gd_hedge', 'px_gd_topiary', 'px_gd_birdbath', 'px_gd_fountain', 'px_gd_stones', 'px_gd_gnome', 'px_gd_pinwheel', 'px_gd_pot', 'px_gd_crystal', 'px_gd_mushrooms', 'px_bed_cozy', 'px_bed_sunny', 'px_bed_canopy', 'px_sleeper', 'px_keeper', 'px_petstall', 'px_pet_cat0', 'px_pet_cat1', 'px_pet_cat2', 'px_pet_cat3', 'px_pet_dog0', 'px_pet_dog1', 'px_pet_dog2', 'px_pet_dog3', 'px_pet_pony0', 'px_pet_pony1', 'px_pet_pony2', 'px_pet_pony3', 'px_pet_bird0', 'px_pet_bird1', 'px_pet_bird2', 'px_pet_bird3', 'px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;
+export const KINGDOM_KEYS = ['px_shape_circle_red', 'px_shape_square_red', 'px_shape_triangle_red', 'px_shape_star_red', 'px_shape_heart_red', 'px_shape_diamond_red', 'px_shape_circle_blue', 'px_shape_square_blue', 'px_shape_triangle_blue', 'px_shape_star_blue', 'px_shape_heart_blue', 'px_shape_diamond_blue', 'px_shape_circle_yellow', 'px_shape_square_yellow', 'px_shape_triangle_yellow', 'px_shape_star_yellow', 'px_shape_heart_yellow', 'px_shape_diamond_yellow', 'px_shape_circle_pink', 'px_shape_square_pink', 'px_shape_triangle_pink', 'px_shape_star_pink', 'px_shape_heart_pink', 'px_shape_diamond_pink', 'px_cnt_star1', 'px_cnt_star2', 'px_cnt_star3', 'px_cnt_star4', 'px_cnt_star5', 'px_cnt_star6', 'px_cnt_heart1', 'px_cnt_heart2', 'px_cnt_heart3', 'px_cnt_heart4', 'px_cnt_heart5', 'px_cnt_heart6', 'px_cnt_flower1', 'px_cnt_flower2', 'px_cnt_flower3', 'px_cnt_flower4', 'px_cnt_flower5', 'px_cnt_flower6', 'px_cnt_ball1', 'px_cnt_ball2', 'px_cnt_ball3', 'px_cnt_ball4', 'px_cnt_ball5', 'px_cnt_ball6', 'px_gd_rose', 'px_gd_tulip', 'px_gd_bluebell', 'px_gd_daisy', 'px_gd_sunflower', 'px_gd_lavender', 'px_gd_tree', 'px_gd_blossom', 'px_gd_bush', 'px_gd_rosebush', 'px_gd_hedge', 'px_gd_topiary', 'px_gd_birdbath', 'px_gd_fountain', 'px_gd_stones', 'px_gd_gnome', 'px_gd_pinwheel', 'px_gd_pot', 'px_gd_crystal', 'px_gd_mushrooms', 'px_bed_cozy', 'px_bed_sunny', 'px_bed_canopy', 'px_sleeper', 'px_keeper', 'px_petstall', 'px_pet_cat0', 'px_pet_cat1', 'px_pet_cat2', 'px_pet_cat3', 'px_pet_dog0', 'px_pet_dog1', 'px_pet_dog2', 'px_pet_dog3', 'px_pet_pony0', 'px_pet_pony1', 'px_pet_pony2', 'px_pet_pony3', 'px_pet_bird0', 'px_pet_bird1', 'px_pet_bird2', 'px_pet_bird3', 'px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_rock', 'px_pearl', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;

@@ -247,6 +247,10 @@ export const NARRATION: NarrationClip[] = [
   clip('chapter_done', 'narrator', 'More adventures are coming soon!', undefined, false)
 ];
 
+import { libraryClips } from './puzzleLibrary';
+const have = new Set(NARRATION.map((n) => n.key));
+for (const lc of libraryClips()) if (!have.has(lc.key)) { NARRATION.push(clip(lc.key, lc.speaker, lc.text, undefined, false)); have.add(lc.key); }
+
 export const narrationByKey = (key: string) => NARRATION.find((n) => n.key === key);
 
 /** Path convention. Both formats are listed so iOS Safari (m4a) and Chrome/Firefox (ogg) both work. */

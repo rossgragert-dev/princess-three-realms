@@ -261,8 +261,8 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     if (once('race_pick')) await ctx.say(SCRIPT.racePick);
     const choice = await ctx.pickOne([{ id: 'free', picture: 'icon_mermaid' }, { id: 'friendly', picture: 'px_dolphin' }, { id: 'star', picture: 'icon_star' }]);
     if (!choice) return true;
-    if (choice === 'free') { K.stopRace(); return true; }
-    K.startRace(choice as RaceMode);
+    const r = await ctx.playRace(choice as RaceMode);
+    if (r.finished && r.mode !== 'free') await onRaceFinish(ctx, r.mode, r.stars, r.ms);
     return true;
   }
   return false;

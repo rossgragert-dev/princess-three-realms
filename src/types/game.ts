@@ -75,6 +75,8 @@ export interface PuzzleDef {
   /** Choice id for single-answer; ordered ids for pattern/sequence; count target for count. */
   correctAnswer: string | string[] | number;
   hintKeys: string[];
+  /** v0.4d.5: pattern puzzles: the pictures already laid out before the child fills in `correctAnswer`. */
+  prefix?: string[];
   successEvent: QuestFlag;
   replayAllowed: true;
   reward: { sticker?: string; decor?: string; star?: boolean } | null;

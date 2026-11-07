@@ -2114,5 +2114,1688 @@
       "assets/audio/narration/chapter_done.m4a",
       "assets/audio/narration/chapter_done.ogg"
     ]
+  },
+  {
+    "key": "lib_snd_B",
+    "speaker": "pip",
+    "text": "Which one starts with the sound buh? Like the letter B!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_B.m4a",
+      "assets/audio/narration/lib_snd_B.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_B_h1",
+    "speaker": "pip",
+    "text": "Listen! buh, buh, buh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_B_h1.m4a",
+      "assets/audio/narration/lib_snd_B_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_B_h2",
+    "speaker": "pip",
+    "text": "Ball starts with buh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_B_h2.m4a",
+      "assets/audio/narration/lib_snd_B_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_C",
+    "speaker": "pip",
+    "text": "Which one starts with the sound kuh? Like the letter C!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_C.m4a",
+      "assets/audio/narration/lib_snd_C.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_C_h1",
+    "speaker": "pip",
+    "text": "Listen! kuh, kuh, kuh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_C_h1.m4a",
+      "assets/audio/narration/lib_snd_C_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_C_h2",
+    "speaker": "pip",
+    "text": "Cat starts with kuh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_C_h2.m4a",
+      "assets/audio/narration/lib_snd_C_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_S",
+    "speaker": "pip",
+    "text": "Which one starts with the sound sss? Like the letter S!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_S.m4a",
+      "assets/audio/narration/lib_snd_S.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_S_h1",
+    "speaker": "pip",
+    "text": "Listen! sss, sss, sss!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_S_h1.m4a",
+      "assets/audio/narration/lib_snd_S_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_S_h2",
+    "speaker": "pip",
+    "text": "Sun starts with sss!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_S_h2.m4a",
+      "assets/audio/narration/lib_snd_S_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_F",
+    "speaker": "pip",
+    "text": "Which one starts with the sound fff? Like the letter F!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_F.m4a",
+      "assets/audio/narration/lib_snd_F.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_F_h1",
+    "speaker": "pip",
+    "text": "Listen! fff, fff, fff!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_F_h1.m4a",
+      "assets/audio/narration/lib_snd_F_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_F_h2",
+    "speaker": "pip",
+    "text": "Fish starts with fff!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_F_h2.m4a",
+      "assets/audio/narration/lib_snd_F_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_H",
+    "speaker": "pip",
+    "text": "Which one starts with the sound huh? Like the letter H!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_H.m4a",
+      "assets/audio/narration/lib_snd_H.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_H_h1",
+    "speaker": "pip",
+    "text": "Listen! huh, huh, huh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_H_h1.m4a",
+      "assets/audio/narration/lib_snd_H_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_H_h2",
+    "speaker": "pip",
+    "text": "Hat starts with huh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_H_h2.m4a",
+      "assets/audio/narration/lib_snd_H_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_T",
+    "speaker": "pip",
+    "text": "Which one starts with the sound tuh? Like the letter T!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_T.m4a",
+      "assets/audio/narration/lib_snd_T.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_T_h1",
+    "speaker": "pip",
+    "text": "Listen! tuh, tuh, tuh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_T_h1.m4a",
+      "assets/audio/narration/lib_snd_T_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_T_h2",
+    "speaker": "pip",
+    "text": "Tree starts with tuh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_T_h2.m4a",
+      "assets/audio/narration/lib_snd_T_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_L",
+    "speaker": "pip",
+    "text": "Which one starts with the sound lll? Like the letter L!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_L.m4a",
+      "assets/audio/narration/lib_snd_L.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_L_h1",
+    "speaker": "pip",
+    "text": "Listen! lll, lll, lll!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_L_h1.m4a",
+      "assets/audio/narration/lib_snd_L_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_L_h2",
+    "speaker": "pip",
+    "text": "Log starts with lll!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_L_h2.m4a",
+      "assets/audio/narration/lib_snd_L_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_E",
+    "speaker": "pip",
+    "text": "Which one starts with the sound eh? Like the letter E!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_E.m4a",
+      "assets/audio/narration/lib_snd_E.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_E_h1",
+    "speaker": "pip",
+    "text": "Listen! eh, eh, eh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_E_h1.m4a",
+      "assets/audio/narration/lib_snd_E_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_E_h2",
+    "speaker": "pip",
+    "text": "Egg starts with eh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_E_h2.m4a",
+      "assets/audio/narration/lib_snd_E_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_D",
+    "speaker": "pip",
+    "text": "Which one starts with the sound duh? Like the letter D!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_D.m4a",
+      "assets/audio/narration/lib_snd_D.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_D_h1",
+    "speaker": "pip",
+    "text": "Listen! duh, duh, duh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_D_h1.m4a",
+      "assets/audio/narration/lib_snd_D_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_D_h2",
+    "speaker": "pip",
+    "text": "Deer starts with duh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_D_h2.m4a",
+      "assets/audio/narration/lib_snd_D_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_M",
+    "speaker": "pip",
+    "text": "Which one starts with the sound mmm? Like the letter M!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_M.m4a",
+      "assets/audio/narration/lib_snd_M.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_M_h1",
+    "speaker": "pip",
+    "text": "Listen! mmm, mmm, mmm!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_M_h1.m4a",
+      "assets/audio/narration/lib_snd_M_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_M_h2",
+    "speaker": "pip",
+    "text": "Mushroom starts with mmm!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_M_h2.m4a",
+      "assets/audio/narration/lib_snd_M_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_P",
+    "speaker": "pip",
+    "text": "Which one starts with the sound puh? Like the letter P!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_P.m4a",
+      "assets/audio/narration/lib_snd_P.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_P_h1",
+    "speaker": "pip",
+    "text": "Listen! puh, puh, puh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_P_h1.m4a",
+      "assets/audio/narration/lib_snd_P_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_P_h2",
+    "speaker": "pip",
+    "text": "Pizza starts with puh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_P_h2.m4a",
+      "assets/audio/narration/lib_snd_P_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_O",
+    "speaker": "pip",
+    "text": "Which one starts with the sound oh? Like the letter O!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_O.m4a",
+      "assets/audio/narration/lib_snd_O.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_O_h1",
+    "speaker": "pip",
+    "text": "Listen! oh, oh, oh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_O_h1.m4a",
+      "assets/audio/narration/lib_snd_O_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_snd_O_h2",
+    "speaker": "pip",
+    "text": "Owl starts with oh!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_snd_O_h2.m4a",
+      "assets/audio/narration/lib_snd_O_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_cat",
+    "speaker": "pip",
+    "text": "Which one sounds like Cat?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_cat.m4a",
+      "assets/audio/narration/lib_rhy_cat.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_cat_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Cat!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_cat_h1.m4a",
+      "assets/audio/narration/lib_rhy_cat_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_cat_hat_h2",
+    "speaker": "pip",
+    "text": "Cat and Hat sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_cat_hat_h2.m4a",
+      "assets/audio/narration/lib_rhy_cat_hat_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_hat",
+    "speaker": "pip",
+    "text": "Which one sounds like Hat?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_hat.m4a",
+      "assets/audio/narration/lib_rhy_hat.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_hat_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Hat!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_hat_h1.m4a",
+      "assets/audio/narration/lib_rhy_hat_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_hat_cat_h2",
+    "speaker": "pip",
+    "text": "Hat and Cat sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_hat_cat_h2.m4a",
+      "assets/audio/narration/lib_rhy_hat_cat_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_bee",
+    "speaker": "pip",
+    "text": "Which one sounds like Bee?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_bee.m4a",
+      "assets/audio/narration/lib_rhy_bee.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_bee_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Bee!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_bee_h1.m4a",
+      "assets/audio/narration/lib_rhy_bee_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_bee_tree_h2",
+    "speaker": "pip",
+    "text": "Bee and Tree sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_bee_tree_h2.m4a",
+      "assets/audio/narration/lib_rhy_bee_tree_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_tree",
+    "speaker": "pip",
+    "text": "Which one sounds like Tree?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_tree.m4a",
+      "assets/audio/narration/lib_rhy_tree.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_tree_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Tree!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_tree_h1.m4a",
+      "assets/audio/narration/lib_rhy_tree_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_tree_bee_h2",
+    "speaker": "pip",
+    "text": "Tree and Bee sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_tree_bee_h2.m4a",
+      "assets/audio/narration/lib_rhy_tree_bee_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_frog",
+    "speaker": "pip",
+    "text": "Which one sounds like Frog?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_frog.m4a",
+      "assets/audio/narration/lib_rhy_frog.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_frog_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Frog!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_frog_h1.m4a",
+      "assets/audio/narration/lib_rhy_frog_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_frog_log_h2",
+    "speaker": "pip",
+    "text": "Frog and Log sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_frog_log_h2.m4a",
+      "assets/audio/narration/lib_rhy_frog_log_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_log",
+    "speaker": "pip",
+    "text": "Which one sounds like Log?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_log.m4a",
+      "assets/audio/narration/lib_rhy_log.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_log_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Log!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_log_h1.m4a",
+      "assets/audio/narration/lib_rhy_log_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_log_frog_h2",
+    "speaker": "pip",
+    "text": "Log and Frog sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_log_frog_h2.m4a",
+      "assets/audio/narration/lib_rhy_log_frog_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_dog",
+    "speaker": "pip",
+    "text": "Which one sounds like Dog?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_dog.m4a",
+      "assets/audio/narration/lib_rhy_dog.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_dog_h1",
+    "speaker": "pip",
+    "text": "Say it out loud: Dog!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_dog_h1.m4a",
+      "assets/audio/narration/lib_rhy_dog_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_dog_log_h2",
+    "speaker": "pip",
+    "text": "Dog and Log sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_dog_log_h2.m4a",
+      "assets/audio/narration/lib_rhy_dog_log_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_log_dog_h2",
+    "speaker": "pip",
+    "text": "Log and Dog sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_log_dog_h2.m4a",
+      "assets/audio/narration/lib_rhy_log_dog_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_frog_dog_h2",
+    "speaker": "pip",
+    "text": "Frog and Dog sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_frog_dog_h2.m4a",
+      "assets/audio/narration/lib_rhy_frog_dog_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_rhy_dog_frog_h2",
+    "speaker": "pip",
+    "text": "Dog and Frog sound the same at the end!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_rhy_dog_frog_h2.m4a",
+      "assets/audio/narration/lib_rhy_dog_frog_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_cnt_ask",
+    "speaker": "pip",
+    "text": "Count them! Find the group with the same number.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_cnt_ask.m4a",
+      "assets/audio/narration/lib_cnt_ask.ogg"
+    ]
+  },
+  {
+    "key": "lib_cnt_h1",
+    "speaker": "pip",
+    "text": "Touch and count them one by one!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_cnt_h1.m4a",
+      "assets/audio/narration/lib_cnt_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_cnt_h2",
+    "speaker": "pip",
+    "text": "Count the first group. Now count each one that you can pick!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_cnt_h2.m4a",
+      "assets/audio/narration/lib_cnt_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_shp_ask1",
+    "speaker": "pip",
+    "text": "Which one is the same shape?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_shp_ask1.m4a",
+      "assets/audio/narration/lib_shp_ask1.ogg"
+    ]
+  },
+  {
+    "key": "lib_shp_ask",
+    "speaker": "pip",
+    "text": "Which one looks exactly the same?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_shp_ask.m4a",
+      "assets/audio/narration/lib_shp_ask.ogg"
+    ]
+  },
+  {
+    "key": "lib_shp_h1",
+    "speaker": "pip",
+    "text": "Look at the shape. How many corners does it have?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_shp_h1.m4a",
+      "assets/audio/narration/lib_shp_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_shp_h2",
+    "speaker": "pip",
+    "text": "Look at the colour too!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_shp_h2.m4a",
+      "assets/audio/narration/lib_shp_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_pat_ask",
+    "speaker": "pip",
+    "text": "What comes next? Finish the pattern!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_pat_ask.m4a",
+      "assets/audio/narration/lib_pat_ask.ogg"
+    ]
+  },
+  {
+    "key": "lib_pat_h1",
+    "speaker": "pip",
+    "text": "Say the pattern out loud. It goes round and round!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_pat_h1.m4a",
+      "assets/audio/narration/lib_pat_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_pat_h2",
+    "speaker": "pip",
+    "text": "Look at what came before. It repeats!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_pat_h2.m4a",
+      "assets/audio/narration/lib_pat_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_grow",
+    "speaker": "pip",
+    "text": "How does a flower grow? Put the pictures in order!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_grow.m4a",
+      "assets/audio/narration/lib_sty_grow.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_grow_h2",
+    "speaker": "pip",
+    "text": "First comes Seed!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_grow_h2.m4a",
+      "assets/audio/narration/lib_sty_grow_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_chick",
+    "speaker": "pip",
+    "text": "Put the pictures in order. What happens first?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_chick.m4a",
+      "assets/audio/narration/lib_sty_chick.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_chick_h2",
+    "speaker": "pip",
+    "text": "First comes Egg!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_chick_h2.m4a",
+      "assets/audio/narration/lib_sty_chick_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_sprout",
+    "speaker": "pip",
+    "text": "A tiny seed grows up. Put the pictures in order!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_sprout.m4a",
+      "assets/audio/narration/lib_sty_sprout.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_sprout_h2",
+    "speaker": "pip",
+    "text": "First comes Seed!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_sprout_h2.m4a",
+      "assets/audio/narration/lib_sty_sprout_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_dig",
+    "speaker": "pip",
+    "text": "Planting day! Put the pictures in order.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_dig.m4a",
+      "assets/audio/narration/lib_sty_dig.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_dig_h2",
+    "speaker": "pip",
+    "text": "First comes Seed packet!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_dig_h2.m4a",
+      "assets/audio/narration/lib_sty_dig_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_rain",
+    "speaker": "pip",
+    "text": "What helps the soil grow a sprout? Put them in order!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_rain.m4a",
+      "assets/audio/narration/lib_sty_rain.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_rain_h2",
+    "speaker": "pip",
+    "text": "First comes Soil!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_rain_h2.m4a",
+      "assets/audio/narration/lib_sty_rain_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_cycleh",
+    "speaker": "pip",
+    "text": "The hen starts the story. What comes next?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_cycleh.m4a",
+      "assets/audio/narration/lib_sty_cycleh.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_cycleh_h2",
+    "speaker": "pip",
+    "text": "First comes Hen!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_cycleh_h2.m4a",
+      "assets/audio/narration/lib_sty_cycleh_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_cyclec",
+    "speaker": "pip",
+    "text": "The chick starts the story. What comes next?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_cyclec.m4a",
+      "assets/audio/narration/lib_sty_cyclec.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_cyclec_h2",
+    "speaker": "pip",
+    "text": "First comes Chick!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_cyclec_h2.m4a",
+      "assets/audio/narration/lib_sty_cyclec_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_cyclef",
+    "speaker": "pip",
+    "text": "The flower starts the story. What comes next?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_cyclef.m4a",
+      "assets/audio/narration/lib_sty_cyclef.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_cyclef_h2",
+    "speaker": "pip",
+    "text": "First comes Flower!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_cyclef_h2.m4a",
+      "assets/audio/narration/lib_sty_cyclef_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_plant4",
+    "speaker": "pip",
+    "text": "From seed packet to flower! Put all four in order.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_plant4.m4a",
+      "assets/audio/narration/lib_sty_plant4.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_plant4_h2",
+    "speaker": "pip",
+    "text": "First comes Seed packet!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_plant4_h2.m4a",
+      "assets/audio/narration/lib_sty_plant4_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_plant4b",
+    "speaker": "pip",
+    "text": "A seed goes into the soil. Put all four in order!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_plant4b.m4a",
+      "assets/audio/narration/lib_sty_plant4b.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_plant4b_h2",
+    "speaker": "pip",
+    "text": "First comes Seed!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_plant4b_h2.m4a",
+      "assets/audio/narration/lib_sty_plant4b_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_sty_h1",
+    "speaker": "pip",
+    "text": "What happens first? Then what happens next?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_sty_h1.m4a",
+      "assets/audio/narration/lib_sty_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_need",
+    "speaker": "pip",
+    "text": "What does a flower need to grow?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_need.m4a",
+      "assets/audio/narration/lib_nat_need.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_need_h1",
+    "speaker": "pip",
+    "text": "Flowers get thirsty. They need a drink!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_need_h1.m4a",
+      "assets/audio/narration/lib_nat_need_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_need_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Water!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_need_h2.m4a",
+      "assets/audio/narration/lib_nat_need_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_light",
+    "speaker": "pip",
+    "text": "What gives a flower warm light?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_light.m4a",
+      "assets/audio/narration/lib_nat_light.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_light_h1",
+    "speaker": "pip",
+    "text": "Look up in the sky. It is bright and warm!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_light_h1.m4a",
+      "assets/audio/narration/lib_nat_light_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_light_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Sun!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_light_h2.m4a",
+      "assets/audio/narration/lib_nat_light_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_treehome",
+    "speaker": "pip",
+    "text": "Who lives up in the tree?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_treehome.m4a",
+      "assets/audio/narration/lib_nat_treehome.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_treehome_h1",
+    "speaker": "pip",
+    "text": "Whoo whoo! This one says hoot.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_treehome_h1.m4a",
+      "assets/audio/narration/lib_nat_treehome_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_treehome_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Owl!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_treehome_h2.m4a",
+      "assets/audio/narration/lib_nat_treehome_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_swim",
+    "speaker": "pip",
+    "text": "Who swims in the water?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_swim.m4a",
+      "assets/audio/narration/lib_nat_swim.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_swim_h1",
+    "speaker": "pip",
+    "text": "It has fins and a tail.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_swim_h1.m4a",
+      "assets/audio/narration/lib_nat_swim_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_swim_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Fish!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_swim_h2.m4a",
+      "assets/audio/narration/lib_nat_swim_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_visit",
+    "speaker": "pip",
+    "text": "Who buzzes from flower to flower?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_visit.m4a",
+      "assets/audio/narration/lib_nat_visit.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_visit_h1",
+    "speaker": "pip",
+    "text": "Bzzz bzzz! It makes honey.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_visit_h1.m4a",
+      "assets/audio/narration/lib_nat_visit_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_visit_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Bee!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_visit_h2.m4a",
+      "assets/audio/narration/lib_nat_visit_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_seed",
+    "speaker": "pip",
+    "text": "What grows from a little seed?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_seed.m4a",
+      "assets/audio/narration/lib_nat_seed.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_seed_h1",
+    "speaker": "pip",
+    "text": "Plant it, water it, and it blooms!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_seed_h1.m4a",
+      "assets/audio/narration/lib_nat_seed_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_seed_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Flower!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_seed_h2.m4a",
+      "assets/audio/narration/lib_nat_seed_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_hatch",
+    "speaker": "pip",
+    "text": "What hatches out of an egg?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_hatch.m4a",
+      "assets/audio/narration/lib_nat_hatch.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_hatch_h1",
+    "speaker": "pip",
+    "text": "Peep peep! It is small and fluffy.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_hatch_h1.m4a",
+      "assets/audio/narration/lib_nat_hatch_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_hatch_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Chick!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_hatch_h2.m4a",
+      "assets/audio/narration/lib_nat_hatch_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_pond",
+    "speaker": "pip",
+    "text": "Who hops on the lily pad?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_pond.m4a",
+      "assets/audio/narration/lib_nat_pond.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_pond_h1",
+    "speaker": "pip",
+    "text": "Ribbit! It is green and it jumps.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_pond_h1.m4a",
+      "assets/audio/narration/lib_nat_pond_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_pond_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Frog!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_pond_h2.m4a",
+      "assets/audio/narration/lib_nat_pond_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_nuts",
+    "speaker": "pip",
+    "text": "Who collects nuts in the forest?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_nuts.m4a",
+      "assets/audio/narration/lib_nat_nuts.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_nuts_h1",
+    "speaker": "pip",
+    "text": "It has a big bushy tail.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_nuts_h1.m4a",
+      "assets/audio/narration/lib_nat_nuts_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_nuts_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Squirrel!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_nuts_h2.m4a",
+      "assets/audio/narration/lib_nat_nuts_h2.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_spots",
+    "speaker": "pip",
+    "text": "Who has red wings with little black spots?",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_spots.m4a",
+      "assets/audio/narration/lib_nat_spots.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_spots_h1",
+    "speaker": "pip",
+    "text": "It is a tiny bug with spots.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_spots_h1.m4a",
+      "assets/audio/narration/lib_nat_spots_h1.ogg"
+    ]
+  },
+  {
+    "key": "lib_nat_spots_h2",
+    "speaker": "pip",
+    "text": "Think about it. The answer is the Ladybug!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_nat_spots_h2.m4a",
+      "assets/audio/narration/lib_nat_spots_h2.ogg"
+    ]
+  },
+  {
+    "key": "word_n1",
+    "speaker": "narrator",
+    "text": "One!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_n1.m4a",
+      "assets/audio/narration/word_n1.ogg"
+    ]
+  },
+  {
+    "key": "word_n2",
+    "speaker": "narrator",
+    "text": "Two!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_n2.m4a",
+      "assets/audio/narration/word_n2.ogg"
+    ]
+  },
+  {
+    "key": "word_n3",
+    "speaker": "narrator",
+    "text": "Three!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_n3.m4a",
+      "assets/audio/narration/word_n3.ogg"
+    ]
+  },
+  {
+    "key": "word_n4",
+    "speaker": "narrator",
+    "text": "Four!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_n4.m4a",
+      "assets/audio/narration/word_n4.ogg"
+    ]
+  },
+  {
+    "key": "word_n5",
+    "speaker": "narrator",
+    "text": "Five!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_n5.m4a",
+      "assets/audio/narration/word_n5.ogg"
+    ]
+  },
+  {
+    "key": "word_n6",
+    "speaker": "narrator",
+    "text": "Six!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_n6.m4a",
+      "assets/audio/narration/word_n6.ogg"
+    ]
+  },
+  {
+    "key": "word_shape_circle",
+    "speaker": "narrator",
+    "text": "Circle.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shape_circle.m4a",
+      "assets/audio/narration/word_shape_circle.ogg"
+    ]
+  },
+  {
+    "key": "word_shape_square",
+    "speaker": "narrator",
+    "text": "Square.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shape_square.m4a",
+      "assets/audio/narration/word_shape_square.ogg"
+    ]
+  },
+  {
+    "key": "word_shape_triangle",
+    "speaker": "narrator",
+    "text": "Triangle.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shape_triangle.m4a",
+      "assets/audio/narration/word_shape_triangle.ogg"
+    ]
+  },
+  {
+    "key": "word_shape_star",
+    "speaker": "narrator",
+    "text": "Star.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shape_star.m4a",
+      "assets/audio/narration/word_shape_star.ogg"
+    ]
+  },
+  {
+    "key": "word_shape_heart",
+    "speaker": "narrator",
+    "text": "Heart.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shape_heart.m4a",
+      "assets/audio/narration/word_shape_heart.ogg"
+    ]
+  },
+  {
+    "key": "word_shape_diamond",
+    "speaker": "narrator",
+    "text": "Diamond.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shape_diamond.m4a",
+      "assets/audio/narration/word_shape_diamond.ogg"
+    ]
+  },
+  {
+    "key": "lib_win_1",
+    "speaker": "pip",
+    "text": "You did it!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_win_1.m4a",
+      "assets/audio/narration/lib_win_1.ogg"
+    ]
+  },
+  {
+    "key": "lib_win_2",
+    "speaker": "pip",
+    "text": "Hooray, great job!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_win_2.m4a",
+      "assets/audio/narration/lib_win_2.ogg"
+    ]
+  },
+  {
+    "key": "lib_win_3",
+    "speaker": "pip",
+    "text": "Wow, you are so clever!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/lib_win_3.m4a",
+      "assets/audio/narration/lib_win_3.ogg"
+    ]
+  },
+  {
+    "key": "word_deer",
+    "speaker": "narrator",
+    "text": "Deer.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_deer.m4a",
+      "assets/audio/narration/word_deer.ogg"
+    ]
+  },
+  {
+    "key": "word_mushroom",
+    "speaker": "narrator",
+    "text": "Mushroom.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_mushroom.m4a",
+      "assets/audio/narration/word_mushroom.ogg"
+    ]
+  },
+  {
+    "key": "word_pizza",
+    "speaker": "narrator",
+    "text": "Pizza.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_pizza.m4a",
+      "assets/audio/narration/word_pizza.ogg"
+    ]
+  },
+  {
+    "key": "word_owl",
+    "speaker": "narrator",
+    "text": "Owl.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_owl.m4a",
+      "assets/audio/narration/word_owl.ogg"
+    ]
+  },
+  {
+    "key": "word_bee",
+    "speaker": "narrator",
+    "text": "Bee.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_bee.m4a",
+      "assets/audio/narration/word_bee.ogg"
+    ]
+  },
+  {
+    "key": "word_frog",
+    "speaker": "narrator",
+    "text": "Frog.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_frog.m4a",
+      "assets/audio/narration/word_frog.ogg"
+    ]
+  },
+  {
+    "key": "word_carrot",
+    "speaker": "narrator",
+    "text": "Carrot.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_carrot.m4a",
+      "assets/audio/narration/word_carrot.ogg"
+    ]
+  },
+  {
+    "key": "word_dog",
+    "speaker": "narrator",
+    "text": "Dog.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_dog.m4a",
+      "assets/audio/narration/word_dog.ogg"
+    ]
+  },
+  {
+    "key": "word_fox",
+    "speaker": "narrator",
+    "text": "Fox.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_fox.m4a",
+      "assets/audio/narration/word_fox.ogg"
+    ]
+  },
+  {
+    "key": "word_squirrel",
+    "speaker": "narrator",
+    "text": "Squirrel.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_squirrel.m4a",
+      "assets/audio/narration/word_squirrel.ogg"
+    ]
+  },
+  {
+    "key": "word_ladybug",
+    "speaker": "narrator",
+    "text": "Ladybug.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_ladybug.m4a",
+      "assets/audio/narration/word_ladybug.ogg"
+    ]
+  },
+  {
+    "key": "word_heart",
+    "speaker": "narrator",
+    "text": "Heart.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_heart.m4a",
+      "assets/audio/narration/word_heart.ogg"
+    ]
+  },
+  {
+    "key": "word_cake",
+    "speaker": "narrator",
+    "text": "Cake.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_cake.m4a",
+      "assets/audio/narration/word_cake.ogg"
+    ]
+  },
+  {
+    "key": "word_shell",
+    "speaker": "narrator",
+    "text": "Shell.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_shell.m4a",
+      "assets/audio/narration/word_shell.ogg"
+    ]
+  },
+  {
+    "key": "word_sprout",
+    "speaker": "narrator",
+    "text": "Sprout.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_sprout.m4a",
+      "assets/audio/narration/word_sprout.ogg"
+    ]
+  },
+  {
+    "key": "word_mound",
+    "speaker": "narrator",
+    "text": "Soil.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_mound.m4a",
+      "assets/audio/narration/word_mound.ogg"
+    ]
+  },
+  {
+    "key": "word_packet",
+    "speaker": "narrator",
+    "text": "Seed packet.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/word_packet.m4a",
+      "assets/audio/narration/word_packet.ogg"
+    ]
   }
 ]
