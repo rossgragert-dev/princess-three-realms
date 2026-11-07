@@ -1031,10 +1031,17 @@ export class WorldScene extends Phaser.Scene {
         if (path && path.length > 1) await new Promise<void>((res) => this.player.walk(path, undefined, () => res()));
       }
       this.transformNow(target);
-      if (key) void services.audio.speak(key);
       if (plan.mode === 'walk' && plan.step) {
-        await new Promise<void>((res) => this.player.walk([this.player.tile, plan.step!], undefined, () => res()));
+        // A mermaid cannot stand on a land tile. Place her directly on the valid
+        // destination cell during the sparkle transition, rather than starting a
+        // mermaid walk on impassable ground and risking a stuck joystick state.
+        const landing = this.grid.passable(plan.step.x, plan.step.y)
+          ? plan.step
+          : safeSpawn(this.grid, plan.step);
+        this.player.teleport(landing);
+        this.sparkleAt(landing.x, landing.y, 7);
       }
+      if (key) void services.audio.speak(key);
     } finally {
       this.busy = wasBusy;
       this.afterAction();
