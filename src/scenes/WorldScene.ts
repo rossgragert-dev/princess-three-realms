@@ -29,6 +29,9 @@ import { KingdomLayer } from './kingdomLayer';
 import { envTargets } from '../world/envMagic';
 import type { KingdomApi } from '../world/kingdomStory';
 import { bakeProbe } from '../ui/creativePanels';
+import { PetCareStage } from './petCareStage';
+import { PET_TYPES } from '../content/kingdom';
+import { isCheerful, record as recordCare, type CareKind } from '../world/petCare';
 import { FOODS, toppingOffset, TOPPING_SCALE, type FoodId } from '../world/foodDesign';
 import { KITCHEN_STATIONS } from '../world/castleMaps';
 import { petKey } from '../content/kingdom';
@@ -355,6 +358,37 @@ export class WorldScene extends Phaser.Scene {
     this.buildPet();
   }
 
+  private petBusy = false;
+  private petFree = (t: Tile) => this.grid.passable(t.x, t.y) && t.x >= 1 && t.x <= 22 && t.y >= 4 && t.y <= 15 && !(t.x >= 10 && t.x <= 13 && t.y >= 14) && !(t.x === this.player?.tile.x && t.y === this.player?.tile.y);
+  private petStage?: PetCareStage;
+  petCareLog() { return this.petStage?.log ?? null; }
+
+  private startPetIdle() {
+    const s = this.petSprite;
+    if (s && !reducedEffects()) this.tweens.add({ targets: s, scaleY: { from: 1, to: 0.94 }, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+  }
+
+  /** Feed, water or play with the pet (bedroom only). Gentle: nothing is ever consumed, lost or required. */
+  async petDo(kind: CareKind, variant?: string): Promise<void> {
+    const pet = this.state.kingdom.pet, s = this.petSprite;
+    if (!pet || !s || this.map.id !== 'bedroom' || this.petBusy) return;
+    const stage = this.petStage = new PetCareStage({
+      scene: this, sprite: () => this.petSprite, tile: () => this.petTile,
+      setTile: (t) => { this.petTile = t; this.objPos.set('bedroom_pet', { ...t }); },
+      grid: () => this.grid, free: (t) => this.petFree(t), playerTile: () => this.player.tile, ui: () => this.ui,
+      setBusy: (b) => {
+        this.petBusy = b; this.petTimers.forEach((t) => { t.paused = b; });
+        if (b) { this.tweens.killTweensOf(s); s.setScale(1).setAngle(0); } else { s.setScale(1).setAngle(0).setFrame(0); this.startPetIdle(); }
+      }
+    }, PET_TYPES[pet.type]);
+    this.tweens.killTweensOf(s);
+    if (kind === 'feed') await stage.feed(variant ?? '');
+    else if (kind === 'water') await stage.water();
+    else await stage.play();
+    this.state.kingdom.petCare = recordCare(this.state.kingdom.petCare, kind);
+    services.save.save();
+  }
+
   private buildPet() {
     const pet = this.state.kingdom.pet;
     this.petTimers.forEach((t) => t.remove(false)); this.petTimers = [];
@@ -373,13 +407,14 @@ export class WorldScene extends Phaser.Scene {
     // idle animation: a little two-frame flutter plus a gentle bob
     let f = 0;
     this.petTimers.push(this.time.addEvent({ delay: 520, loop: true, callback: () => { f = 1 - f; s.setFrame(f); } }));
-    if (!reducedEffects()) this.tweens.add({ targets: s, scaleY: { from: 1, to: 0.94 }, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    this.startPetIdle();
     this.petTimers.push(this.time.addEvent({ delay: 4200, loop: true, callback: () => this.petWander(free) }));
   }
 
   private petWander(free: (t: Tile) => boolean) {
     const s = this.petSprite;
-    if (!s || !s.active || this.editing || this.sleeping || this.busy) return;
+    if (!s || !s.active || this.editing || this.sleeping || this.busy || this.petBusy) return;
+    if (isCheerful(this.state.kingdom.petCare) && Math.random() < 0.35) { this.petHappy(); return; }
     for (let i = 0; i < 12; i++) {
       const t = { x: this.petTile.x + Phaser.Math.Between(-3, 3), y: this.petTile.y + Phaser.Math.Between(-2, 2) };
       if (t.x < 1 || t.x > 22 || t.y < 4 || t.y > 15 || !free(t) || (t.x === this.petTile.x && t.y === this.petTile.y)) continue;
@@ -703,7 +738,8 @@ export class WorldScene extends Phaser.Scene {
       paint: (strokes) => self.ui.paint(strokes),
       save: () => services.save.save(),
       sleepInBed: () => self.sleepInBed(),
-      petHappy: () => self.petHappy()
+      petHappy: () => self.petHappy(),
+      petDo: (kind, variant) => self.petDo(kind, variant)
     };
   }
 
@@ -1593,6 +1629,7 @@ export class WorldScene extends Phaser.Scene {
       teleportPlayer: (t: Tile) => this.player.teleport(t),
       faceDir: (d: 'up' | 'down' | 'left' | 'right') => { this.player.dir = d; this.player.idle(); },
       tag: () => (this.tagGame ? { phase: this.tagGame.s.phase, stars: this.tagGame.s.stars, pal: { ...this.tagGame.s.pal }, t: this.tagGame.s.t, ended: this.tagGame.ended, tally: this.ui.tallyState, exit: this.ui.exitPos } : null),
+      pet: () => ({ tile: { ...this.petTile }, x: this.petSprite?.x ?? 0, y: this.petSprite?.y ?? 0, visible: !!this.petSprite?.visible, busy: this.petBusy, care: { ...this.state.kingdom.petCare }, log: this.petStage?.log ?? null, type: this.state.kingdom.pet?.type ?? -1 }),
       bake: () => ({ ...bakeProbe, cards: bakeProbe.cards.map((c) => ({ ...c })) }),
       foods: () => ({ layers: this.foodLayers.map((i) => ({ key: i.texture.key, x: i.x, y: i.y, s: i.scale })), dishes: (Object.keys(FOODS) as FoodId[]).map((id) => { const q = this.foodSprite(id); return { id, visible: !!q?.visible, x: q?.x ?? 0, y: q?.y ?? 0 }; }) }),
       kingdom: () => this.kingdom?.debug() ?? null,

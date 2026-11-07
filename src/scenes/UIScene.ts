@@ -429,6 +429,20 @@ export class UIScene extends Phaser.Scene {
   }
 
   /** v0.4d.2: the kitchen decorating table and the gallery canvas (both modal, both picture-only). */
+  /** Hands every tap to `onTap` until she presses the big back button (or `release()` is called). Used by pet play. */
+  holdTaps(onTap: (p: Phaser.Input.Pointer) => void, onExit: () => void): () => void {
+    this.modalDepth++;
+    const zone = this.add.rectangle(256 + this.L.ox, 192 + this.L.oy, 4000, 4000, 0x000000, 0.001).setDepth(55).setInteractive();
+    zone.on('pointerdown', (p: Phaser.Input.Pointer) => onTap(p));
+    let gone = false;
+    const release = () => { if (gone) return; gone = true; zone.destroy(); back.container.destroy(); this.modalDepth = Math.max(0, this.modalDepth - 1); };
+    const back = makeButton(this, 40 + this.L.ox, 36 + this.L.oy, 'icon_back', 1.5, () => { release(); onExit(); });
+    back.container.setDepth(56);
+    this.holdInfo = { back: { x: 40 + this.L.ox, y: 36 + this.L.oy } };
+    return release;
+  }
+  holdInfo: { back: { x: number; y: number } } | null = null;
+
   bake(spec: BakeSpec, initial: readonly Topping[] = []): Promise<Topping[] | null> { this.modalDepth++; return runBake(this, this.L, spec, initial).finally(() => { this.modalDepth = Math.max(0, this.modalDepth - 1); }); }
   paint(strokes: readonly ArtStroke[]): Promise<ArtStroke[] | null> { this.modalDepth++; return runPaint(this, this.L, strokes).finally(() => { this.modalDepth = Math.max(0, this.modalDepth - 1); }); }
 

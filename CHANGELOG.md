@@ -1,4 +1,9 @@
 # Changelog
+## 0.4.0d.6.4 (preview) — Pet care
+- Tap the bedroom pet for a picture menu: food bowl, water bowl, toy. Each species has its own foods, toy, speed and reaction (cat chases yarn, dog fetches a ball, pony trots after a ribbon, bird flutters to a feather). Feeding and water play a walk-up and eat/drink animation; play lets her tap the floor to throw the toy (8 throws, or the back button, ends it). Nothing is ever consumed or required and there are no penalties.
+- Cared-for pets are cheerful and hop on their own now and then. Care counts are saved (`kingdom.petCare`, old saves load fine); changing animal at the Pet Keeper starts a fresh count, a new look for the same animal keeps it. Pet customization is untouched.
+- Tests: 381 unit tests; `v04d6-pets.mjs` (all four species).
+
 ## 0.4.0d.6.3 (preview) — Pajamas
 - Four free pajamas on their own wardrobe page (dress tab, page 2): Heart Pajamas, Star Pajamas, Moon and Cloud Nightgown, Rainbow Bedtime Set. Real pixel art from the art pipeline (`tools/art_wardrobe.py`, `art_overworld.py`, `gen_art.py`): full-body and portrait wardrobe layers plus 24 overworld sheets (4 sets x 6 hairstyles) with idle/walk poses. They recolour with the chosen dress colour; hair, skin, tiara and accessories layer as usual; mermaid is unaffected. Selection is immediate, saved, and never forced at bedtime.
 - Tests: 377 unit tests; `v04d6-pj.mjs`.

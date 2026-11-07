@@ -1,6 +1,7 @@
 // v0.4c: story beats and activity flow for the Kingdom Beyond. Gentle by design: replay is always welcome, a wrong
 // answer only ever brings a hint, and every reward is granted once through completeFlag.
 import { MISSIONS } from './missions';
+import { SPECIES_CARE, afterPetChange } from './petCare';
 import { FOODS, type FoodId, type Topping } from './foodDesign';
 import type { PuzzleDef, QuestFlag } from '../types/game';
 import type { ObjDef } from './types';
@@ -106,14 +107,30 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     const choice = { type: ti, look: Number(look) };
     const ok = await ctx.pickOne([{ id: 'yes', picture: petKey(choice) }, { id: 'no', picture: 'icon_cross' }]);
     if (ok !== 'yes') return true;
-    kd.pet = choice; ctx.save();
+    kd.pet = choice; kd.petCare = afterPetChange(kd.petCare, choice.type); ctx.save();
     ctx.celebrate(petKey(choice), 4);
     await ctx.say(SCRIPT.petChosen);
     return true;
   }
   // ------------------------------------------------------------ the bedroom: her bed and her pet
   if (id === 'bed_sleep') { await ctx.sleepInBed(); return true; }
-  if (id === 'bedroom_pet') { ctx.sparkle({ x: obj.x, y: obj.y }); ctx.petHappy(); return true; }
+  if (id === 'bedroom_pet') {
+    ctx.sparkle({ x: obj.x, y: obj.y }); ctx.petHappy();
+    if (!kd.pet) return true;
+    const care = SPECIES_CARE[PET_TYPES[kd.pet.type]];
+    // a picture menu she can come back to as often as she likes: food bowl, water bowl, toy. Back leaves.
+    for (let round = 0; round < 40; round++) {
+      const c = await ctx.pickOne([{ id: 'feed', picture: 'px_bowl_food' }, { id: 'water', picture: 'px_bowl_water' }, { id: 'play', picture: care.toy }]);
+      if (!c) break;
+      if (c === 'feed') {
+        const f = await ctx.pickOne(care.foods.map((k) => ({ id: k, picture: k })));
+        if (!f) continue;
+        await ctx.petDo('feed', f);
+      } else if (c === 'water') await ctx.petDo('water');
+      else await ctx.petDo('play');
+    }
+    return true;
+  }
 
   // ------------------------------------------------------------ the Royal Kitchen: four decorate-it games, always replayable
   const cook = COOKING[id];

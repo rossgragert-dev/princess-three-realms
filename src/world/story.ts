@@ -57,6 +57,8 @@ export interface StoryCtx {
   /** v0.4d.3: tuck her into bed: night falls, morning comes, she wakes up. Repeatable, no consequences. */
   sleepInBed(): Promise<void>;
   petHappy(): void;
+  /** Feed / water / play with the bedroom pet (resolves when the animation or play session ends). */
+  petDo(kind: 'feed' | 'water' | 'play', variant?: string): Promise<void>;
   openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop'): Promise<void>;
 }
 

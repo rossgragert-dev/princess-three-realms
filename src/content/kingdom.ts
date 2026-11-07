@@ -1,5 +1,6 @@
 // v0.4c: The Kingdom Beyond — pure data and rules for the garden and the river race records.
 // Nothing here touches Phaser: every rule is unit tested and every saved value is sanitized on load.
+import { defaultPetCare, sanitizePetCare, type PetCare } from '../world/petCare';
 import { defaultFoods, sanitizeFoods, type FoodDisplays } from '../world/foodDesign';
 import type { GameState } from '../types/game';
 import { sanitizeArt, type ArtStroke } from '../ui/paintStrokes';
@@ -48,13 +49,15 @@ export interface Kingdom {
   lib: LibMemory;
   /** v0.4d.6: what each Royal Kitchen stand is currently showing (null = the plain dish). */
   food: FoodDisplays;
+  /** v0.4d.6: gentle pet-care memory for the current pet type. */
+  petCare: PetCare;
 }
 
 export const PET_TYPES = ['cat', 'dog', 'pony', 'bird'] as const;
 export interface PetChoice { type: number; look: number }
 export const petKey = (p: PetChoice) => `px_pet_${PET_TYPES[p.type]}${p.look}`;
 
-export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [], pet: null, gardenItems: [], carry: null, gardenTaught: false, lib: defaultLibMemory(), food: defaultFoods() });
+export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [], pet: null, gardenItems: [], carry: null, gardenTaught: false, lib: defaultLibMemory(), food: defaultFoods(), petCare: defaultPetCare() });
 
 const int = (v: unknown, max: number) => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(max, Math.floor(v))) : 0);
 
@@ -78,6 +81,7 @@ export function sanitizeKingdom(raw: unknown): Kingdom {
   d.gardenTaught = r.gardenTaught === true;
   d.lib = sanitizeLibMemory(r.lib);
   d.food = sanitizeFoods(r.food);
+  d.petCare = sanitizePetCare(r.petCare, d.pet ? d.pet.type : null);
   if (r.pet && typeof r.pet === 'object') { const pp = r.pet as Partial<PetChoice>; if (typeof pp.type === 'number' && typeof pp.look === 'number') d.pet = { type: int(pp.type, PET_TYPES.length - 1), look: int(pp.look, 3) }; }
   return d;
 }

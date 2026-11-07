@@ -90,3 +90,35 @@ describe('v0.4d.6 pajamas', () => {
     for (const id of OW_PJS) for (const st of OW_STYLES) assert.ok(keys.has(`ow_${id}_${st}`), `${id} ${st}`);
   });
 });
+
+import { SPECIES_CARE, FOOD_PICS, CARE_PICS, sanitizePetCare, record, afterPetChange, isCheerful, defaultPetCare } from '../world/petCare';
+import { PET_TYPES, defaultKingdom, sanitizeKingdom } from '../content/kingdom';
+
+describe('v0.4d.6 stage 4: pet care', () => {
+  it('every species has two foods, a toy and distinct play, using known pictures', () => {
+    for (const t of PET_TYPES) {
+      const c = SPECIES_CARE[t];
+      assert.equal(c.foods.length, 2);
+      for (const f of c.foods) assert.ok((FOOD_PICS as readonly string[]).includes(f), f);
+      assert.ok((CARE_PICS as readonly string[]).includes(c.toy));
+    }
+    assert.equal(new Set(PET_TYPES.map((t) => SPECIES_CARE[t].play)).size, PET_TYPES.length);
+  });
+  it('sanitize is tolerant and tied to the pet type', () => {
+    assert.deepEqual(sanitizePetCare(undefined, null), defaultPetCare(0));
+    assert.deepEqual(sanitizePetCare({ type: 1, fed: 3, watered: -4, played: 'x' }, 1), { type: 1, fed: 3, watered: 0, played: 0 });
+    assert.deepEqual(sanitizePetCare({ type: 1, fed: 3 }, 2), defaultPetCare(2));
+  });
+  it('recording care makes a pet cheerful; switching animals resets, same animal keeps', () => {
+    let c = defaultPetCare(0);
+    for (const k of ['feed', 'water', 'play'] as const) c = record(c, k);
+    assert.ok(isCheerful(c));
+    assert.equal(afterPetChange(c, 0), c);
+    assert.equal(isCheerful(afterPetChange(c, 2)), false);
+  });
+  it('old saves without petCare load cleanly', () => {
+    const old: Record<string, unknown> = { ...defaultKingdom() }; delete old.petCare;
+    const k = sanitizeKingdom(old);
+    assert.equal(k.petCare.fed, 0);
+  });
+});
