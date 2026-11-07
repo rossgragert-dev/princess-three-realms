@@ -28,6 +28,7 @@ import type { UIScene } from './UIScene';
 import { KingdomLayer } from './kingdomLayer';
 import { envTargets } from '../world/envMagic';
 import type { KingdomApi } from '../world/kingdomStory';
+import { petKey } from '../content/kingdom';
 
 const T = 16;
 
@@ -67,6 +68,8 @@ export class WorldScene extends Phaser.Scene {
     const st = this.state;
     const id = this.init0.scene ?? st.scene;
     this.map = getMap(id);
+    // v0.4d.3: runtime-only tap targets that follow her bed and her pet (kept out of the map data so the furniture rules ignore them)
+    if (id === 'bedroom') this.map = { ...this.map, objects: [...this.map.objects, { id: 'bed_sleep', kind: 'station', x: 7, y: 5, radius: 2.4 }, { id: 'bedroom_pet', kind: 'station', x: -9, y: -9, radius: 1.6 }] };
     this.leaving = false;
     this.busy = false;
     this.idleMs = 0;
@@ -102,6 +105,7 @@ export class WorldScene extends Phaser.Scene {
     if (this.map.medium === 'water') this.addUnderwater();
     this.applyFlags(false);
     this.renderDecor();
+    this.syncBedroomObjects();
     this.cameras.main.fadeIn(dur(300));
 
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
@@ -266,6 +270,142 @@ export class WorldScene extends Phaser.Scene {
     });
   }
 
+  // ------------------------------------------------------------------ v0.4d.3 bed, sleep and pet
+  private petSprite?: Phaser.GameObjects.Sprite;
+  private petTile: Tile = { x: 14, y: 14 };
+  private petTimers: Phaser.Time.TimerEvent[] = [];
+  private sleeping = false;
+
+  private bedItem(): PlacedItem | undefined {
+    return this.state.bedroomLayout.find((p) => FURNITURE[p.item]?.group === 'beds');
+  }
+
+  /** Keeps the bed's tap target on the bed, and the pet on a free floor tile. */
+  private syncBedroomObjects() {
+    if (this.map.id !== 'bedroom') return;
+    const bed = this.bedItem(), d = bed ? FURNITURE[bed.item] : undefined;
+    this.objPos.set('bed_sleep', bed && d ? { x: bed.x + Math.floor(d.w / 2), y: bed.y + d.h - 1 } : { x: -9, y: -9 });
+    this.buildPet();
+  }
+
+  private buildPet() {
+    const pet = this.state.kingdom.pet;
+    this.petTimers.forEach((t) => t.remove(false)); this.petTimers = [];
+    this.petSprite?.destroy(); this.petSprite = undefined;
+    this.objPos.set('bedroom_pet', { x: -9, y: -9 });
+    if (!pet || this.map.id !== 'bedroom') return;
+    const free = (t: Tile) => this.grid.passable(t.x, t.y) && !(t.x >= 10 && t.x <= 13 && t.y >= 14) && !(t.x === this.player?.tile.x && t.y === this.player?.tile.y);
+    if (!free(this.petTile)) {
+      const t = nearestPassable(this.grid, { x: 14, y: 13 }, 6);
+      if (t) this.petTile = t;
+    }
+    const key = petKey(pet);
+    const s = this.add.sprite(this.petTile.x * T + T / 2, (this.petTile.y + 1) * T, key, 0).setOrigin(0.5, 1);
+    s.setDepth(s.y); this.petSprite = s;
+    this.objPos.set('bedroom_pet', { ...this.petTile });
+    // idle animation: a little two-frame flutter plus a gentle bob
+    let f = 0;
+    this.petTimers.push(this.time.addEvent({ delay: 520, loop: true, callback: () => { f = 1 - f; s.setFrame(f); } }));
+    if (!reducedEffects()) this.tweens.add({ targets: s, scaleY: { from: 1, to: 0.94 }, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+    this.petTimers.push(this.time.addEvent({ delay: 4200, loop: true, callback: () => this.petWander(free) }));
+  }
+
+  private petWander(free: (t: Tile) => boolean) {
+    const s = this.petSprite;
+    if (!s || !s.active || this.editing || this.sleeping || this.busy) return;
+    for (let i = 0; i < 12; i++) {
+      const t = { x: this.petTile.x + Phaser.Math.Between(-3, 3), y: this.petTile.y + Phaser.Math.Between(-2, 2) };
+      if (t.x < 1 || t.x > 22 || t.y < 4 || t.y > 15 || !free(t) || (t.x === this.petTile.x && t.y === this.petTile.y)) continue;
+      this.petTile = t; this.objPos.set('bedroom_pet', { ...t });
+      s.setFlipX(t.x < s.x / T);
+      this.tweens.add({ targets: s, x: t.x * T + T / 2, y: (t.y + 1) * T, duration: dur(1400), ease: 'Sine.InOut', onUpdate: () => s.setDepth(s.y) });
+      return;
+    }
+  }
+
+  petHappy() {
+    const s = this.petSprite;
+    if (!s) return;
+    services.audio.sfx('pop');
+    this.tweens.add({ targets: s, y: s.y - 8, yoyo: true, duration: dur(160), repeat: 1 });
+    for (let i = 0; i < sparkleCount(4); i++) {
+      const h = this.add.sprite(s.x + (i - 1.5) * 6, s.y - 20, 'items', ITEM.heart).setDepth(9999).setScale(0.6);
+      this.tweens.add({ targets: h, y: h.y - 22, alpha: 0, duration: dur(900), delay: i * 90, onComplete: () => h.destroy() });
+    }
+  }
+
+  private tweenP(cfg: Phaser.Types.Tweens.TweenBuilderConfig): Promise<void> {
+    return new Promise((res) => this.tweens.add({ ...cfg, onComplete: () => res() }));
+  }
+
+  /** Tuck her in: she settles on the bed, the room darkens under moon and stars, it fades, and morning sunlight wakes her. */
+  async sleepInBed(): Promise<void> {
+    const bed = this.bedItem();
+    if (!bed || this.sleeping || this.map.id !== 'bedroom') return;
+    this.sleeping = true;
+    const d = FURNITURE[bed.item], at = spot(d, bed.x, bed.y);
+    const cam = this.cameras.main, W = cam.width, H = cam.height, calm = reducedEffects();
+    const extras: Phaser.GameObjects.GameObject[] = [];
+    try {
+      this.player.endSteer(); this.player.stop();
+      const bx = (bed.x + d.w / 2) * T, by = (bed.y + d.h) * T - 3;
+      this.player.sprite.setVisible(false);
+      this.petSprite?.setVisible(false);
+      const sl = this.add.image(bx, by, 'px_sleeper').setOrigin(0.5, 1).setDepth(at.depth + 2).setAlpha(0);
+      extras.push(sl);
+      services.audio.sfx('shimmer');
+      await this.tweenP({ targets: sl, alpha: 1, duration: dur(400) });
+      // night falls
+      const veil = this.add.rectangle(W / 2, H / 2, W * 6, H * 6, 0x0a1040, 0).setScrollFactor(0).setDepth(8500);
+      extras.push(veil);
+      await this.tweenP({ targets: veil, fillAlpha: 0.72, duration: dur(1300) });
+      // moon and twinkling stars (screen-fixed)
+      const moon = this.add.graphics().setScrollFactor(0).setDepth(8600);
+      moon.fillStyle(0xfff6c8, 1).fillCircle(0, 0, 16).fillStyle(0x0a1040, 1).fillCircle(7, -3, 13);
+      moon.setPosition(W * 0.82, 56).setAlpha(0); extras.push(moon);
+      this.tweens.add({ targets: moon, alpha: 1, duration: dur(700) });
+      const stars = Math.min(16, Math.floor(W / 40));
+      for (let i = 0; i < stars; i++) {
+        const sp = this.add.sprite(Phaser.Math.Between(12, W - 12), Phaser.Math.Between(14, Math.floor(H * 0.45)), 'items', ITEM[(['sparkle0', 'sparkle1', 'sparkle2'] as const)[i % 3]]).setScrollFactor(0).setDepth(8600).setAlpha(0.2);
+        extras.push(sp);
+        if (!calm) this.tweens.add({ targets: sp, alpha: 1, duration: 600 + (i % 5) * 150, yoyo: true, repeat: -1, delay: i * 80 });
+        else sp.setAlpha(0.9);
+      }
+      for (let i = 0; i < 3; i++) {
+        const z = this.add.text(bx + 14, by - 18, 'Z', { fontFamily: 'sans-serif', fontStyle: 'bold', fontSize: `${9 + i * 3}px`, color: '#ffffff' }).setDepth(8700).setAlpha(0);
+        extras.push(z);
+        this.tweens.add({ targets: z, y: z.y - 26 - i * 6, x: z.x + 8 + i * 4, alpha: { from: 0.9, to: 0 }, duration: dur(1500), delay: dur(i * 600), repeat: calm ? 0 : 1 });
+      }
+      await new Promise<void>((r) => this.time.delayedCall(dur(2800), () => r()));
+      // fade to black, then morning
+      await this.tweenP({ targets: veil, fillAlpha: 1, duration: dur(900) });
+      moon.destroy();
+      extras.forEach((e) => { if (e !== veil && e !== sl) e.destroy(); });
+      sl.destroy();
+      const at2 = nearestPassable(this.grid, { x: bed.x + Math.floor(d.w / 2), y: bed.y + d.h }, 4) ?? this.player.tile;
+      this.player.teleport(at2); this.state.tile = { ...at2 };
+      this.player.sprite.setVisible(true);
+      this.petSprite?.setVisible(true);
+      veil.setFillStyle(0xfff0b8, 1);
+      services.audio.sfx('chime');
+      const beams: Phaser.GameObjects.Rectangle[] = [];
+      for (let i = 0; i < 3; i++) {
+        const b = this.add.rectangle(W * (0.25 + i * 0.25), H * 0.3, 26, H * 1.4, 0xfff6c0, 0.0).setScrollFactor(0).setDepth(8550).setAngle(-18);
+        beams.push(b); this.tweens.add({ targets: b, fillAlpha: 0.28, duration: dur(500), yoyo: true, hold: dur(900) });
+      }
+      await this.tweenP({ targets: veil, fillAlpha: 0, duration: dur(1800) });
+      beams.forEach((b) => b.destroy()); veil.destroy();
+      services.audio.sfx('bloom');
+      this.sparkleAt(at2.x, at2.y, 10);
+      this.petHappy();
+    } finally {
+      extras.forEach((e) => { if (e.active) e.destroy(); });
+      this.player.sprite.setVisible(true);
+      this.petSprite?.setVisible(true);
+      this.sleeping = false;
+    }
+  }
+
   // ------------------------------------------------------------------ bedroom decorating
   private refreshFurnBlocked() {
     this.furnBlocked = new Set();
@@ -300,6 +440,7 @@ export class WorldScene extends Phaser.Scene {
     this.refreshFurnBlocked();
     this.grid = makeGrid(this.map, this.state.flags, this.player.form, this.furnBlocked);
     this.renderDecor(pop);
+    this.syncBedroomObjects();
     services.save.save();
   }
 
@@ -318,6 +459,7 @@ export class WorldScene extends Phaser.Scene {
     this.player.endSteer(); this.player.stop();
     this.editor = new LayoutEditor(this.state.bedroomLayout, () => this.state.unlockedDecor);
     this.ui.setEditing(true);
+    this.petSprite?.setVisible(false);
     const cam = this.cameras.main;
     cam.stopFollow(); cam.setZoom(1); this.decorScroll();
     this.scene.launch('Decorate', { world: this });
@@ -350,6 +492,7 @@ export class WorldScene extends Phaser.Scene {
     cam.startFollow(this.player.sprite, true, 0.12, 0.12);
     this.setupCamera();
     this.ui.setEditing(false);
+    this.petSprite?.setVisible(true);
     this.buttonsLockedUntil = performance.now() + 600;
     if (hasItem(layout, 'star_lamp')) { this.busy = true; try { await lampPlaced(this.ctx); } finally { this.busy = false; this.afterAction(); } }
   }
@@ -418,7 +561,9 @@ export class WorldScene extends Phaser.Scene {
       pickOne: (o: readonly { id: string; picture: string }[]) => self.ui.pickOne(o),
       bake: (spec) => self.ui.bake(spec),
       paint: (strokes) => self.ui.paint(strokes),
-      save: () => services.save.save()
+      save: () => services.save.save(),
+      sleepInBed: () => self.sleepInBed(),
+      petHappy: () => self.petHappy()
     };
   }
 

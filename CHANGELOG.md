@@ -1,4 +1,11 @@
 # Changelog
+## 0.4.0d.3 "Bedroom and Companions" (preview)
+- **Princess beds redrawn:** Cozy, Sunny and Canopy beds now have a tall starred headboard, two pillows, a patterned folded blanket and footboard/posts; the Canopy bed adds drapes and a canopy top. Furniture rearranging is unchanged.
+- **Sleep:** tap the bed (wherever it is placed) and the princess tucks in, the room darkens under a moon and twinkling stars with floating Zs, fades to black, then warm morning sunbeams bring her back beside the bed. Repeatable, no clock, no penalties; reduced-effects mode uses calmer visuals.
+- **Pet Keeper (courtyard stall):** pick a cat, dog, pony or bird from large picture cards, pick one of four looks, confirm with a picture tick (or cancel). Changeable any time, free.
+- **Pet in the bedroom:** the chosen pet lives in the room with a two-frame idle and a gentle wander, never blocks doors or furniture, hides while decorating, and hops with hearts when tapped. Saved in the game save; old saves load unchanged.
+- Tests: 340+ unit tests (`bedroomPet.test.ts`), real-Chrome driver `v04d-bedroom.mjs`.
+
 ## 0.4.0d.2 "The Royal Castle" (preview)
 - **Throne Room** now has a west door to the Royal Kitchen and an east door to the Royal Gallery.
 - **Royal Kitchen:** four replayable decorate-it tables (cake, cookies, pizza, ice cream). Pick from large picture toppings by tapping or dragging them onto the treat; scoops stack on the cone; undo, back and a green check. No reading, money, prerequisites or failing.

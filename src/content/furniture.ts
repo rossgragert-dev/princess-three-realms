@@ -45,9 +45,9 @@ const F = (id: string, name: string, group: FGroup, kind: FKind, w: number, h: n
 
 export const FURNITURE: Record<string, FurnitureDef> = Object.fromEntries([
   // beds
-  F('cozy_bed', 'Cozy Bed', 'beds', 'big', 3, 2, 'bed', 1),
-  F('sunny_bed', 'Sunny Bed', 'beds', 'big', 3, 2, 'sunny_bed', 1),
-  F('canopy_bed', 'Canopy Bed', 'beds', 'big', 3, 2, 'canopy_bed', 1),
+  F('cozy_bed', 'Cozy Bed', 'beds', 'big', 3, 2, 'px_bed_cozy', 1),
+  F('sunny_bed', 'Sunny Bed', 'beds', 'big', 3, 2, 'px_bed_sunny', 1),
+  F('canopy_bed', 'Canopy Bed', 'beds', 'big', 3, 2, 'px_bed_canopy', 1),
   // tables
   F('round_table', 'Round Table', 'tables', 'big', 2, 1, 'round_table', 3, { surface: 15 }),
   F('square_table', 'Square Table', 'tables', 'big', 2, 1, 'square_table', 3, { surface: 15 }),

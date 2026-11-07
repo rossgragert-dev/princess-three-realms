@@ -7,7 +7,7 @@ import { SCRIPT, type Line } from '../content/dialogue';
 import { puzzleById } from '../content/puzzleBank';
 import { newProgress, countTap } from '../systems/puzzleEngine';
 import { services } from '../systems/services';
-import { allDone, fountainReady, markDone, plantedCount, type PlotId, type PlotStage, type Seed } from '../content/kingdom';
+import { PET_TYPES, petKey, allDone, fountainReady, markDone, plantedCount, type PlotId, type PlotStage, type Seed } from '../content/kingdom';
 import type { RaceMode } from './race';
 
 /** What the running world offers the story for the Kingdom's interactive systems (implemented by KingdomLayer). */
@@ -83,6 +83,27 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     else if (pick === 'garden') await ctx.say(SCRIPT.throneGarden);
     return true;
   }
+
+  // ------------------------------------------------------------ the Pet Keeper: pick an animal, then how it looks, then confirm
+  if (id === 'pet_keeper') {
+    ctx.react(id);
+    if (once('pet_hi')) await ctx.say(SCRIPT.petKeeperHi);
+    const type = await ctx.pickOne(PET_TYPES.map((t, i) => ({ id: String(i), picture: kd.pet && kd.pet.type === i ? petKey(kd.pet) : `px_pet_${t}0` })));
+    if (type === null) return true;
+    const ti = Number(type);
+    const look = await ctx.pickOne([0, 1, 2, 3].map((v) => ({ id: String(v), picture: petKey({ type: ti, look: v }) })));
+    if (look === null) return true;
+    const choice = { type: ti, look: Number(look) };
+    const ok = await ctx.pickOne([{ id: 'yes', picture: petKey(choice) }, { id: 'no', picture: 'icon_cross' }]);
+    if (ok !== 'yes') return true;
+    kd.pet = choice; ctx.save();
+    ctx.celebrate(petKey(choice), 4);
+    await ctx.say(SCRIPT.petChosen);
+    return true;
+  }
+  // ------------------------------------------------------------ the bedroom: her bed and her pet
+  if (id === 'bed_sleep') { await ctx.sleepInBed(); return true; }
+  if (id === 'bedroom_pet') { ctx.sparkle({ x: obj.x, y: obj.y }); ctx.petHappy(); return true; }
 
   // ------------------------------------------------------------ the Royal Kitchen: four decorate-it games, always replayable
   const cook = COOKING[id];

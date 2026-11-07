@@ -61,6 +61,8 @@ export const SCRIPT = {
   butterflyAsk: [L('nana', 'butterfly_ask')],
   butterfliesDone: [L('nana', 'butterflies_done')],
   ladybugAsk: [L('nana', 'ladybug_count')],
+  petKeeperHi: [L('pip', 'pet_keeper_hi')],
+  petChosen: [L('pip', 'pet_chosen')],
   kitchenHi: [L('queen', 'kitchen_hi')],
   galleryHi: [L('king', 'gallery_hi')],
   mazeKing: [L('king', 'maze_king_hi')],

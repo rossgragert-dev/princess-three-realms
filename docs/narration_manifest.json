@@ -1698,6 +1698,28 @@
     ]
   },
   {
+    "key": "pet_keeper_hi",
+    "speaker": "pip",
+    "text": "Would you like a pet friend? Tap the animal you love!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/pet_keeper_hi.m4a",
+      "assets/audio/narration/pet_keeper_hi.ogg"
+    ]
+  },
+  {
+    "key": "pet_chosen",
+    "speaker": "pip",
+    "text": "Your new friend is waiting for you in your bedroom!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/pet_chosen.m4a",
+      "assets/audio/narration/pet_chosen.ogg"
+    ]
+  },
+  {
     "key": "kitchen_hi",
     "speaker": "queen",
     "text": "Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top!",

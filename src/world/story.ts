@@ -44,6 +44,9 @@ export interface StoryCtx {
   bake(spec: import('../ui/creativePanels').BakeSpec): Promise<import('../ui/creativePanels').BakeResult | null>;
   paint(strokes: readonly import('../ui/paintStrokes').ArtStroke[]): Promise<import('../ui/paintStrokes').ArtStroke[] | null>;
   save(): void;
+  /** v0.4d.3: tuck her into bed: night falls, morning comes, she wakes up. Repeatable, no consequences. */
+  sleepInBed(): Promise<void>;
+  petHappy(): void;
   openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop'): Promise<void>;
 }
 

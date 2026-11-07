@@ -186,6 +186,71 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
   m('px_easel', 24, 40, (c) => { P(c, 2, 12, 20, 18, '#fffaf0'); P(c, 0, 10, 24, 3, '#8f5c1a'); P(c, 3, 14, 5, 4, '#ff5a6e'); P(c, 10, 18, 5, 4, '#3ea6ff'); P(c, 16, 14, 4, 4, '#ffd93d'); P(c, 4, 30, 3, 10, '#8f5c1a'); P(c, 17, 30, 3, 10, '#8f5c1a'); P(c, 11, 30, 2, 8, '#8f5c1a'); });
   m('px_frame', 48, 32, (c) => { P(c, 0, 0, 48, 32, '#d9a91f'); P(c, 3, 3, 42, 26, '#b8860b'); P(c, 4, 4, 40, 24, '#fffaf0'); });
 
+
+  // ------------------------------------------------------------ v0.4d.3: princess beds (same footprints as the old sprites), pets, keeper
+  const bed = (key: string, wood: string, woodLt: string, sheet: string, pillowA: string, pillowB: string, blanket: string, fold: string, hem: string, dot: string) =>
+    m(key, 48, 32, (c) => {
+      P(c, 0, 4, 48, 28, wood); P(c, 1, 4, 46, 2, woodLt);                                    // frame
+      P(c, 0, 0, 48, 9, wood); P(c, 2, 1, 44, 2, woodLt); P(c, 0, 0, 3, 3, '#0000'); P(c, 21, 0, 6, 2, woodLt); P(c, 23, 1, 2, 2, '#ffd93d'); // tall headboard + star
+      P(c, 2, 8, 44, 21, sheet);                                                                // mattress
+      P(c, 4, 9, 18, 9, pillowA); P(c, 5, 10, 16, 2, '#ffffff66'); P(c, 4, 16, 18, 2, '#00000018');   // pillows
+      P(c, 26, 9, 18, 9, pillowB); P(c, 27, 10, 16, 2, '#ffffff66'); P(c, 26, 16, 18, 2, '#00000018');
+      P(c, 2, 17, 44, 12, blanket); P(c, 2, 17, 44, 3, fold); P(c, 2, 20, 44, 1, '#00000022');  // blanket + folded top
+      for (const [x, y] of [[8, 23], [16, 26], [24, 22], [32, 26], [40, 23], [12, 21], [36, 21]] as const) P(c, x, y, 2, 2, dot); // pattern
+      P(c, 2, 28, 44, 3, hem); P(c, 0, 29, 48, 3, wood); P(c, 0, 29, 48, 1, woodLt);            // hem + footboard
+      P(c, 0, 24, 2, 8, woodLt); P(c, 46, 24, 2, 8, woodLt);                                    // posts
+    });
+  bed('px_bed_cozy', '#a0643a', '#c98a4a', '#fff6e4', '#ffd0e8', '#d0e8ff', '#ff7ec3', '#ffc2e0', '#d95aa0', '#fff0a8');
+  bed('px_bed_sunny', '#c9892a', '#f2b84a', '#fffbe6', '#fff0a8', '#ffe0c8', '#ffb347', '#ffd98a', '#d98a1e', '#ffffff');
+  m('px_bed_canopy', 50, 50, (c) => {
+    P(c, 0, 0, 50, 4, '#c98ad8'); P(c, 2, 4, 46, 12, '#f4c8f2'); P(c, 2, 4, 46, 3, '#ffe0fa');       // canopy top + valance
+    for (let i = 0; i < 8; i++) P(c, 3 + i * 6, 14, 4, 4, '#f4c8f2');                               // scalloped edge
+    P(c, 0, 4, 4, 46, '#8f5c9a'); P(c, 46, 4, 4, 46, '#8f5c9a'); P(c, 1, 4, 1, 46, '#b080bc');       // posts
+    P(c, 4, 6, 4, 26, '#ffe0faaa'); P(c, 42, 6, 4, 26, '#ffe0faaa');                                 // drapes
+    P(c, 4, 18, 42, 32, '#8f5c9a'); P(c, 4, 18, 42, 8, '#a874b4');                                   // headboard
+    P(c, 6, 24, 38, 22, '#fff6fb');
+    P(c, 8, 26, 15, 8, '#ffd0e8'); P(c, 27, 26, 15, 8, '#d0e8ff'); P(c, 9, 27, 13, 2, '#ffffff77'); P(c, 28, 27, 13, 2, '#ffffff77');
+    P(c, 6, 34, 38, 12, '#c98ad8'); P(c, 6, 34, 38, 3, '#e8b8f0');
+    for (const [x, y] of [[11, 40], [19, 42], [27, 39], [35, 42], [41, 39]] as const) P(c, x, y, 2, 2, '#fff0a8');
+    P(c, 6, 45, 38, 3, '#9a5aa8'); P(c, 4, 46, 42, 4, '#8f5c9a'); P(c, 22, 20, 6, 3, '#ffd93d'); disc(c, 25, 21, 2, '#fff29a');
+  });
+  m('px_sleeper', 40, 22, (c) => {           // the princess tucked in: head on the pillow, blanket up to her chin
+    P(c, 12, 0, 16, 11, '#f2c9a0'); P(c, 10, 0, 20, 5, '#8a5a2a'); P(c, 9, 4, 4, 10, '#8a5a2a'); P(c, 27, 4, 4, 10, '#8a5a2a');
+    P(c, 16, 6, 2, 1, '#5a3a2a'); P(c, 22, 6, 2, 1, '#5a3a2a'); P(c, 19, 8, 2, 1, '#e8786a'); P(c, 14, 2, 12, 2, '#ffd93d');
+    P(c, 2, 11, 36, 11, '#ff7ec3'); P(c, 2, 11, 36, 3, '#ffc2e0'); P(c, 6, 17, 2, 2, '#fff0a8'); P(c, 20, 18, 2, 2, '#fff0a8'); P(c, 30, 16, 2, 2, '#fff0a8');
+  });
+  const PET_LOOKS = [['#f2a05a', '#888a96', '#f4ecd8', '#3a3040'], ['#c98a4a', '#f4ecd8', '#3a3040', '#e8b84a'], ['#ffffff', '#c98a4a', '#ff9ccd', '#b08af0'], ['#ffd93d', '#3ea6ff', '#ff5a6e', '#7bd86a']];
+  const MANES = ['#ff7ec3', '#5a3322', '#ffd93d', '#7be3ff'];
+  const dark = (hex: string) => { const n = parseInt(hex.slice(1), 16); const f = (v: number) => Math.max(0, Math.floor(v * 0.7)); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; };
+  for (let v = 0; v < 4; v++) {
+    const [cc, dc, pc, bc] = [PET_LOOKS[0][v], PET_LOOKS[1][v], PET_LOOKS[2][v], PET_LOOKS[3][v]];
+    m(`px_pet_cat${v}`, 20, 20, (c, f) => {                      // cat
+      P(c, 5, 10, 10, 8, cc); P(c, 6, 4, 8, 7, cc); P(c, 6, 2, 2, 3, cc); P(c, 12, 2, 2, 3, cc); P(c, 7, 3, 1, 1, '#ff9ccd'); P(c, 12, 3, 1, 1, '#ff9ccd');
+      P(c, 8, 7, 1, 2, '#222'); P(c, 11, 7, 1, 2, '#222'); P(c, 9, 9, 2, 1, '#f58'); P(c, 6, 17, 3, 2, dark(cc)); P(c, 11, 17, 3, 2, dark(cc)); P(c, 15, f ? 7 : 9, 3, 2, cc); P(c, 17, f ? 5 : 8, 2, 2, cc);
+    }, 2);
+    m(`px_pet_dog${v}`, 20, 20, (c, f) => {                       // dog
+      P(c, 4, 10, 12, 8, dc); P(c, 5, 3, 10, 8, dc); P(c, 3, 4, 3, 8, dark(dc)); P(c, 14, 4, 3, 8, dark(dc)); P(c, 7, 6, 1, 2, '#222'); P(c, 12, 6, 1, 2, '#222');
+      P(c, 8, 8, 4, 3, '#f4ecd8'); P(c, 9, 8, 2, 2, '#222'); if (f) P(c, 9, 11, 2, 2, '#f58'); P(c, 5, 17, 3, 2, dark(dc)); P(c, 12, 17, 3, 2, dark(dc)); P(c, 16, f ? 8 : 10, 2, 4, dc);
+    }, 2);
+    m(`px_pet_pony${v}`, 20, 20, (c, f) => {                      // pony (the horn-free cousin of the unicorn)
+      P(c, 3, 9, 13, 7, pc); P(c, 4, 15, 2, 5, dark(pc)); P(c, 12, 15, 2, 5, dark(pc)); P(c, 13, 3, 5, 9, pc); P(c, 15, 6, 4, 5, pc);
+      P(c, 12, 2, 3, 9, MANES[v]); P(c, f ? 0 : 1, 9, 3, 8, MANES[v]); P(c, 16, 6, 1, 2, '#222'); P(c, 17, 9, 1, 1, '#f58'); P(c, 13, 1, 2, 2, pc);
+    }, 2);
+    m(`px_pet_bird${v}`, 20, 20, (c, f) => {                     // bird
+      disc(c, 10, 12, 6.5, bc); disc(c, 10, 5.5, 4.5, bc); P(c, 13, 5, 4, 2, '#ffa31a'); P(c, 11, 4, 1, 2, '#222'); P(c, 8, 17, 1, 3, '#ffa31a'); P(c, 11, 17, 1, 3, '#ffa31a');
+      P(c, f ? 3 : 4, f ? 8 : 11, 6, 5, dark(bc)); P(c, 5, 15, 3, 3, dark(bc)); P(c, 9, 0, 2, 2, bc);
+    }, 2);
+  }
+  m('px_keeper', 18, 26, (c) => {
+    P(c, 4, 0, 10, 3, '#3b8f4f'); P(c, 2, 3, 14, 2, '#3b8f4f'); P(c, 5, 5, 8, 7, '#f2c9a0'); P(c, 4, 4, 2, 6, '#8a5a2a'); P(c, 12, 4, 2, 6, '#8a5a2a');
+    P(c, 7, 8, 1, 1, '#333'); P(c, 10, 8, 1, 1, '#333'); P(c, 8, 10, 2, 1, '#e8786a'); P(c, 3, 12, 12, 10, '#7bd86a'); P(c, 5, 14, 8, 8, '#fff6e4'); P(c, 4, 22, 4, 4, '#5a3a2a'); P(c, 10, 22, 4, 4, '#5a3a2a');
+    P(c, 8, 16, 2, 2, '#ff7ec3'); P(c, 0, 13, 3, 6, '#f2c9a0'); P(c, 15, 13, 3, 6, '#f2c9a0');
+  });
+  m('px_petstall', 32, 32, (c) => {
+    P(c, 1, 6, 30, 8, '#ff7ec3'); for (let i = 0; i < 5; i++) P(c, 1 + i * 6, 6, 3, 8, '#fff6e4'); P(c, 3, 14, 3, 18, '#8f5c1a'); P(c, 26, 14, 3, 18, '#8f5c1a');
+    P(c, 3, 22, 26, 9, '#c98a4a'); P(c, 3, 22, 26, 2, '#e0a860'); P(c, 6, 17, 5, 5, '#ffd93d'); P(c, 14, 18, 4, 4, '#3ea6ff'); P(c, 21, 17, 5, 5, '#ff5a6e');
+  });
+
   // ------------------------------------------------------------ River
   m('px_lily', 16, 16, (c) => { disc(c, 8, 9, 6, '#3fb27c'); P(c, 8, 4, 1, 5, '#2f9a6a'); disc(c, 10, 7, 2.4, '#ff9ad2'); disc(c, 10, 7, 1, '#ffe14d'); });
   m('px_reed', 16, 32, (c) => { for (const [x, h] of [[4, 28], [8, 32], [12, 24]]) { P(c, x, 32 - h, 2, h, '#4a9a5a'); P(c, x - 1, 32 - h, 4, 6, '#8a5a2e'); } });
@@ -235,4 +300,4 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
 }
 
 /** Names of every runtime texture (for tests). */
-export const KINGDOM_KEYS = ['px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;
+export const KINGDOM_KEYS = ['px_bed_cozy', 'px_bed_sunny', 'px_bed_canopy', 'px_sleeper', 'px_keeper', 'px_petstall', 'px_pet_cat0', 'px_pet_cat1', 'px_pet_cat2', 'px_pet_cat3', 'px_pet_dog0', 'px_pet_dog1', 'px_pet_dog2', 'px_pet_dog3', 'px_pet_pony0', 'px_pet_pony1', 'px_pet_pony2', 'px_pet_pony3', 'px_pet_bird0', 'px_pet_bird1', 'px_pet_bird2', 'px_pet_bird3', 'px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;

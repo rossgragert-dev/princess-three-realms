@@ -12,7 +12,7 @@ import { defaultState, sanitize } from '../systems/saveManager';
 
 const manifest = JSON.parse(readFileSync(new URL('../../public/assets/manifest.json', import.meta.url), 'utf8')) as { images: { key: string }[]; sheets: { key: string }[] };
 // v0.4c reward decorations are drawn at runtime (kingdomArt.ts), so they are not in the asset manifest
-const KINGDOM_DECOR_KEYS = new Set(['decor_woodland_plush', 'decor_mushroom_lamp', 'decor_flower_cushion', 'decor_river_fountain', 'decor_lantern_garland']);
+const KINGDOM_DECOR_KEYS = new Set(['decor_woodland_plush', 'decor_mushroom_lamp', 'decor_flower_cushion', 'decor_river_fountain', 'decor_lantern_garland', 'px_bed_cozy', 'px_bed_sunny', 'px_bed_canopy']);
 const textures = new Set([...manifest.images.map((i) => i.key), ...manifest.sheets.map((s) => s.key)]);
 const ALL = DECOR_IDS; // every reward unlocked
 const ed = (layout: PlacedItem[] = defaultLayout(), unlocked: readonly string[] = ALL) => new LayoutEditor(layout, () => unlocked);
