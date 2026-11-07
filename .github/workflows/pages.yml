@@ -83,7 +83,7 @@ jobs:
           done
 
       - name: Promote development game to stable iPad release (manual approval only)
-        if: ${{ (github.event_name == 'workflow_dispatch' && inputs.promote == true) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[ipad-release]')) }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.promote == true }}
         shell: bash
         run: |
           set -euo pipefail
