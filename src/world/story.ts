@@ -47,7 +47,11 @@ export interface StoryCtx {
   /** Fades out and arrives at a safe spawn using the normal travel path (saves first). */
   travelTo(scene: import('../types/game').SceneId, spawn: string): void;
   playRace(mode: import('./race').RaceMode): Promise<import('../scenes/RaceScene').RaceResult>;
-  bake(spec: import('../ui/creativePanels').BakeSpec): Promise<import('../ui/creativePanels').BakeResult | null>;
+  bake(spec: import('../ui/creativePanels').BakeSpec, initial?: readonly import('../world/foodDesign').Topping[]): Promise<import('../world/foodDesign').Topping[] | null>;
+  /** Re-draw the toppings on the kitchen stands from the saved designs. */
+  refreshFoods(): void;
+  /** The little bite-by-bite eating animation for one stand. */
+  eatFood(id: import('../world/foodDesign').FoodId): Promise<void>;
   paint(strokes: readonly import('../ui/paintStrokes').ArtStroke[]): Promise<import('../ui/paintStrokes').ArtStroke[] | null>;
   save(): void;
   /** v0.4d.3: tuck her into bed: night falls, morning comes, she wakes up. Repeatable, no consequences. */

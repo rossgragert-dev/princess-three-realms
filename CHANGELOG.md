@@ -1,4 +1,10 @@
 # Changelog
+## 0.4.0d.6.2 (preview) — Royal Kitchen
+- **Precise decorating:** tap a topping picture (gold frame + check; the first is selected at the start), then tap any spot on the food to place it exactly there; dragging also works. Tapping off the food only wiggles the selected card. Big Undo (last topping), Done and Back. Ice cream stacks scoops (max 5) up the cone with each tap.
+- **Dishes stay on their stands:** each of the four stands saves its own design (`kingdom.food`, normalised spots, capped and sanitised) and shows the dish with your toppings in the kitchen across rooms and reloads.
+- **Redecorate or eat:** tapping a finished stand offers two pictures (paint = change it with the saved toppings loaded, the dish = eat it with a bite-by-bite animation, no rewards). Back leaves the dish untouched; eating empties only that stand.
+- Tests: 375 unit tests; `v04d6-kitchen.mjs`.
+
 ## 0.4.0d.6.1 (preview) — tree, missions, free forms
 - **Talking tree:** the tree now rumbles and slides four tiles aside over ~1.8 seconds (with sparkles) *before* the thank-you dialogue, so the gate opening is clearly seen; reduced-effects snaps it with a sparkle. Open position persists across re-entry/reload.
 - **King and Queen mission pictures travel:** tapping Tree, Unicorn, Mermaid or Flower in the throne room speaks a short line and then fades to the Whispering Woods, Unicorn Meadow, Lake Shore or Royal Magic Garden (`src/world/missions.ts`); Back keeps her in the throne room.

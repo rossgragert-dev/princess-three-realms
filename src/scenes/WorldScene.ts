@@ -28,6 +28,9 @@ import type { UIScene } from './UIScene';
 import { KingdomLayer } from './kingdomLayer';
 import { envTargets } from '../world/envMagic';
 import type { KingdomApi } from '../world/kingdomStory';
+import { bakeProbe } from '../ui/creativePanels';
+import { FOODS, toppingOffset, TOPPING_SCALE, type FoodId } from '../world/foodDesign';
+import { KITCHEN_STATIONS } from '../world/castleMaps';
 import { petKey } from '../content/kingdom';
 import { GITEM, LAWNS, tileOpen, type GPlaced } from '../content/gardenCatalog';
 import { GardenEditor, blockedByGarden, checkGarden } from '../world/gardenRules';
@@ -56,6 +59,7 @@ export class WorldScene extends Phaser.Scene {
   private waterCells: { x: number; y: number; phase: number }[] = [];
   private waterTick = 0;
   private treeSprite?: Phaser.GameObjects.Sprite;
+  private foodLayers: Phaser.GameObjects.Image[] = [];
   private treeSlide: Promise<void> = Promise.resolve();
   private treeSlideBusy = false;
   private init0: InitData = {};
@@ -93,6 +97,8 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(this.map.bg);
     this.buildGround();
     this.buildProps();
+    this.foodLayers = [];
+    this.refreshFoods();
     this.buildObjects();
     this.buildKingdom();
 
@@ -262,6 +268,47 @@ export class WorldScene extends Phaser.Scene {
     }
     this.grid = makeGrid(this.map, flags, st.form, this.furnBlocked);
     this.kingdom?.applyFlags(animated);
+  }
+
+  private foodSprite(id: FoodId): Phaser.GameObjects.Sprite | undefined {
+    const st = KITCHEN_STATIONS.find((q) => q.id === id);
+    return st ? this.props.find((q) => q.def.key === st.dish && q.def.x === st.x)?.sprite : undefined;
+  }
+
+  /** Kitchen stands show exactly what she made: the dish with her toppings where she put them, until she eats it or decorates again. */
+  private refreshFoods() {
+    if (this.map.id !== 'kitchen') return;
+    this.foodLayers.forEach((i) => i.destroy()); this.foodLayers = [];
+    const foods = this.state.kingdom.food;
+    for (const id of Object.keys(FOODS) as FoodId[]) {
+      const spr = this.foodSprite(id); if (!spr) continue;
+      const spec = FOODS[id], design = foods[id];
+      spr.setScale(1.15).setVisible(!design?.eaten);
+      if (!design || design.eaten) continue;
+      const f = spr.scale / spec.baseScale, c = spr.getCenter();
+      design.toppings.forEach((t, i) => {
+        const o = toppingOffset(spec, t, i);
+        this.foodLayers.push(this.add.image(c.x! + o.dx * f, c.y! + o.dy * f, t.key).setScale(TOPPING_SCALE * f).setDepth(spr.depth + 1 + i * 0.01));
+      });
+    }
+  }
+
+  /** Eat it bite by bite (no rewards, nothing else changes), then the stand is empty until she decorates again. */
+  private async eatFood(id: FoodId): Promise<void> {
+    const spr = this.foodSprite(id);
+    const c = spr?.getCenter();
+    const bites = reducedEffects() ? 1 : 3;
+    for (let b = 0; b < bites; b++) {
+      services.audio.sfx('pop');
+      if (c) this.sparkleAt(c.x! / T, c.y! / T, 3);
+      const k = 1 - (b + 1) / bites;
+      await new Promise<void>((res) => this.tweens.add({ targets: [spr, ...this.foodLayers], alpha: Math.max(0.05, k), duration: dur(260), onComplete: () => res() }));
+    }
+    this.state.kingdom.food[id] = { toppings: [], eaten: true };
+    spr?.setAlpha(1);
+    this.refreshFoods();
+    if (c) this.sparkleAt(c.x! / T, c.y! / T, 8);
+    services.save.save();
   }
 
   /** The talking tree rumbles and slides four tiles aside so everyone can see the gate open (reduced effects: snaps, with a sparkle). */
@@ -649,8 +696,10 @@ export class WorldScene extends Phaser.Scene {
       pickOne: (o: readonly { id: string; picture: string }[]) => self.ui.pickOne(o),
       playRace: (mode) => self.playRace(mode),
       settle: () => self.treeSlide,
+      refreshFoods: () => self.refreshFoods(),
+      eatFood: (id) => self.eatFood(id),
       travelTo: (scene, spawn) => self.travel(scene, spawn),
-      bake: (spec) => self.ui.bake(spec),
+      bake: (spec, initial) => self.ui.bake(spec, initial),
       paint: (strokes) => self.ui.paint(strokes),
       save: () => services.save.save(),
       sleepInBed: () => self.sleepInBed(),
@@ -1544,6 +1593,8 @@ export class WorldScene extends Phaser.Scene {
       teleportPlayer: (t: Tile) => this.player.teleport(t),
       faceDir: (d: 'up' | 'down' | 'left' | 'right') => { this.player.dir = d; this.player.idle(); },
       tag: () => (this.tagGame ? { phase: this.tagGame.s.phase, stars: this.tagGame.s.stars, pal: { ...this.tagGame.s.pal }, t: this.tagGame.s.t, ended: this.tagGame.ended, tally: this.ui.tallyState, exit: this.ui.exitPos } : null),
+      bake: () => ({ ...bakeProbe, cards: bakeProbe.cards.map((c) => ({ ...c })) }),
+      foods: () => ({ layers: this.foodLayers.map((i) => ({ key: i.texture.key, x: i.x, y: i.y, s: i.scale })), dishes: (Object.keys(FOODS) as FoodId[]).map((id) => { const q = this.foodSprite(id); return { id, visible: !!q?.visible, x: q?.x ?? 0, y: q?.y ?? 0 }; }) }),
       kingdom: () => this.kingdom?.debug() ?? null,
       kingdomApi: () => this.kingdom,
       envFx: () => this.kingdom?.debug().activeFx ?? 0,

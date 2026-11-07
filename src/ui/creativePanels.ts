@@ -1,58 +1,88 @@
 // v0.4d.2: the two big creative panels — the Royal Kitchen "decorate it" table and the Royal Gallery canvas.
 // Picture-only (no reading, no money, no failing). Both are drag-or-tap and always replayable.
 import Phaser from 'phaser';
+import { UI } from '../content/frameIndex';
+import { MAX_SCOOPS, TOPPING_SCALE, place, radiusOf, spotFromOffset, toppingOffset, type FoodSpec, type Topping } from '../world/foodDesign';
 import { makeButton, pic, roundedPanel } from './touchTargets';
 import { services } from '../systems/services';
 import { dur } from '../systems/accessibility';
 import { PAINT_BG, PAINT_COLORS, PAINT_H, PAINT_W, BRUSH_SIZES, MAX_POINTS, MAX_STROKES, drawStamp, drawStrokes, type ArtStroke } from './paintStrokes';
 
 export interface Layout { ox: number; oy: number }
-export interface BakeSpec {
-  base: string; baseScale: number;
-  toppings: readonly string[];
-  /** Scoops stack upward from the cone instead of landing anywhere on the plate. */
-  stack?: boolean;
-}
-export interface BakeResult { placed: number }
+export type BakeSpec = FoodSpec;
+/** Read-only handle for tests. */
+export const bakeProbe: { cards: { key: string; x: number; y: number }[]; selected: string; food: { cx: number; cy: number; rx: number; stack: boolean }; count: number; hint: number } = { cards: [], selected: '', food: { cx: 0, cy: 0, rx: 0, stack: false }, count: 0, hint: 0 };
 
-/** Decorate a cake / cookie / pizza / ice cream. Resolves with how many things she put on, or null if she backed out. */
-export function runBake(scene: Phaser.Scene, L: Layout, spec: BakeSpec): Promise<BakeResult | null> {
+/**
+ * Decorate a cake / cookie / pizza / ice cream. Tap a topping picture to select it (gold box + check), then tap a spot on the food to put it
+ * exactly there; drag also works. Tapping off the food only wiggles the selected card. Resolves with the toppings when she presses the check,
+ * or null if she backs out (the finished dish on the stand is then left untouched).
+ */
+export function runBake(scene: Phaser.Scene, L: Layout, spec: BakeSpec, initial: readonly Topping[] = []): Promise<Topping[] | null> {
   return new Promise((resolve) => {
     const cx = 256 + L.ox, cy = 150 + L.oy;
     const root = scene.add.container(0, 0).setDepth(60);
     root.add(scene.add.rectangle(256 + L.ox, 192 + L.oy, 2000, 2000, 0x40255a, 0.55).setInteractive());
     root.add(roundedPanel(scene, cx - 200, cy - 118, 400, 236, 0xfff1d6, 0xf2994a, 22));
-    const plate = scene.add.ellipse(cx, cy + 40, 210, 60, 0xffffff).setStrokeStyle(4, 0xd9d2e9);
-    root.add(plate);
-    const base = pic(scene, spec.base, cx, cy + (spec.stack ? 10 : 8), spec.baseScale);
+    root.add(scene.add.ellipse(cx, cy + 40, 210, 60, 0xffffff).setStrokeStyle(4, 0xd9d2e9));
+    const by = cy + (spec.stack ? 10 : 8);
+    const base = pic(scene, spec.base, cx, by, spec.baseScale);
     root.add(base);
-    const placed: Phaser.GameObjects.Image[] = [];
-    const radius = spec.stack ? 0 : 52 * (spec.baseScale / 3.4);
-    const put = (key: string, x?: number, y?: number) => {
-      if (placed.length >= 40) return;
-      let px = x, py = y;
-      if (spec.stack) { px = cx + Phaser.Math.Between(-3, 3); py = cy + 10 - spec.baseScale * 20 - 6 - Math.min(placed.length, 5) * 16; if (placed.length >= 5) return; }
-      else if (px === undefined || py === undefined) { const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * radius; px = cx + Math.cos(a) * r; py = cy + 8 + Math.sin(a) * r * 0.8; }
-      else { const dx = px - cx, dy = (py - (cy + 8)) / 0.8, d = Math.hypot(dx, dy); if (d > radius) { px = cx + (dx / d) * radius; py = cy + 8 + ((dy / d) * radius) * 0.8; } }
-      const im = pic(scene, key, px, py - 30, 2.2).setScale(0.2); root.add(im); placed.push(im);
-      scene.tweens.add({ targets: im, y: py, scale: 2.2, duration: dur(280), ease: 'Bounce.Out' });
+    const list: Topping[] = [];
+    const imgs: Phaser.GameObjects.Image[] = [];
+    const drop = (t: Topping, animate: boolean) => {
+      const o = toppingOffset(spec, t, imgs.length);
+      const x = cx + o.dx, y = by + o.dy;
+      const im = pic(scene, t.key, x, animate ? y - 30 : y, TOPPING_SCALE);
+      root.add(im); imgs.push(im);
+      if (animate) { im.setScale(0.2); scene.tweens.add({ targets: im, y, scale: TOPPING_SCALE, duration: dur(280), ease: 'Bounce.Out' }); }
+    };
+    for (const t of initial) { list.push(t); drop(t, false); }
+    bakeProbe.count = list.length;
+    const add = (key: string, dx: number, dy: number): boolean => {
+      const sp = spotFromOffset(spec, dx, dy);
+      if (!sp) return false;
+      const next = place(spec, list, key, sp.u, sp.v);
+      if (!next) return false;
+      const t = next[next.length - 1]; list.push(t); drop(t, true); services.audio.sfx('pop'); bakeProbe.count = list.length;
+      return true;
+    };
+    // ---- the picture cards: the selected one gets a gold frame and a check
+    let selected = spec.toppings[0];
+    const holders = new Map<string, { frame: Phaser.GameObjects.Graphics; check: Phaser.GameObjects.Image; chip: Phaser.GameObjects.Image }>();
+    const n = spec.toppings.length;
+    const gap = Math.min(60, 372 / n);
+    const sel = (key: string) => {
+      selected = key; bakeProbe.selected = key;
+      holders.forEach((h, k) => { h.frame.setVisible(k === key); h.check.setVisible(k === key); h.chip.setScale(k === key ? 2.6 : 2.2); });
       services.audio.sfx('pop');
     };
-    const n = spec.toppings.length;
+    const wiggle = () => { const h = holders.get(selected); if (h) scene.tweens.add({ targets: h.chip, angle: { from: -12, to: 12 }, duration: dur(90), yoyo: true, repeat: 1, onComplete: () => h.chip.setAngle(0) }); bakeProbe.hint++; };
+    bakeProbe.cards = [];
     spec.toppings.forEach((key, i) => {
-      const x = cx + (i - (n - 1) / 2) * Math.min(56, 360 / n), y = cy + 98;
-      const holder = scene.add.container(x, y); holder.add(roundedPanel(scene, -24, -24, 48, 48, 0xffffff, 0xf2994a, 12)); root.add(holder);
-      const chip = pic(scene, key, x, y, 2.2).setDepth(61).setInteractive({ draggable: true, useHandCursor: true }); root.add(chip);
+      const x = cx + (i - (n - 1) / 2) * gap, y = cy + 88;
+      const card = scene.add.container(x, y); card.add(roundedPanel(scene, -28, -28, 56, 56, 0xffffff, 0xf2994a, 12)); root.add(card);
+      const frame = scene.add.graphics().lineStyle(5, 0xffc61a, 1).strokeRoundedRect(x - 30, y - 30, 60, 60, 14).setVisible(false); root.add(frame);
+      const chip = pic(scene, key, x, y, 2.2).setInteractive({ draggable: true, useHandCursor: true }); root.add(chip);
+      const check = scene.add.image(x + 22, y - 22, 'ui', UI.icon_check).setScale(0.55).setVisible(false); root.add(check);
+      holders.set(key, { frame, check, chip }); bakeProbe.cards.push({ key, x, y });
       let dragged = false;
-      chip.on('dragstart', () => { dragged = false; chip.setDepth(66); });
-      chip.on('drag', (_p: unknown, dx: number, dy: number) => { dragged = true; chip.setPosition(dx, dy); });
-      chip.on('dragend', () => { if (dragged && Math.abs(chip.x - cx) < 130 && chip.y < cy + 70) put(key, chip.x, chip.y); chip.setPosition(x, y).setDepth(61); });
-      chip.on('pointerup', () => { if (!dragged) put(key); dragged = false; });
+      chip.on('dragstart', () => { dragged = false; sel(key); chip.setDepth(66); });
+      chip.on('drag', (_p: unknown, dx: number, dy: number) => { if (Math.hypot(dx - x, dy - y) > 8) dragged = true; chip.setPosition(dx, dy); });
+      chip.on('dragend', () => { if (dragged) add(key, chip.x - cx, chip.y - by); chip.setPosition(x, y).setDepth(61); });
+      chip.on('pointerup', () => { if (!dragged) sel(key); dragged = false; });
     });
-    const finish = (v: BakeResult | null) => { root.destroy(true); back.container.destroy(); done.container.destroy(); undo.container.destroy(); resolve(v); };
+    sel(selected);
+    // ---- tap a spot on the food
+    const zw = spec.stack ? 110 : radiusOf(spec) * 2 + 20, zh = spec.stack ? spec.baseScale * 20 + 22 + MAX_SCOOPS * 16 + spec.baseScale * 20 : radiusOf(spec) * 1.6 + 20;
+    const zcy = spec.stack ? by - (zh / 2 - spec.baseScale * 20) : by;
+    const zone = scene.add.zone(cx, zcy, zw, zh).setInteractive(); root.add(zone);
+    bakeProbe.food = { cx, cy: by, rx: radiusOf(spec), stack: !!spec.stack };
+    zone.on('pointerdown', (p: Phaser.Input.Pointer) => { if (!add(selected, p.x - cx, p.y - by)) wiggle(); });
+    const finish = (v: Topping[] | null) => { root.destroy(true); back.container.destroy(); done.container.destroy(); undo.container.destroy(); bakeProbe.cards = []; resolve(v); };
     const back = makeButton(scene, 40 + L.ox, 36 + L.oy, 'icon_back', 1.5, () => finish(null)); back.container.setDepth(62);
-    const done = makeButton(scene, 472 + L.ox, 330 + L.oy, 'icon_check', 1.8, () => finish({ placed: placed.length })); done.container.setDepth(62);
-    const undo = makeButton(scene, 40 + L.ox, 330 + L.oy, 'icon_undo', 1.5, () => { placed.pop()?.destroy(); }); undo.container.setDepth(62);
+    const done = makeButton(scene, 472 + L.ox, 330 + L.oy, 'icon_check', 1.8, () => finish(list.map((t) => ({ ...t })))); done.container.setDepth(62);
+    const undo = makeButton(scene, 40 + L.ox, 330 + L.oy, 'icon_undo', 1.5, () => { if (!list.length) return; list.pop(); imgs.pop()?.destroy(); bakeProbe.count = list.length; }); undo.container.setDepth(62);
   });
 }
 

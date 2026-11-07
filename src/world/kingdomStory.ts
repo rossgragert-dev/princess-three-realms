@@ -1,6 +1,7 @@
 // v0.4c: story beats and activity flow for the Kingdom Beyond. Gentle by design: replay is always welcome, a wrong
 // answer only ever brings a hint, and every reward is granted once through completeFlag.
 import { MISSIONS } from './missions';
+import { FOODS, type FoodId, type Topping } from './foodDesign';
 import type { PuzzleDef, QuestFlag } from '../types/game';
 import type { ObjDef } from './types';
 import type { StoryCtx } from './story';
@@ -13,12 +14,7 @@ import { PET_TYPES, petKey, allDone, fountainReady, markDone, plantedCount, type
 import type { RaceMode } from './race';
 
 /** What the running world offers the story for the Kingdom's interactive systems (implemented by KingdomLayer). */
-export const COOKING: Record<string, import('../ui/creativePanels').BakeSpec> = {
-  cook_cake: { base: 'px_cake', baseScale: 3.4, toppings: ['px_t_cherry', 'px_t_sprinkle', 'px_t_strawb', 'px_t_choc', 'px_t_star', 'px_t_candy'] },
-  cook_cookies: { base: 'px_cookie', baseScale: 4, toppings: ['px_t_choc', 'px_t_sprinkle', 'px_t_candy', 'px_t_star', 'px_t_strawb'] },
-  cook_pizza: { base: 'px_pizza', baseScale: 3.4, toppings: ['px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush'] },
-  cook_icecream: { base: 'px_cone', baseScale: 2.2, toppings: ['px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_t_cherry'], stack: true }
-};
+export const COOKING: Record<string, import('../ui/creativePanels').BakeSpec> = FOODS;
 
 export interface KingdomApi {
   held(): Seed | null;
@@ -124,8 +120,20 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
   if (cook) {
     ctx.react(id);
     if (once('kitchen_hi')) await ctx.say(SCRIPT.kitchenHi);
-    const res = await ctx.bake(cook);
-    if (res && res.placed > 0) { ctx.celebrate(cook.base, 3); for (const dx of [-2, 0, 2]) ctx.sparkle({ x: obj.x + dx, y: obj.y + 1 }); }
+    const fid = id as FoodId, cur = kd.food[fid];
+    let initial: readonly Topping[] = [];
+    if (cur && !cur.eaten) {
+      // something is on the stand: decorate it again (keeps her toppings) or eat it; Back leaves it exactly as it is
+      const c = await ctx.pickOne([{ id: 'decorate', picture: 'icon_palette' }, { id: 'eat', picture: cook.base }]);
+      if (!c) return true;
+      if (c === 'eat') { await ctx.eatFood(fid); return true; }
+      initial = cur.toppings;
+    }
+    const res = await ctx.bake(cook, initial);
+    if (res) {
+      kd.food[fid] = { toppings: res, eaten: false }; ctx.save(); ctx.refreshFoods();
+      if (res.length > 0) { ctx.celebrate(cook.base, 3); for (const dx of [-2, 0, 2]) ctx.sparkle({ x: obj.x + dx, y: obj.y + 1 }); }
+    }
     return true;
   }
   // ------------------------------------------------------------ the Royal Gallery: paint, and see it on the wall
