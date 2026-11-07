@@ -46,6 +46,11 @@ export const DRESSES: OptionDef[] = [
   o('festival', 'Festival Dress'),
   o('starry_night', 'Starry Night Dress', 'GROTTO_CHEST', 'chest'),
   o('rainbow_gown', 'Rainbow Princess Gown', 'RAINBOW_BRIDGE_OPEN', 'icon_rainbow'),
+  // v0.4d.6: bedtime pyjamas, free from the start
+  o('pj_hearts', 'Heart Pajamas'),
+  o('pj_stars', 'Star Pajamas'),
+  o('pj_moon', 'Moon and Cloud Nightgown'),
+  o('pj_rainbow', 'Rainbow Bedtime Set'),
   o('sea_glass', 'Sea-Glass Dress', 'SHORE_CHEST', 'chest'),
   o('fairy_sparkle', 'Fairy-Sparkle Gown', 'FAIRY_DUST_FOUND', 'sparkle0')
 ];

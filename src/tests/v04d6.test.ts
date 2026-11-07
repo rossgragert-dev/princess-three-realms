@@ -69,3 +69,24 @@ describe('v0.4d.6 kitchen designs', () => {
     assert.ok(onFood(0, 0.99) && !onFood(0.8, 0.8));
   });
 });
+
+import { DRESSES } from '../content/appearance';
+import { ATLAS, OW_PJS, OW_STYLES } from '../content/wardrobeIndex';
+import { readFileSync } from 'node:fs';
+
+describe('v0.4d.6 pajamas', () => {
+  const pj = ['pj_hearts', 'pj_stars', 'pj_moon', 'pj_rainbow'];
+  it('four free pajamas exist with real atlas layers in both wardrobe atlases', () => {
+    for (const id of pj) {
+      const d = DRESSES.find((x) => x.id === id);
+      assert.ok(d && !d.flag, id);
+      for (const k of ['wd_full', 'wd_port'] as const) assert.ok(`dress:${id}` in ATLAS[k].cells, `${k} ${id}`);
+    }
+  });
+  it('every pajama has an overworld sheet for every hairstyle', () => {
+    const manifest = JSON.parse(readFileSync('public/assets/manifest.json', 'utf8')) as { sheets: { key: string }[] };
+    const keys = new Set(manifest.sheets.map((s) => s.key));
+    assert.deepEqual([...OW_PJS], pj);
+    for (const id of OW_PJS) for (const st of OW_STYLES) assert.ok(keys.has(`ow_${id}_${st}`), `${id} ${st}`);
+  });
+});

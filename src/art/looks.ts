@@ -58,7 +58,8 @@ export function applyOverworldLook(scene: Phaser.Scene, app: PrincessAppearance)
   const style = (OW_STYLES as readonly string[]).includes(app.hairstyleId) ? app.hairstyleId : 'long';
   const remap = buildRemap(app);
   const out = new Uint8ClampedArray(192 * 128 * 4);
-  remapSheet(out, pixelsOf(scene, owHairSheet(style)).data, remap);
+  const pj = `ow_${app.dressId}_${style}`;
+  remapSheet(out, pixelsOf(scene, app.dressId.startsWith('pj_') && scene.textures.exists(pj) ? pj : owHairSheet(style)).data, remap);
   const crown = owCrownSheet(app.tiaraId);
   if (crown && scene.textures.exists(crown)) remapSheet(out, pixelsOf(scene, crown).data, remap);
   putPixels(scene.textures.get(PRINCESS_LOOK) as Phaser.Textures.CanvasTexture, out, 192, 128);

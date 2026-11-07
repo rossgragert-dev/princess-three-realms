@@ -1991,6 +1991,174 @@
    "key": "ow_hair_curls"
   },
   {
+   "file": "assets/characters/ow_pj_hearts_long.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_hearts_long"
+  },
+  {
+   "file": "assets/characters/ow_pj_hearts_bob.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_hearts_bob"
+  },
+  {
+   "file": "assets/characters/ow_pj_hearts_ponytail.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_hearts_ponytail"
+  },
+  {
+   "file": "assets/characters/ow_pj_hearts_braids.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_hearts_braids"
+  },
+  {
+   "file": "assets/characters/ow_pj_hearts_bun.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_hearts_bun"
+  },
+  {
+   "file": "assets/characters/ow_pj_hearts_curls.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_hearts_curls"
+  },
+  {
+   "file": "assets/characters/ow_pj_stars_long.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_stars_long"
+  },
+  {
+   "file": "assets/characters/ow_pj_stars_bob.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_stars_bob"
+  },
+  {
+   "file": "assets/characters/ow_pj_stars_ponytail.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_stars_ponytail"
+  },
+  {
+   "file": "assets/characters/ow_pj_stars_braids.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_stars_braids"
+  },
+  {
+   "file": "assets/characters/ow_pj_stars_bun.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_stars_bun"
+  },
+  {
+   "file": "assets/characters/ow_pj_stars_curls.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_stars_curls"
+  },
+  {
+   "file": "assets/characters/ow_pj_moon_long.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_moon_long"
+  },
+  {
+   "file": "assets/characters/ow_pj_moon_bob.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_moon_bob"
+  },
+  {
+   "file": "assets/characters/ow_pj_moon_ponytail.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_moon_ponytail"
+  },
+  {
+   "file": "assets/characters/ow_pj_moon_braids.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_moon_braids"
+  },
+  {
+   "file": "assets/characters/ow_pj_moon_bun.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_moon_bun"
+  },
+  {
+   "file": "assets/characters/ow_pj_moon_curls.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_moon_curls"
+  },
+  {
+   "file": "assets/characters/ow_pj_rainbow_long.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_rainbow_long"
+  },
+  {
+   "file": "assets/characters/ow_pj_rainbow_bob.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_rainbow_bob"
+  },
+  {
+   "file": "assets/characters/ow_pj_rainbow_ponytail.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_rainbow_ponytail"
+  },
+  {
+   "file": "assets/characters/ow_pj_rainbow_braids.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_rainbow_braids"
+  },
+  {
+   "file": "assets/characters/ow_pj_rainbow_bun.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_rainbow_bun"
+  },
+  {
+   "file": "assets/characters/ow_pj_rainbow_curls.png",
+   "frameHeight": 32,
+   "frameWidth": 24,
+   "frames": 32,
+   "key": "ow_pj_rainbow_curls"
+  },
+  {
    "file": "assets/characters/ow_crown_gold_tiara.png",
    "frameHeight": 32,
    "frameWidth": 24,
@@ -2239,7 +2407,7 @@
    "file": "assets/wardrobe/wd_port.png",
    "frameHeight": 140,
    "frameWidth": 112,
-   "frames": 48,
+   "frames": 56,
    "key": "wd_port"
   }
  ]

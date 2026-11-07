@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.0d.6.3 (preview) — Pajamas
+- Four free pajamas on their own wardrobe page (dress tab, page 2): Heart Pajamas, Star Pajamas, Moon and Cloud Nightgown, Rainbow Bedtime Set. Real pixel art from the art pipeline (`tools/art_wardrobe.py`, `art_overworld.py`, `gen_art.py`): full-body and portrait wardrobe layers plus 24 overworld sheets (4 sets x 6 hairstyles) with idle/walk poses. They recolour with the chosen dress colour; hair, skin, tiara and accessories layer as usual; mermaid is unaffected. Selection is immediate, saved, and never forced at bedtime.
+- Tests: 377 unit tests; `v04d6-pj.mjs`.
+
 ## 0.4.0d.6.2 (preview) — Royal Kitchen
 - **Precise decorating:** tap a topping picture (gold frame + check; the first is selected at the start), then tap any spot on the food to place it exactly there; dragging also works. Tapping off the food only wiggles the selected card. Big Undo (last topping), Done and Back. Ice cream stacks scoops (max 5) up the cone with each tap.
 - **Dishes stay on their stands:** each of the four stands saves its own design (`kingdom.food`, normalised spots, capped and sanitised) and shows the dish with your toppings in the kitchen across rooms and reloads.

@@ -848,11 +848,134 @@ def dress_layer(did, kind):
             if (x, y) in cells: p.set(x, y, W if r.random() < .6 else GOLD_HI)
         flower(p, hx, sy + 11 * s, 2.6 * s, PINK_HI, YELLOW)
         outline = DM[3]
+    elif did.startswith('pj_'):
+        pajama_layer(p, g, did, full)
+        outline = DM[3]
     else:
         raise ValueError(did)
     remove_specks(p)
     p.outline(outline)
     return p
+
+# ------------------------------------------------------------------ PAJAMAS (v0.4d.6): free bedtime sets drawn in the same marker colours
+
+def pstar(p, x, y, big=False):
+    """A chunky fixed-colour pixel star for the pyjamas (the generic star helper turns to slivers at this size)."""
+    x, y = int(x), int(y)
+    rows = ['..X..', '.XXX.', 'XXXXX', '.XXX.', '.X.X.'] if big else ['.X.', 'XXX', '.X.']
+    oy, ox = len(rows) // 2, len(rows[0]) // 2
+    for j, row in enumerate(rows):
+        for i, ch in enumerate(row):
+            if ch == 'X': p.set(x - ox + i, y - oy + j, GOLD)
+    p.set(x, y, W)
+    if big: p.set(x - 1, y - 1, GOLD_HI)
+
+PJ_IDS = ['pj_hearts', 'pj_stars', 'pj_moon', 'pj_rainbow']
+
+
+def pj_sprinkle(p, cells, kind, seed, r_scale=1.0, n=14):
+    """Little fixed-colour motifs scattered over a set of cells (hearts / stars / moons)."""
+    r = rng(seed); cl = sorted(cells)
+    if not cl: return
+    for _ in range(n):
+        x, y = cl[r.randrange(len(cl))]
+        if kind == 'heart': heart(p, x, y, 2.9 * r_scale, RED, rgb('#ff9aa6'))
+        elif kind == 'star': pstar(p, x, y, r_scale >= 1.0)
+
+
+def pajama_layer(p, g, did, full):
+    s = g.s; hx = g.hx; sy, wy = g.sh_y, g.waist_y
+    R = DM
+    if did == 'pj_moon':
+        # a long, soft nightgown: bodice + straight A-line to the ankles, cloud-scalloped hem
+        if full:
+            cells = skirt(p, g, 9, 24, 126, 1.0, R, folds=4, scallop=(0, 8))
+            for x in range(int(hx - 24), int(hx + 25)):          # fluffy cloud hem
+                yy = 126 + int(1.6 * math.cos((x - hx) * 0.9))
+                p.set(x, yy, W); p.set(x, yy - 1, CREAM)
+            r = rng(41)
+            for _ in range(7):
+                x = r.randint(int(hx - 17), int(hx + 17)); y = r.randint(100, 118)
+                if p.get(x, y) is not None: pstar(p, x, y, False)
+            # a little cloud and crescent on the skirt
+            for (cx, cy) in ((hx - 9, 108), (hx + 8, 116)):
+                p.ell(cx, cy, 4, 2.4, W); p.ell(cx + 2.5, cy - 1.2, 2.6, 2, W); p.ell(cx - 2.4, cy - 0.8, 2.2, 1.6, CREAM)
+        cells = bodice(p, g, 'round', R)
+        sleeves(p, g, 'cap', R)
+        mx, my = hx, sy + 11 * s
+        p.ell(mx, my, 4 * s, 4 * s, GOLD_HI); p.ell(mx + 1.8 * s, my - 0.6 * s, 3.4 * s, 3.4 * s, R[1]); p.set(int(mx - 2 * s), int(my - 2 * s), W)
+        for x in range(int(hx - 9 * s), int(hx + 9 * s)):
+            y = int(sy + interp(NECK['round'], (x - hx) / s) * s)
+            if (x, y + 1) in cells: p.set(x, y + 1, W)
+        return
+    # ---- two-piece sets: long-sleeved top + full-length pants
+    if full:
+        # pants legs over the (skin) legs, cuffs at the ankle
+        for sgn in (-1, 1):
+            for y in range(int(wy) - 2, 130):
+                t = (y - wy) / (130 - wy)
+                cxl = hx + sgn * (6 + 1.5 * t)
+                for x in range(int(cxl - 6), int(cxl + 6)):
+                    u = (x - cxl) / 6
+                    idx = 1 if u < 0.3 else 2
+                    if u < -0.7: idx = 0
+                    if abs(x - cxl) < 0.6 and y > wy + 6 and sgn * (x - hx) < 3: idx = 3
+                    if sgn * (x - hx) >= -0.5:
+                        p.set(x, y, R[idx])
+            cxl = hx + sgn * 7.5
+            cuff = {'pj_hearts': CREAM, 'pj_stars': CREAM, 'pj_rainbow': None}[did]
+            for x in range(int(cxl - 6), int(cxl + 6)):
+                if p.get(x, 129) is not None:
+                    p.set(x, 128, cuff or R[0]); p.set(x, 129, CREAM_SH if cuff else R[2]); p.set(x, 130, R[3])
+        pants = {(x, y) for y in range(int(wy), 128) for x in range(int(hx - 14), int(hx + 15)) if p.get(x, y) is not None}
+        if did == 'pj_rainbow':
+            for sgn in (-1, 1):
+                for i, c in enumerate(RAINBOW[:5]):
+                    cxl = hx + sgn * 7.5
+                    for x in range(int(cxl - 5.5), int(cxl + 5.5)):
+                        if p.get(x, 122 + i) is not None: p.set(x, 122 + i, c)
+        elif did == 'pj_hearts': pj_sprinkle(p, {c for c in pants if c[1] > 98 and c[1] < 118}, 'heart', 7, 1.0, 5)
+        else: pj_sprinkle(p, {c for c in pants if c[1] > 98 and c[1] < 118}, 'star', 9, 1.0, 5)
+        # waistband
+        for x in range(int(hx - 12), int(hx + 12)):
+            if p.get(x, int(wy)) is not None: p.set(x, int(wy), R[0]); p.set(x, int(wy) - 1, R[2]) if p.get(x, int(wy) - 1) is not None else None
+    cells = bodice(p, g, 'round', R)
+    # long sleeves down over the arms (full) / soft cap sleeves in the portrait
+    if full:
+        for sgn in (-1, 1):
+            sx, sy_ = hx + sgn * 13, 66
+            ex, ey = hx + sgn * 20, 78
+            wx, wy2 = hx + sgn * 24, 89
+            line_w(p, sx, sy_, ex, ey, 7, R[1]); line_w(p, ex, ey, wx, wy2, 6, R[1])
+            line_w(p, sx + sgn * 3, sy_ + 1, ex + sgn * 3, ey, 2, R[2]); line_w(p, ex + sgn * 3, ey, wx + sgn * 3, wy2, 2, R[2])
+            line_w(p, sx - sgn * 2, sy_ - 1, ex - sgn * 2, ey - 1, 2, R[0])
+            for i in range(3):   # cuff
+                p.rect(int(wx - 3), int(wy2 + i - 1), 6, 1, (CREAM if i < 2 else CREAM_SH) if did != 'pj_rainbow' else RAINBOW[i])
+    else:
+        sleeves(p, g, 'cap', R)
+    # top decoration
+    if did == 'pj_hearts':
+        pj_sprinkle(p, {c for c in cells if c[1] > sy + 6 * s}, 'heart', 3, max(1.0, s * 0.8), 4)
+        heart(p, hx, sy + 10 * s, 3 * s, RED, rgb('#ff9aa6'))
+    elif did == 'pj_stars':
+        pj_sprinkle(p, {c for c in cells if c[1] > sy + 6 * s}, 'star', 5, max(1.0, s * 0.8), 4)
+        pstar(p, hx, sy + 10 * s, True)
+    else:
+        for i, c in enumerate(RAINBOW):                       # rainbow arc on the chest
+            r_ = (12 - i * 1.5) * s
+            for x in range(int(hx - r_), int(hx + r_ + 1)):
+                dy = math.sqrt(max(0, r_ * r_ - (x - hx) ** 2)) * 0.7
+                y = int(sy + 20 * s - dy)
+                if (x, y) in cells: p.set(x, y, c)
+    # collar piping and buttons
+    for x in range(int(hx - 9 * s), int(hx + 9 * s)):
+        y = int(sy + interp(NECK['round'], (x - hx) / s) * s)
+        if (x, y + 1) in cells: p.set(x, y + 1, CREAM)
+    for k in range(3):
+        p.set(int(hx), int(sy + (15 + k * 3.5) * s) if did == 'pj_rainbow' else int(sy + (17 + k * 3.2) * s), W) if False else None
+    for y in range(int(sy + 16 * s), int(wy) - 1, max(3, int(3.4 * s))):
+        if (int(hx), y) in cells and did != 'pj_rainbow': p.set(int(hx), y, CREAM_SH)
+
 
 
 # ------------------------------------------------------------------ SHOES (full only)
@@ -1437,7 +1560,7 @@ def ui_icons():
 
 
 # ------------------------------------------------------------------ ATLASES
-DRESS_IDS = ['royal_ball', 'garden', 'rose_petal', 'festival', 'starry_night', 'rainbow_gown', 'sea_glass', 'fairy_sparkle']
+DRESS_IDS = ['royal_ball', 'garden', 'rose_petal', 'festival', 'starry_night', 'rainbow_gown', 'sea_glass', 'fairy_sparkle', 'pj_hearts', 'pj_stars', 'pj_moon', 'pj_rainbow']
 SHOE_IDS = ['slippers', 'mary_janes', 'boots', 'jeweled', 'sandals', 'pearl_shoes']
 ACC_IDS = ['royal_cape', 'lace_gloves', 'flower_shawl', 'butterfly_wings', 'moon_cape']
 STYLE_IDS = ['long', 'bob', 'ponytail', 'braids', 'bun', 'curls']

@@ -5,10 +5,11 @@ from art_wardrobe import DM, HM, SM, GOLD, GOLD_HI, GOLD_SH, W, PINK, PINK_HI, P
 
 EYE = rgb('#4b2d94')
 STYLES = ['long', 'bob', 'ponytail', 'braids', 'bun', 'curls']
+PJS = ['pj_hearts', 'pj_stars', 'pj_moon', 'pj_rainbow']
 CROWNS = ['gold_tiara', 'pearl_crown', 'star_tiara', 'flower_crown', 'bunny_ribbon', 'butterfly_clip']
 
 
-def princess_ow(d, kind, f, style='long'):
+def princess_ow(d, kind, f, style='long', outfit='dress'):
     p = Px(24, 32)
     walk = kind == 'walk'
     lift = -1 if (walk and f in (1, 3)) else 0
@@ -23,6 +24,47 @@ def princess_ow(d, kind, f, style='long'):
     D, D_HI, D_SH = DM[1], DM[0], DM[2]
 
     def dress(w0, back=False):
+        if outfit.startswith('pj_'): return pajamas(w0, back)
+        return gown(w0, back)
+
+    def pajamas(w0, back=False):
+        side = w0 < 4
+        if outfit == 'pj_moon':               # nightgown: the gown shape, no sash, cloud hem, a gold moon
+            for y in range(19 + lift, 28 + lift):
+                hw = w0 + (y - 19 - lift) * 0.5
+                for x in range(int(cx - hw), int(cx + hw) + 1):
+                    p.set(x, y, D_HI if y < 22 + lift else (D_SH if x > cx + hw - 2 else D))
+            for x in range(cx - 8, cx + 8): p.set(x, 28 + lift, C['white']); p.set(x, 27 + lift, C['cream']) if x % 2 == 0 else None
+            if not back and not side: p.set(cx, 20 + lift, GOLD_HI); p.set(cx + 1, 21 + lift, GOLD_HI); p.set(cx, 22 + lift, GOLD_HI)
+            return
+        for y in range(19 + lift, 24 + lift):   # long-sleeved top
+            hw = w0 + (y - 19 - lift) * 0.2
+            for x in range(int(cx - hw), int(cx + hw) + 1):
+                p.set(x, y, D_HI if y < 21 + lift else (D_SH if x > cx + hw - 2 else D))
+        p.rect(cx - int(w0), 23 + lift, int(2 * w0) + 1, 1, D_SH)
+        # pants: two straight legs, cream cuffs
+        legs = [(cx - 1, cx + 2)] if side else [(cx - 5, cx - 1), (cx + 1, cx + 5)]
+        for (a, b) in legs:
+            for y in range(24 + lift, 29 + lift):
+                for x in range(a, b):
+                    p.set(x, y, D_SH if x == b - 1 else D)
+            p.rect(a, 28 + lift, b - a, 1, C['cream'])
+        if side: p.rect(cx - 3, 24 + lift, 7, 4, D); p.rect(cx - 3, 28 + lift, 7, 1, C['cream']); p.rect(cx + 2, 24 + lift, 2, 4, D_SH)
+        # fixed-colour motifs
+        if outfit == 'pj_hearts':
+            for (x, y) in ((cx - 2, 21), (cx + 1, 22), (cx - 3, 26), (cx + 3, 25)):
+                if not back: p.set(x, y + lift, C['red']) if 'red' in C else p.set(x, y + lift, (255, 90, 110, 255))
+        elif outfit == 'pj_stars':
+            for (x, y) in ((cx - 2, 21), (cx + 2, 22), (cx - 3, 26), (cx + 3, 25)):
+                if not back: p.set(x, y + lift, GOLD_HI)
+        else:
+            for i, col in enumerate(((255, 90, 110, 255), (255, 225, 77, 255), (62, 166, 255, 255))):
+                p.rect(cx - 6, 21 + i + lift, 12, 1, col) if (not back and not side and i == 0 and False) else None
+            if not back: p.rect(cx - 2, 21 + lift, 4, 1, (255, 90, 110, 255)); p.rect(cx - 2, 22 + lift, 4, 1, (255, 225, 77, 255))
+            for a in ((cx - 5), (cx + 1)) if not side else (cx - 1,):
+                p.rect(a, 27 + lift, 4 if not side else 3, 1, (62, 166, 255, 255)); p.rect(a, 28 + lift, 4 if not side else 3, 1, (255, 90, 110, 255))
+
+    def gown(w0, back=False):
         for y in range(19 + lift, 28 + lift):
             hw = w0 + (y - 19 - lift) * 0.55
             for x in range(int(cx - hw), int(cx + hw) + 1):

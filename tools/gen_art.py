@@ -85,6 +85,10 @@ ow_imgs = {}
 for st in AO.STYLES:
     im, n = dir_sheet(f'ow_hair_{st}', f'characters/ow_hair_{st}.png', pr_spec, lambda d, k, f, st=st: AO.princess_ow(d, k, f, st), None)
     ow_imgs[('hair', st)] = im
+for pj in AO.PJS:
+    for st in AO.STYLES:
+        im, n = dir_sheet(f'ow_{pj}_{st}', f'characters/ow_{pj}_{st}.png', pr_spec, lambda d, k, f, st=st, pj=pj: AO.princess_ow(d, k, f, st, pj), None)
+        ow_imgs[(pj, st)] = im
 for tid in AO.CROWNS:
     im, n = dir_sheet(f'ow_crown_{tid}', f'characters/ow_crown_{tid}.png', pr_spec, lambda d, k, f, tid=tid: AO.crown_ow(d, k, f, tid), None)
     ow_imgs[('crown', tid)] = im
@@ -243,6 +247,7 @@ with open(os.path.join(ROOT, 'src', 'content', 'wardrobeIndex.ts'), 'w') as f:
     f.write('export const ATLAS = ' + json.dumps(atlas_meta, indent=1, sort_keys=True) + ' as const;\n')
     f.write('export const OW_STYLES = ' + json.dumps(AO.STYLES) + ' as const;\n')
     f.write('export const OW_CROWNS = ' + json.dumps(AO.CROWNS) + ' as const;\n')
+    f.write('export const OW_PJS = ' + json.dumps(AO.PJS) + ' as const;\n')
 
 # ---- preview sheets for review
 for name, (im, k, bgc) in previews.items():
