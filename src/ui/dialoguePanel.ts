@@ -42,9 +42,14 @@ export class DialoguePanel {
     this.text = scene.add.text(108, 278, '', { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: '#40255a', wordWrap: { width: 300 }, lineSpacing: 3 });
     this.replay = makeButton(scene, 438, 296, 'icon_speaker', 0.8, () => this.replayFn?.());
     this.next = makeButton(scene, 454, 344, 'icon_next', 1.5, () => this.tap());
+    // A tap anywhere outside the speech card advances just like its green arrow.
+    // Keep this hit area behind the card controls so speaker replay and Next remain usable.
+    // The opening touch is ignored by the existing armedAt guard in tap().
+    const outside = scene.add.zone(256, 192, 8192, 8192).setInteractive();
+    outside.on('pointerdown', () => this.tap());
     const zone = scene.add.zone(256, 322, 480, 108).setInteractive();
     zone.on('pointerdown', () => this.tap());
-    this.root.add([frame, zone, this.portrait, this.text, this.replay.container, this.next.container]);
+    this.root.add([outside, frame, zone, this.portrait, this.text, this.replay.container, this.next.container]);
   }
 
   hit(_x: number, _y: number) { return this.isOpen; }
