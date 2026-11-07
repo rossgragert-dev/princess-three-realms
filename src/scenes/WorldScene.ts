@@ -175,14 +175,8 @@ export class WorldScene extends Phaser.Scene {
       s.setDepth((p.y + 1) * T + (p.depthBias ?? 0));
       this.props.push({ def: p, sprite: s });
     }
-    if (this.map.id === 'bedroom') {
-      // picture cues so a child can find the two customization stations: bobbing wardrobe / mirror icons
-      for (const [key, icon, x, y] of [['wardrobe_prop', 'icon_wardrobe', 32, 152], ['vanity_prop', 'icon_mirror', 352, 170], ['paint_prop', 'icon_brush', 104, 212]] as const) {
-        if (!this.props.some((q) => q.def.key === key)) continue;
-        const cue = this.add.image(x, y, 'ui', UI[icon]).setDepth(9000).setScale(0.6).setAlpha(0.95);
-        if (!reducedEffects()) this.tweens.add({ targets: cue, y: y - 4, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
-      }
-    }
+    // v0.4d: the free-floating wardrobe / mirror / easel icons are gone. The furniture itself (which already glows)
+    // is the tap target, so nothing floats in the room that does nothing when touched.
   }
 
   private buildObjects() {

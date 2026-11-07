@@ -121,6 +121,37 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
     P(c, 5, 26, 22, 3, f ? '#7be3ff' : '#6a7186'); if (f) { P(c, 15, 4, 2, 10, '#bff3ff'); disc(c, 16, 4, 2, '#fff'); } else { P(c, 8, 27, 3, 1, '#4a5166'); P(c, 20, 27, 3, 1, '#4a5166'); }
   }, 2);
 
+
+  // ------------------------------------------------------------ v0.4d: the Throne Room
+  m('px_throne', 24, 48, (c) => {
+    P(c, 4, 4, 16, 30, '#d9a91f'); P(c, 6, 6, 12, 26, '#c23a4e'); P(c, 8, 8, 8, 22, '#e0566a');          // tall gold-framed red back
+    P(c, 2, 2, 20, 4, '#ffd93d'); P(c, 4, 0, 4, 3, '#ffd93d'); P(c, 10, 0, 4, 3, '#ffd93d'); P(c, 16, 0, 4, 3, '#ffd93d'); // crown top
+    disc(c, 12, 12, 2.2, '#3ea6ff'); disc(c, 6, 4, 1.2, '#fff'); disc(c, 18, 4, 1.2, '#fff');
+    P(c, 1, 30, 22, 8, '#d9a91f'); P(c, 3, 32, 18, 6, '#c23a4e'); P(c, 1, 38, 22, 3, '#b8860b');       // seat and arms
+    P(c, 2, 41, 4, 7, '#8f5c1a'); P(c, 18, 41, 4, 7, '#8f5c1a'); P(c, 6, 44, 12, 4, '#a0521a');            // legs and footstool
+  });
+  m('px_pillar', 16, 48, (c) => {
+    P(c, 1, 0, 14, 5, '#e8e0f5'); P(c, 3, 5, 10, 38, '#f2ecff'); P(c, 5, 5, 2, 38, '#fff'); P(c, 10, 5, 2, 38, '#cfc4ea'); P(c, 1, 43, 14, 5, '#e8e0f5');
+    P(c, 0, 0, 16, 2, '#ffd93d'); P(c, 0, 46, 16, 2, '#ffd93d');
+  });
+  m('px_banner', 16, 32, (c) => {
+    P(c, 0, 0, 16, 3, '#ffd93d'); P(c, 2, 3, 12, 22, '#c23a4e'); P(c, 3, 3, 10, 22, '#e0566a'); P(c, 2, 25, 4, 5, '#c23a4e'); P(c, 10, 25, 4, 5, '#c23a4e'); P(c, 6, 25, 4, 3, '#e0566a');
+    P(c, 2, 3, 1, 22, '#ffd93d'); P(c, 13, 3, 1, 22, '#ffd93d');
+    for (const [x, y, w, h] of [[7, 8, 2, 8], [4, 11, 8, 2], [5, 9, 6, 2], [5, 14, 6, 2]] as const) P(c, x, y, w, h, '#ffd93d');
+  });
+  m('px_stained', 16, 32, (c) => {
+    P(c, 0, 4, 16, 28, '#8f5c1a'); P(c, 2, 2, 12, 4, '#8f5c1a'); P(c, 4, 0, 8, 3, '#8f5c1a');
+    const cols = ['#3ea6ff', '#ff7ec3', '#ffd93d', '#7be3ff', '#ff5a6e', '#7bd86a'];
+    for (let r = 0; r < 4; r++) for (let q = 0; q < 2; q++) P(c, 2 + q * 6, 4 + r * 6, 5, 5, cols[(r * 2 + q) % cols.length]);
+    P(c, 4, 1, 8, 3, cols[0]); P(c, 3, 6, 10, 1, '#fff6e4'); P(c, 3, 16, 10, 1, '#fff6e4');
+  });
+  m('px_carpet', 16, 16, (c, f) => {
+    P(c, 0, 0, 16, 16, '#c23a4e'); P(c, 2, 0, 12, 16, '#d84a5e');
+    const edge = f === 0 ? 0 : 14; P(c, edge, 0, 2, 16, '#ffd93d'); P(c, f === 0 ? 2 : 12, 0, 2, 16, '#a82a40');
+    P(c, 6, 3, 4, 2, '#ffd93d'); P(c, 6, 11, 4, 2, '#ffd93d'); P(c, 7, 7, 2, 2, '#fff6e4');
+  }, 2);
+  m('px_sconce', 16, 24, (c) => { P(c, 6, 10, 4, 10, '#8f5c1a'); P(c, 3, 18, 10, 4, '#8f5c1a'); disc(c, 8, 7, 4, '#ff9a3d'); disc(c, 8, 6, 2.2, '#ffe14d'); });
+
   // ------------------------------------------------------------ River
   m('px_lily', 16, 16, (c) => { disc(c, 8, 9, 6, '#3fb27c'); P(c, 8, 4, 1, 5, '#2f9a6a'); disc(c, 10, 7, 2.4, '#ff9ad2'); disc(c, 10, 7, 1, '#ffe14d'); });
   m('px_reed', 16, 32, (c) => { for (const [x, h] of [[4, 28], [8, 32], [12, 24]]) { P(c, x, 32 - h, 2, h, '#4a9a5a'); P(c, x - 1, 32 - h, 4, 6, '#8a5a2e'); } });
@@ -170,4 +201,4 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
 }
 
 /** Names of every runtime texture (for tests). */
-export const KINGDOM_KEYS = ['px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;
+export const KINGDOM_KEYS = ['px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;

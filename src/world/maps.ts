@@ -38,8 +38,10 @@ function courtyard(): MapDef {
   g.rect(0, 11, 2, 3, 'path0'); // v0.4b: west path to the Festival Garden
   g.rect(38, 11, 2, 3, 'path0'); // v0.4c: east path to the Royal Magic Garden
   g.set(31, 5, 'cobble0'); // v0.4b: the Queen's conservatory door
-  g.rect(36, 14, 4, 3, 'path0'); // east exit path
-  g.scatter(36, 14, 4, 3, ['path1'], 0.4, 17, () => true);
+  g.rect(36, 11, 4, 6, 'path0'); // east exit path: the Whispering Woods only (v0.4d)
+  g.scatter(36, 11, 4, 6, ['path1'], 0.4, 17, () => true);
+  for (const x of [18, 19, 20]) g.set(x, 5, 'cobble0'); // v0.4d: the great castle gate is a real door to the Throne Room
+  g.set(25, 5, 'cobble0'); // v0.4d: the Royal Garden archway
   // hedge between plaza and garden, with a stair gap
   g.rect(2, 21, 36, 1, 'hedge');
   g.rect(18, 21, 4, 1, 'path0');
@@ -57,6 +59,7 @@ function courtyard(): MapDef {
     { key: 'castle_gate', x: 19, y: 5, depthBias: -1 },
     { key: 'door_small', x: 8, y: 5, depthBias: -1 },
     { key: 'door_small', x: 31, y: 5, depthBias: -1 },
+    { key: 'px_arch', x: 25, y: 5, ox: 0, depthBias: -1 },
     { key: 'ribbon', frame: 0, x: 20, y: 2, flagFrame: { flag: 'STAR_1_FOUND', frame: 1 }, depthBias: -2 },
     { key: 'fountain', anim: 'fountain_flow', x: 19, y: 13, blocks: [[-1, -1], [0, -1], [1, -1], [-1, 0], [0, 0], [1, 0]] },
     { key: 'plot', frame: 0, x: 10, y: 24, ox: 8, blocks: [[0, 0], [1, 0]] },
@@ -71,14 +74,15 @@ function courtyard(): MapDef {
     { id: 'butterfly_spot', kind: 'find', hideWhen: 'BUTTERFLY_FOUND', x: 3, y: 27, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.6 },
     { id: 'wand_pedestal', kind: 'ability', x: 6, y: 12, sprite: { key: 'pedestal', frame: 0 }, blocks: true, radius: 1.8 },
     { id: 'door_bedroom', kind: 'warp', x: 8, y: 5, tiles: [tile(8, 5)], to: { scene: 'bedroom', spawn: 'from_courtyard' }, radius: 1.5 },
-    { id: 'warp_woods', kind: 'warp', x: 39, y: 15, tiles: col(39, 14, 16), to: { scene: 'woods', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
-    { id: 'warp_garden', kind: 'warp', x: 39, y: 12, tiles: col(39, 11, 13), to: { scene: 'garden', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'warp_woods', kind: 'warp', x: 39, y: 13, tiles: col(39, 11, 16), to: { scene: 'woods', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'warp_garden', kind: 'warp', x: 25, y: 5, tiles: [tile(25, 5)], to: { scene: 'garden', spawn: 'from_courtyard' }, radius: 1.5 },
+    { id: 'gate_throne', kind: 'warp', x: 19, y: 5, tiles: [tile(18, 5), tile(19, 5), tile(20, 5)], to: { scene: 'throne', spawn: 'from_courtyard' }, radius: 1.5 },
     { id: 'warp_festival', kind: 'warp', x: 0, y: 12, tiles: col(0, 11, 13), to: { scene: 'festival', spawn: 'from_courtyard' }, sprite: { key: 'items', anim: 'sparkle' } },
     { id: 'door_conservatory', kind: 'warp', x: 31, y: 5, tiles: [tile(31, 5)], to: { scene: 'conservatory', spawn: 'from_courtyard' }, radius: 1.5 },
   ];
   return {
     id: 'courtyard', w: 40, h: 30, medium: 'air', mermaidAllowed: false, bg: '#8fd3ff', ground: g.cells, props, objects, gates: [],
-    spawns: { start: tile(12, 10), from_woods: tile(37, 15), from_bedroom: tile(8, 7), from_festival: tile(3, 12), from_conservatory: tile(31, 7), from_garden: tile(37, 12) }, music: 'sunlit'
+    spawns: { start: tile(12, 10), from_woods: tile(37, 15), from_bedroom: tile(8, 7), from_festival: tile(3, 12), from_conservatory: tile(31, 7), from_garden: tile(25, 7), from_throne: tile(19, 7) }, music: 'sunlit'
   };
 }
 
@@ -298,7 +302,6 @@ function conservatory(): MapDef {
   g.rect(0, 0, 18, 1, 'wall_top_int'); g.rect(0, 1, 18, 2, 'wall_lavender'); g.rect(0, 3, 18, 1, 'base_lavender');
   g.rect(0, 4, 1, 9, 'wall_lavender'); g.rect(17, 4, 1, 9, 'wall_lavender'); g.rect(0, 12, 18, 1, 'wall_lavender');
   g.rect(8, 12, 2, 1, 'floor_cream_tile1');
-  g.rect(17, 7, 1, 2, 'floor_cream_tile0'); // v0.4c: the glass door to the Royal Magic Garden
   const props: PropDef[] = [
     { key: 'window_night', x: 4, y: 2, ox: 8, depthBias: -2 }, { key: 'window_night', x: 13, y: 2, ox: 8, depthBias: -2 },
     { key: 'door_small', x: 8, y: 12, ox: 8, depthBias: -2 },
@@ -311,9 +314,8 @@ function conservatory(): MapDef {
     { id: 'queen', kind: 'npc', x: 7, y: 6, sprite: npc('queen'), blocks: true, radius: 1.9 },
     { id: 'wand_station', kind: 'station', x: 10, y: 7, radius: 2.0 },
     { id: 'door_exit', kind: 'warp', x: 8, y: 12, tiles: [tile(8, 12), tile(9, 12)], to: { scene: 'courtyard', spawn: 'from_conservatory' }, radius: 1.5 },
-    { id: 'door_garden', kind: 'warp', x: 17, y: 8, tiles: [tile(17, 7), tile(17, 8)], to: { scene: 'garden', spawn: 'from_conservatory' }, sprite: { key: 'items', anim: 'sparkle' }, radius: 1.5 },
   ];
-  return { id: 'conservatory', w: 18, h: 13, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(8, 10), from_garden: tile(15, 8) }, music: 'sunlit' };
+  return { id: 'conservatory', w: 18, h: 13, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(8, 10) }, music: 'sunlit' };
 }
 
 // ---------------------------------------------------------------- 8. Unicorn Meadow (36x26): tag with Dapple
@@ -344,9 +346,58 @@ function meadow(): MapDef {
   return { id: 'meadow', w: 36, h: 26, medium: 'air', mermaidAllowed: false, bg: '#4fae5a', ground: g.cells, props, objects, gates: [], spawns: { from_woods: tile(17, 21) }, music: 'wilds' };
 }
 
+
+// ---------------------------------------------------------------- 12. Throne Room (26x18) — v0.4d
+function throne(): MapDef {
+  const W = 26, H = 18;
+  const g = new Grid(W, H, 'floor_cream_tile0');
+  for (let y = 4; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g.set(x, y, (x + y) % 2 === 0 ? 'floor_cream_tile0' : 'floor_cream_tile1');
+  g.rect(0, 0, W, 1, 'wall_top_int'); g.rect(0, 1, W, 2, 'wall_lavender'); g.rect(0, 3, W, 1, 'base_lavender');
+  g.rect(0, 4, 1, H - 4, 'wall_lavender'); g.rect(W - 1, 4, 1, H - 4, 'wall_lavender'); g.rect(0, H - 1, W, 1, 'wall_lavender');
+  g.rect(12, H - 1, 2, 1, 'floor_cream_tile1'); // the great doors
+  const carpet = (y: number, bias: number): PropDef[] => [
+    { key: 'px_carpet', frame: 0, x: 12, y, depthBias: bias - (y + 1) * 16 }, { key: 'px_carpet', frame: 1, x: 13, y, depthBias: bias - (y + 1) * 16 }
+  ];
+  const props: PropDef[] = [
+    ...Array.from({ length: H - 5 }, (_, i) => carpet(7 + i, 2)).flat().filter((p) => p.y <= H - 2),
+    ...[3, 7, 18, 22].map((x): PropDef => ({ key: 'px_stained', x, y: 2, depthBias: -2 })),
+    ...[10, 15].map((x): PropDef => ({ key: 'px_banner', x, y: 2, depthBias: -2 })),
+    ...[[4, 6], [4, 11], [21, 6], [21, 11]].map(([x, y]): PropDef => ({ key: 'px_pillar', x, y, blocks: [[0, 0]] })),
+    { key: 'px_throne', x: 10, y: 6, depthBias: -6, blocks: [[0, 0]] }, { key: 'px_throne', x: 15, y: 6, depthBias: -6, blocks: [[0, 0]] },
+    ...[6, 19].map((x): PropDef => ({ key: 'px_sconce', x, y: 3, depthBias: -2 })),
+    { key: 'door_small', x: 12, y: H - 1, ox: 8, depthBias: -2 }
+  ];
+  const objects: ObjDef[] = [
+    { id: 'throne_king', kind: 'npc', x: 10, y: 6, sprite: npc('king'), blocks: true, radius: 2.0 },
+    { id: 'throne_queen', kind: 'npc', x: 15, y: 6, sprite: npc('queen'), blocks: true, radius: 2.0 },
+    { id: 'door_exit', kind: 'warp', x: 12, y: H - 1, tiles: [tile(12, H - 1), tile(13, H - 1)], to: { scene: 'courtyard', spawn: 'from_throne' }, radius: 1.5 }
+  ];
+  return { id: 'throne', w: W, h: H, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(12, H - 3) }, music: 'sunlit' };
+}
+
+// ---------------------------------------------------------------- 13. Royal Greenhouse (20x14) — v0.4d (its own room; no longer the Queen's workshop)
+function greenhouse(): MapDef {
+  const W = 20, H = 14;
+  const g = new Grid(W, H, 'floor_cream_tile0');
+  for (let y = 4; y < H - 1; y++) for (let x = 1; x < W - 1; x++) g.set(x, y, (x + y) % 2 === 0 ? 'path0' : 'path1');
+  g.rect(0, 0, W, 1, 'wall_top_int'); g.rect(0, 1, W, 2, 'wall_lavender'); g.rect(0, 3, W, 1, 'base_lavender');
+  g.rect(0, 4, 1, H - 4, 'wall_lavender'); g.rect(W - 1, 4, 1, H - 4, 'wall_lavender'); g.rect(0, H - 1, W, 1, 'wall_lavender');
+  g.rect(9, H - 1, 2, 1, 'path0');
+  const props: PropDef[] = [
+    ...[3, 8, 12, 16].map((x): PropDef => ({ key: 'px_stained', x, y: 2, depthBias: -2 })),
+    ...[[2, 5], [17, 5], [2, 10], [17, 10], [6, 8], [13, 8]].map(([x, y], i): PropDef => ({ key: ['leafy_plant', 'sunflower_pot', 'tulip_pot'][i % 3], x, y, blocks: [[0, 0]] })),
+    { key: 'px_bench', x: 9, y: 5, ox: 0, blocks: [[0, 0], [1, 0]] },
+    { key: 'door_small', x: 9, y: H - 1, ox: 8, depthBias: -2 }
+  ];
+  const objects: ObjDef[] = [
+    { id: 'door_exit', kind: 'warp', x: 9, y: H - 1, tiles: [tile(9, H - 1), tile(10, H - 1)], to: { scene: 'garden', spawn: 'from_greenhouse' }, radius: 1.5 }
+  ];
+  return { id: 'greenhouse', w: W, h: H, medium: 'air', mermaidAllowed: false, bg: '#3b8f4f', ground: g.cells, props, objects, gates: [], spawns: { from_garden: tile(9, H - 3) }, music: 'sunlit' };
+}
+
 let cache: Record<SceneId, MapDef> | null = null;
 export function getMaps(): Record<SceneId, MapDef> {
-  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river() };
+  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river(), throne: throne(), greenhouse: greenhouse() };
   return cache;
 }
 export const getMap = (id: SceneId) => getMaps()[id];

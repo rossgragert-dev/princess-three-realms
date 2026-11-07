@@ -13,8 +13,33 @@ const sparkle = { key: 'items', anim: 'sparkle' };
 const row = (x0: number, x1: number, y: number): Tile[] => Array.from({ length: x1 - x0 + 1 }, (_, i) => tile(x0 + i, y));
 const block = (x0: number, x1: number, y0: number, y1: number): Tile[] => { const out: Tile[] = []; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) out.push(tile(x, y)); return out; };
 
+/**
+ * Mirror a finished map top-to-bottom. The Enchanted Woods was authored with its trail entering from the south,
+ * but the trail from the Whispering Woods runs *south*, so the princess must arrive at the NORTH edge and walk deeper.
+ * Everything (ground, props, objects, gates, env, spawns) flips together, so all gameplay stays consistent.
+ */
+export function flipY(m: MapDef): MapDef {
+  const fy = (y: number) => m.h - 1 - y;
+  const ft = (t: Tile): Tile => ({ x: t.x, y: fy(t.y) });
+  return {
+    ...m,
+    ground: [...m.ground].reverse(),
+    props: m.props.map((p) => ({ ...p, y: fy(p.y) })),
+    objects: m.objects.map((o) => ({ ...o, y: fy(o.y), ...(o.tiles ? { tiles: o.tiles.map(ft) } : {}) })),
+    gates: m.gates.map((gt) => ({ ...gt, tiles: gt.tiles.map(ft) })),
+    env: m.env?.map((e) => ({ ...e, y: fy(e.y) })),
+    spawns: Object.fromEntries(Object.entries(m.spawns).map(([k, t]) => [k, ft(t)]))
+  };
+}
+
 // ---------------------------------------------------------------- 9. Enchanted Woods (40x30)
 export function enchanted(): MapDef {
+  const m = flipY(enchantedSouthUp());
+  // The 3-tile-tall ancient trees are drawn upward from their feet tile and their magic target sits on the canopy
+  // one tile above the feet. Mirroring puts that canopy one tile *below* the feet, so move it back up by two.
+  return { ...m, env: m.env?.map((e) => (e.type === 'ancient_tree' ? { ...e, y: e.y - 2 } : e)) };
+}
+function enchantedSouthUp(): MapDef {
   const g = new Grid(40, 30, 'grass0');
   g.mix(0, 0, 40, 30, GRASS, 101);
   g.scatter(0, 3, 40, 24, ['grass_flower0', 'grass_flower1'], 0.1, 102, isGrass);
@@ -62,6 +87,7 @@ export function enchanted(): MapDef {
   ];
   const lanternPos: [number, number][] = [[4, 10], [10, 10], [10, 14], [4, 14]];
   const objects: ObjDef[] = [
+    { id: 'clearing_blossom', kind: 'puzzle', x: 21, y: 8, showWhen: 'LANTERNS_LIT', sprite: { key: 'px_sflower', scale: 2.2 }, blocks: true, radius: 1.9 },
     { id: 'willa_woods', kind: 'npc', x: 23, y: 25, sprite: npc('willa'), blocks: true, radius: 1.8 },
     { id: 'atree_1', kind: 'puzzle', x: 12, y: 20, radius: 1.9 }, { id: 'atree_2', kind: 'puzzle', x: 26, y: 20, radius: 1.9 }, { id: 'atree_3', kind: 'puzzle', x: 16, y: 25, radius: 1.9 },
     { id: 'lantern_stone', kind: 'puzzle', x: 7, y: 12, sprite: { key: 'px_rune' }, blocks: true, radius: 1.8 },
@@ -156,13 +182,13 @@ export function garden(): MapDef {
     { id: 'goal_blue', kind: 'puzzle', x: GOALS.blue.x, y: GOALS.blue.y, sprite: { key: 'px_flower_blue' }, radius: 1.6 },
     { id: 'goal_yellow', kind: 'puzzle', x: GOALS.yellow.x, y: GOALS.yellow.y, sprite: { key: 'px_flower_yellow' }, radius: 1.6 },
     { id: 'treasure_garden', kind: 'find', hideWhen: 'GARDEN_TREASURE', x: 34, y: 12, sprite: sparkle, radius: 1.6 },
-    { id: 'door_conservatory', kind: 'warp', x: 5, y: 7, tiles: [tile(5, 7)], to: { scene: 'conservatory', spawn: 'from_garden' }, sprite: sparkle, radius: 1.5 },
+    { id: 'door_greenhouse', kind: 'warp', x: 5, y: 7, tiles: [tile(5, 7)], to: { scene: 'greenhouse', spawn: 'from_garden' }, sprite: sparkle, radius: 1.5 },
     { id: 'warp_courtyard', kind: 'warp', x: 0, y: 13, tiles: col(0, 12, 14), to: { scene: 'courtyard', spawn: 'from_garden' }, sprite: sparkle }
   ];
   const gates: Gate[] = [
     { id: 'garden_secret', flag: 'GARDEN_SECRET', tiles: [tile(31, 11), tile(32, 11)], closedTile: 'hedge', openTile: 'grass_flower0' }
   ];
-  return { id: 'garden', w: 36, h: 28, medium: 'air', mermaidAllowed: false, bg: '#3b8f4f', ground: g.cells, props, objects, gates, env, spawns: { from_courtyard: tile(2, 13), from_conservatory: tile(5, 9) }, music: 'sunlit' };
+  return { id: 'garden', w: 36, h: 28, medium: 'air', mermaidAllowed: false, bg: '#3b8f4f', ground: g.cells, props, objects, gates, env, spawns: { from_courtyard: tile(2, 13), from_greenhouse: tile(5, 9) }, music: 'sunlit' };
 }
 
 // ---------------------------------------------------------------- 11. Shimmering River (48x26), mermaid only

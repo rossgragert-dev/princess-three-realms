@@ -421,11 +421,38 @@ export class KingdomLayer implements KingdomApi {
     const x = g.x * T + T / 2, y = (g.y + 1) * T - 8;
     this.h.setObjPos(`bf_${c}`, { x: g.x, y: g.y });
     if (animated) {
-      this.scene.tweens.add({ targets: s, x, y, duration: dur(700), ease: 'Sine.InOut' });
-      this.puff(x, y, 'fx_petal', 8, 12, 18, 800);
-      services.audio.sfx('chime');
+      // v0.4d: a clearly visible success moment. The butterfly glides in on an arc, the flower blooms and glows,
+      // sparkles and petals burst, and a soft golden ring spreads out from where it settles.
+      const sx = s.x, sy = s.y;
+      this.scene.tweens.addCounter({
+        from: 0, to: 1, duration: dur(900), ease: 'Sine.InOut',
+        onUpdate: (tw) => { const t = tw.getValue() ?? 0; s.x = sx + (x - sx) * t; s.y = sy + (y - sy) * t - Math.sin(t * Math.PI) * 18; s.setDepth(s.y + 2); }
+      });
+      this.scene.time.delayedCall(dur(900), () => {
+        this.puff(x, y - 6, 'fx_petal', 10, 14, 22, 900);
+        this.puff(x, y - 8, 'fx_glow', 8, 16, 26, 1000);
+        const flower = this.h.objSprite(`goal_${c}`);
+        if (flower) this.scene.tweens.add({ targets: flower, scale: 1.45, duration: dur(200), yoyo: true, repeat: 1, ease: 'Back.Out' });
+        const ring = this.scene.add.image(x, y - 6, 'fx_glow').setDepth(8100).setBlendMode(Phaser.BlendModes.ADD).setTint(0xffe38a).setScale(0.4).setAlpha(0.9);
+        this.scene.tweens.add({ targets: ring, scale: 2.6, alpha: 0, duration: dur(900), onComplete: () => ring.destroy() });
+        services.audio.sfx('chime');
+      });
+      services.audio.sfx('sparkle');
     } else { s.setPosition(x, y); }
     s.setDepth(y + 2);
+  }
+
+  /** v0.4d: tapping a settled butterfly lets it flutter home so the matching game can be played again (progress stays saved). */
+  releaseButterfly(c: Seed): boolean {
+    const b = this.bf.get(c), s = this.h.objSprite(`bf_${c}`), home = this.map.objects.find((o) => o.id === `bf_${c}`);
+    if (!b || !s || !home || !b.landed) return false;
+    b.landed = false; b.following = false;
+    const x = home.x * T + T / 2, y = (home.y + 1) * T - 8;
+    this.h.setObjPos(`bf_${c}`, { x: home.x, y: home.y });
+    this.scene.tweens.add({ targets: s, x, y, duration: dur(900), ease: 'Sine.InOut', onUpdate: () => s.setDepth(s.y + 2) });
+    this.puff(s.x, s.y - 4, 'fx_glow', 5, 10, 16, 700);
+    services.audio.sfx('sparkle');
+    return true;
   }
 
   private matched(): number { return [...this.bf.values()].filter((b) => b.landed).length; }

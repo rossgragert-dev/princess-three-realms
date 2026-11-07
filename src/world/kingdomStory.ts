@@ -24,6 +24,7 @@ export interface KingdomApi {
   startLanterns(onDone: () => void): void;
   lanternTap(i: number): void;
   followButterfly(c: Seed): boolean;
+  releaseButterfly(c: Seed): boolean;
   fountainFx(): void;
   cycleFountain(): void;
   startRace(mode: RaceMode): void;
@@ -62,6 +63,28 @@ export async function onKingdomArrive(ctx: StoryCtx) {
 /** Returns true when it handled the object. */
 export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boolean> {
   const f = ctx.state.flags, id = obj.id, K = ctx.k, kd = ctx.state.kingdom;
+
+  // ------------------------------------------------------------ the Throne Room: parents only ever *suggest*
+  if (id === 'throne_king' || id === 'throne_queen') {
+    ctx.react(id);
+    await ctx.say(id === 'throne_king' ? SCRIPT.throneKing : SCRIPT.throneQueen);
+    const pick = await ctx.pickOne([{ id: 'woods', picture: 'icon_tree' }, { id: 'meadow', picture: 'icon_unicorn' }, { id: 'shore', picture: 'icon_mermaid' }, { id: 'garden', picture: 'px_flower_red' }]);
+    if (pick === 'woods') await ctx.say(SCRIPT.throneWoods);
+    else if (pick === 'meadow') await ctx.say(SCRIPT.throneMeadow);
+    else if (pick === 'shore') await ctx.say(SCRIPT.throneShore);
+    else if (pick === 'garden') await ctx.say(SCRIPT.throneGarden);
+    return true;
+  }
+
+  // ------------------------------------------------------------ the secret clearing: a singing blossom you can visit any time
+  if (id === 'clearing_blossom') {
+    ctx.react(id);
+    services.audio.sfx('bloom');
+    ctx.celebrate('px_sflower', 3);
+    for (const dx of [-2, 0, 2]) ctx.sparkle({ x: obj.x + dx, y: obj.y });
+    if (once('blossom_hi')) await ctx.say(SCRIPT.blossomHi);
+    return true;
+  }
 
   // ------------------------------------------------------------ the Enchanted Woods
   if (id === 'willa_woods') {
@@ -154,6 +177,7 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
   const bf = /^bf_(red|blue|yellow)$/.exec(id)?.[1] as Seed | undefined;
   if (bf) {
     if (K.followButterfly(bf)) { ctx.sparkle({ x: obj.x, y: obj.y }); if (!f.BUTTERFLIES_GUIDED && once('butterfly_ask')) await ctx.say(SCRIPT.butterflyAsk); }
+    else if (K.releaseButterfly(bf)) ctx.sparkle({ x: obj.x, y: obj.y }); // already settled: play again
     else ctx.hop(id);
     return true;
   }
@@ -198,6 +222,8 @@ async function learn(ctx: StoryCtx, pid: string, speaker: Line['speaker'], set: 
 async function lanternsWon(ctx: StoryCtx) {
   const fresh = ctx.complete('LANTERNS_LIT');
   ctx.celebrate('icon_lamp');
+  // a trail of sparkles along the newly opened path (the map is mirrored: the clearing is at the south end)
+  for (const y of [19, 21, 23]) ctx.sparkle({ x: 20, y });
   if (fresh) await ctx.say(SCRIPT.lanternsDone);
 }
 

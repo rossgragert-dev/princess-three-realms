@@ -37,7 +37,7 @@ describe('the three new areas are registered everywhere', () => {
   it('are connected both ways to the existing world', () => {
     const maps = getMaps();
     const link = (from: string, to: string) => maps[from as 'woods'].objects.some((o) => o.kind === 'warp' && o.to?.scene === to && !!maps[to as 'woods'].spawns[o.to.spawn]);
-    for (const [a, b] of [['woods', 'enchanted'], ['enchanted', 'woods'], ['courtyard', 'garden'], ['garden', 'courtyard'], ['conservatory', 'garden'], ['garden', 'conservatory'], ['shore', 'river'], ['river', 'shore']]) assert.ok(link(a, b), `${a} -> ${b}`);
+    for (const [a, b] of [['woods', 'enchanted'], ['enchanted', 'woods'], ['courtyard', 'garden'], ['garden', 'courtyard'], ['garden', 'greenhouse'], ['greenhouse', 'garden'], ['courtyard', 'throne'], ['throne', 'courtyard'], ['shore', 'river'], ['river', 'shore']]) assert.ok(link(a, b), `${a} -> ${b}`);
   });
   it('the guide knows how to leave each new area', () => {
     for (const id of NEW) assert.ok(EXITS[id], `${id} has an exit entry`);
@@ -75,10 +75,10 @@ describe('story objects can all be reached once secrets are open, and secrets st
     const m = getMap('enchanted');
     const base = { ...OPEN, LANTERNS_LIT: false, RHYME_BRIDGE: false } as Flags;
     const g0 = makeGrid(m, base, 'princess'), d0 = flood(g0, m.spawns.from_woods);
-    assert.ok(!d0.has(tileKey({ x: 20, y: 5 })), 'clearing closed');
-    assert.ok(!d0.has(tileKey({ x: 34, y: 16 })), 'east bank closed');
+    assert.ok(!d0.has(tileKey({ x: 20, y: 24 })), 'clearing closed');
+    assert.ok(!d0.has(tileKey({ x: 34, y: 13 })), 'east bank closed');
     const g1 = makeGrid(m, OPEN, 'princess'), d1 = flood(g1, m.spawns.from_woods);
-    assert.ok(d1.has(tileKey({ x: 20, y: 5 })) && d1.has(tileKey({ x: 34, y: 16 })));
+    assert.ok(d1.has(tileKey({ x: 20, y: 24 })) && d1.has(tileKey({ x: 34, y: 13 })));
   });
 });
 

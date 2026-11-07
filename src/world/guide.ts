@@ -3,17 +3,19 @@ import { MAIN_PATH, nextObjective } from '../systems/questEngine';
 
 /** Scene graph exits: from -> to: the object id of the warp that leads there. */
 export const EXITS: Record<SceneId, Partial<Record<SceneId, string>>> = {
-  courtyard: { woods: 'warp_woods', bedroom: 'door_bedroom', festival: 'warp_festival', conservatory: 'door_conservatory', garden: 'warp_garden' },
+  courtyard: { woods: 'warp_woods', bedroom: 'door_bedroom', festival: 'warp_festival', conservatory: 'door_conservatory', garden: 'warp_garden', throne: 'gate_throne' },
   woods: { courtyard: 'warp_courtyard', shore: 'warp_shore', meadow: 'warp_meadow', enchanted: 'warp_enchanted' },
   shore: { woods: 'warp_woods', grotto: 'dive', river: 'river_mouth' },
   grotto: { shore: 'surface' },
   bedroom: { courtyard: 'door_exit' },
   festival: { courtyard: 'warp_courtyard' },
-  conservatory: { courtyard: 'door_exit', garden: 'door_garden' },
+  conservatory: { courtyard: 'door_exit' },
   meadow: { woods: 'warp_woods' },
   enchanted: { woods: 'warp_woods' },
-  garden: { courtyard: 'warp_courtyard', conservatory: 'door_conservatory' },
-  river: { shore: 'exit_shore' }
+  garden: { courtyard: 'warp_courtyard', greenhouse: 'door_greenhouse' },
+  river: { shore: 'exit_shore' },
+  throne: { courtyard: 'door_exit' },
+  greenhouse: { garden: 'door_exit' }
 };
 
 /** Where each main-path step is completed. */

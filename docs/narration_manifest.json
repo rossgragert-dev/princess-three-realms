@@ -1029,7 +1029,7 @@
   {
     "key": "lanterns_done",
     "speaker": "willa",
-    "text": "The lanterns are lit! A secret path is open!",
+    "text": "The lanterns are lit! A secret path is open. Go and see what is waiting!",
     "required": false,
     "scene": "anywhere",
     "files": [
@@ -1695,6 +1695,83 @@
     "files": [
       "assets/audio/narration/river_intro.m4a",
       "assets/audio/narration/river_intro.ogg"
+    ]
+  },
+  {
+    "key": "blossom_hi",
+    "speaker": "willa",
+    "text": "The glow blossom sings for you! Tap it again any time you like.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/blossom_hi.m4a",
+      "assets/audio/narration/blossom_hi.ogg"
+    ]
+  },
+  {
+    "key": "throne_king_hi",
+    "speaker": "king",
+    "text": "Welcome home, Princess! Tap a picture to pick an adventure, or go anywhere you like!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_king_hi.m4a",
+      "assets/audio/narration/throne_king_hi.ogg"
+    ]
+  },
+  {
+    "key": "throne_queen_hi",
+    "speaker": "queen",
+    "text": "Hello, my little star! Where would you like to play today? Tap a picture!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_queen_hi.m4a",
+      "assets/audio/narration/throne_queen_hi.ogg"
+    ]
+  },
+  {
+    "key": "throne_woods",
+    "speaker": "king",
+    "text": "The Whispering Woods! Walk out the east path and say hello to the friendly tree.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_woods.m4a",
+      "assets/audio/narration/throne_woods.ogg"
+    ]
+  },
+  {
+    "key": "throne_meadow",
+    "speaker": "queen",
+    "text": "The Unicorn Meadow! Follow the forest path to find Dapple.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_meadow.m4a",
+      "assets/audio/narration/throne_meadow.ogg"
+    ]
+  },
+  {
+    "key": "throne_shore",
+    "speaker": "queen",
+    "text": "The Moonpool Shore! Walk through the woods to the sparkling water.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_shore.m4a",
+      "assets/audio/narration/throne_shore.ogg"
+    ]
+  },
+  {
+    "key": "throne_garden",
+    "speaker": "king",
+    "text": "The Royal Magic Garden! Go out the front doors and through the flower archway.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_garden.m4a",
+      "assets/audio/narration/throne_garden.ogg"
     ]
   },
   {

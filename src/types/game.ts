@@ -5,7 +5,7 @@ import type { Activities, EquippedWand } from '../content/family';
 import type { Kingdom } from '../content/kingdom';
 
 export type Form = 'princess' | 'unicorn' | 'mermaid';
-export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow' | 'enchanted' | 'garden' | 'river';
+export type SceneId = 'courtyard' | 'woods' | 'shore' | 'grotto' | 'bedroom' | 'festival' | 'conservatory' | 'meadow' | 'enchanted' | 'garden' | 'river' | 'throne' | 'greenhouse';
 
 export type QuestFlag =
   | 'INTRO_DONE'

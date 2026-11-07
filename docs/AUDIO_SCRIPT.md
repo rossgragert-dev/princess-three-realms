@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 178 (80 required)
+- Total lines: 185 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -178,9 +178,10 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `obj_lanterns` | Tap the stone, watch the lanterns glow, then tap them in the same order. |  | no |
 | anywhere | `lanterns_watch` | Watch the lanterns glow. Then tap them in the same order. |  | no |
 | anywhere | `lanterns_again` | Tap the glowing one next. You can do it! |  | no |
-| anywhere | `lanterns_done` | The lanterns are lit! A secret path is open! |  | no |
+| anywhere | `lanterns_done` | The lanterns are lit! A secret path is open. Go and see what is waiting! |  | no |
 | anywhere | `woods_done` | The woods are bright again. Thank you, Princess! |  | no |
 | anywhere | `bridge_done` | The rhyme bridge is ready. Let us cross! |  | no |
+| anywhere | `blossom_hi` | The glow blossom sings for you! Tap it again any time you like. |  | no |
 
 ## The King (`king`)
 
@@ -189,6 +190,9 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `king_hello` | Hello, Princess! Shall we light up the night sky? Tap the launch pad! |  | no |
 | anywhere | `king_again` | Ooh, so pretty! Let us make more fireworks! |  | no |
 | anywhere | `king_fading` | Oh dear! The magic in our kingdom is getting sleepy. Will you help wake it up? |  | no |
+| anywhere | `throne_king_hi` | Welcome home, Princess! Tap a picture to pick an adventure, or go anywhere you like! |  | no |
+| anywhere | `throne_woods` | The Whispering Woods! Walk out the east path and say hello to the friendly tree. |  | no |
+| anywhere | `throne_garden` | The Royal Magic Garden! Go out the front doors and through the flower archway. |  | no |
 
 ## The Queen (`queen`)
 
@@ -197,6 +201,9 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `queen_hello` | Welcome to my wand workshop! Come and make your very own wand. |  | no |
 | anywhere | `queen_again` | What a lovely wand! Would you like to change it? |  | no |
 | anywhere | `queen_fading` | The Enchanted Woods, the Royal Garden and the Shimmering River are waiting for you! |  | no |
+| anywhere | `throne_queen_hi` | Hello, my little star! Where would you like to play today? Tap a picture! |  | no |
+| anywhere | `throne_meadow` | The Unicorn Meadow! Follow the forest path to find Dapple. |  | no |
+| anywhere | `throne_shore` | The Moonpool Shore! Walk through the woods to the sparkling water. |  | no |
 
 ## Dapple the unicorn (`dapple`)
 
@@ -363,7 +370,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (112)
+## anywhere (119)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -395,7 +402,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | willa | `obj_lanterns` | Tap the stone, watch the lanterns glow, then tap them in the same order. |
 | willa | `lanterns_watch` | Watch the lanterns glow. Then tap them in the same order. |
 | willa | `lanterns_again` | Tap the glowing one next. You can do it! |
-| willa | `lanterns_done` | The lanterns are lit! A secret path is open! |
+| willa | `lanterns_done` | The lanterns are lit! A secret path is open. Go and see what is waiting! |
 | willa | `woods_done` | The woods are bright again. Thank you, Princess! |
 | tree | `atree_sound_s` | Listen! Which picture begins with the sss sound? |
 | tree | `atree_sound_c` | Listen! Which picture begins with the kuh sound? |
@@ -456,6 +463,13 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `word_yellow` | Yellow. |
 | narrator | `word_pink` | Pink. |
 | coralie | `river_intro` | Welcome to the river! Swim through the shining rings and listen to its song. |
+| willa | `blossom_hi` | The glow blossom sings for you! Tap it again any time you like. |
+| king | `throne_king_hi` | Welcome home, Princess! Tap a picture to pick an adventure, or go anywhere you like! |
+| queen | `throne_queen_hi` | Hello, my little star! Where would you like to play today? Tap a picture! |
+| king | `throne_woods` | The Whispering Woods! Walk out the east path and say hello to the friendly tree. |
+| queen | `throne_meadow` | The Unicorn Meadow! Follow the forest path to find Dapple. |
+| queen | `throne_shore` | The Moonpool Shore! Walk through the woods to the sparkling water. |
+| king | `throne_garden` | The Royal Magic Garden! Go out the front doors and through the flower archway. |
 | coralie | `river_hint` | Tap the post to start a race. Or swim and play with the shells! |
 | coralie | `river_pearls_hint` | Tap the singing shells with your bubbles. Can you wake four? |
 | coralie | `river_pearls_done` | Listen! The river is singing! Thank you! |

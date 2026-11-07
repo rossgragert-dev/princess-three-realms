@@ -47,7 +47,7 @@ for (const [obj, ans] of [['rhyme_1', 'hat'], ['rhyme_2', 'tree'], ['rhyme_3', '
 }
 await talkOut(page, 6); s = await st();
 ok('RHYME_BRIDGE flag and decor', !!s.flags.RHYME_BRIDGE && s.decor.includes('lantern_garland'));
-ok('bridge tile now a plank', (await ptr(page, 'tileName', 30, 16)) === 'bridge_plank', await ptr(page, 'tileName', 30, 16));
+ok('bridge tile now a plank', (await ptr(page, 'tileName', 30, 13)) === 'bridge_plank', await ptr(page, 'tileName', 30, 13));
 await shot(page, 'woods_bridge_open');
 
 // ---- 3. Storybook stump: a 3-card story in order
