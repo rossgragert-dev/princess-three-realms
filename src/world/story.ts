@@ -344,10 +344,11 @@ export async function pearlBubbleHit(ctx: StoryCtx, obj: ObjDef, curX: number): 
   services.audio.sfx('pop');
   await ctx.moveObject(obj.id, { x, y: PEARL_Y });
   if (!isSocketX(x)) return true;
-  ctx.complete('PEARL_PLACED');
+  const first = !ctx.state.flags.PEARL_PLACED;
+  ctx.complete('PEARL_PLACED'); // idempotent: the star and rewards are granted only once
   services.audio.sfx('chime');
-  ctx.celebrate('pearl');
-  await ctx.say(SCRIPT.pearlPushed);
+  if (first) ctx.celebrate('pearl'); else ctx.sparkle({ x, y: PEARL_Y });
+  await ctx.say(first ? SCRIPT.pearlPushed : SCRIPT.pearlHint);
   return true;
 }
 

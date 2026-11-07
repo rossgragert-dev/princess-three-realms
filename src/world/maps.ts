@@ -218,7 +218,7 @@ function grotto(): MapDef {
     { id: 'starfish_2', kind: 'puzzle', hideWhen: 'MARINA_HELPED', x: 22, y: 7, sprite: item('starfish'), radius: 1.6 },
     { id: 'starfish_3', kind: 'puzzle', hideWhen: 'MARINA_HELPED', x: 29, y: 15, sprite: item('starfish'), radius: 1.6 },
     { id: 'shell_puzzle', kind: 'puzzle', x: 11, y: 6, sprite: { key: 'items', frame: ITEM.shell, scale: 2 }, radius: 2 },
-    { id: 'pearl', kind: 'ability', hideWhen: 'PEARL_PLACED', x: 20, y: 20, sprite: item('pearl'), radius: 1.8 },
+    { id: 'pearl', kind: 'ability', x: 20, y: 20, sprite: item('pearl'), radius: 1.8 },
     { id: 'star_pedestal', kind: 'collect', x: 28, y: 17, sprite: { key: 'pedestal', frame: 0 }, blocks: true, radius: 1.8 },
     { id: 'chest_grotto', kind: 'chest', x: 32, y: 8, sprite: item('chest'), radius: 1.6, reward: 'sticker_pearl' },
     { id: 'surface', kind: 'warp', x: 3, y: 4, tiles: [tile(3, 4)], to: { scene: 'shore', spawn: 'from_grotto' }, sprite: { key: 'whirlpool', anim: 'whirlpool_spin' }, forms: ['mermaid'], radius: 1.5 },

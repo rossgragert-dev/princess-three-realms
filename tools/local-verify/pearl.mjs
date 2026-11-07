@@ -49,8 +49,19 @@ await talkOut(page, 10); await waitIdle(page);
 await page.evaluate(() => window.__ptr.save && window.__ptr.save());
 const saved = await page.evaluate(() => JSON.stringify(JSON.parse(localStorage.getItem(Object.keys(localStorage).find((k) => /save|ptr|princess/i.test(k))) || '{}').flags?.PEARL_PLACED));
 ok('PEARL_PLACED saved', saved === 'true', saved);
+// v0.4d: replay after completion — pearl rests at the socket, reload keeps it visible, tap rolls it back, bubbles push it again
+await enter({ PEARL_PLACED: true });
+let pq = await pearl(); ok('placed save: pearl rests in socket at x=28', pq.x === 28, JSON.stringify(pq));
+await shot(page, 'replay_cue');
+await place(26, 20, 'right'); await ptr(page, 'tapObject', 'pearl'); await sleep(2500); await talkOut(page, 6); await waitIdle(page);
+pq = await pearl(); ok('tapping finished pearl rolls it back to x=20', pq.x === 20, JSON.stringify(pq));
+ok('PEARL_PLACED stays set after reset', await page.evaluate(() => !!window.__ptr.state().flags.PEARL_PLACED));
+const rx = [];
+for (let i = 0; i < 4; i++) { const px = (await pearl()).x; await place(px - 4, 20, 'right'); await fire(1400); rx.push((await pearl()).x); }
+ok('replay: four bubbles bring it back to the socket', rx.join() === '22,24,26,28', rx.join());
+await talkOut(page, 10); await waitIdle(page);
 // older save: flag set already -> pearl hidden, bubbles harmless
 await enter({ PEARL_PLACED: true }); await place(16, 20, 'right'); await fire(1000);
-ok('already-placed save: no pearl, no error on firing', (await page.evaluate(() => window.__errs)).length === 0);
+ok('already-placed save: no error on firing', (await page.evaluate(() => window.__errs)).length === 0);
 const errs = await page.evaluate(() => window.__errs); ok('no page errors', errs.length === 0, errs.slice(0, 2).join('|'));
 await browser.close(); console.log(fail ? fail + ' FAILED' : 'ALL PASS'); process.exit(fail ? 1 : 0);

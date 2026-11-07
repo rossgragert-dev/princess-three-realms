@@ -10,7 +10,7 @@ import {
 } from '../world/navigation';
 import { guideTarget, OBJECTIVE_NARRATION } from '../world/guide';
 import { interact, lampPlaced, onArrive, pearlBubbleHit, session, type StoryCtx } from '../world/story';
-import { BUBBLE_RANGE, bubbleShot, isSocketX } from '../world/pearl';
+import { BUBBLE_RANGE, PEARL_LANE_X, bubbleShot, isSocketX } from '../world/pearl';
 import { SlotPool, TRAIL, TrailPlanner, flowerLook, isGrassTile } from '../world/trail';
 import { ensureTrailTextures, flowerKey, hornOffset } from '../art/unicornFx';
 import { bubbleTexture, ensureMermaidTextures, wandPose } from '../art/mermaidFx';
@@ -71,7 +71,7 @@ export class WorldScene extends Phaser.Scene {
     this.busy = false;
     this.idleMs = 0;
     this.trailSprites = []; this.trailPool = new SlotPool(TRAIL.max); this.trailPlan.reset();
-    this.merWand = undefined; this.pearlCue = undefined; this.pearlCueKey = ''; this.pearlBusy = false;
+    this.merWand = undefined; this.pearlCue = undefined; this.pearlReplay = undefined; this.pearlCueKey = ''; this.pearlBusy = false;
     this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.furnBlocked = new Set(); this.revealQueue = []; this.waterCells = [];
     this.treeSprite = undefined;
     this.kingdom = undefined;
@@ -186,7 +186,9 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private buildObjects() {
-    for (const o of this.map.objects) {
+    for (const o0 of this.map.objects) {
+      // A finished pearl rests in its shell socket on every later visit; tapping it plays again.
+      const o = o0.id === 'pearl' && this.state.flags.PEARL_PLACED ? { ...o0, x: PEARL_LANE_X[PEARL_LANE_X.length - 1] } : o0;
       this.objPos.set(o.id, { x: o.x, y: o.y });
       let spr: Phaser.GameObjects.Sprite | undefined;
       if (o.sprite) {
@@ -874,7 +876,25 @@ export class WorldScene extends Phaser.Scene {
   }
 
   /** A soft "stand here, face this way" glow beside the pearl: it only guides, it never steers the bubble. */
+  private pearlReplay?: Phaser.GameObjects.Graphics;
+  /** A big pulsing circular arrow over a finished pearl: tap it to roll it back and play again. */
+  private updatePearlReplay() {
+    const po = this.pearlObj(), pp = po ? (this.objPos.get('pearl') ?? po) : null;
+    const show = !!pp && !!this.state.flags.MARINA_HELPED && isSocketX(pp.x) && !this.ui?.modal && !this.leaving;
+    if (!show) { this.pearlReplay?.setVisible(false); return; }
+    if (!this.pearlReplay) {
+      const g = this.add.graphics().setDepth(9000);
+      g.fillStyle(0xffffff, 0.85).fillCircle(0, 0, 14).lineStyle(3, 0x6a4bd8, 1).strokeCircle(0, 0, 14);
+      g.lineStyle(4, 0x6a4bd8, 1).beginPath().arc(0, 0, 7, Phaser.Math.DegToRad(-60), Phaser.Math.DegToRad(230), false).strokePath();
+      g.fillStyle(0x6a4bd8, 1).fillTriangle(-8, -9, 1, -12, -3, -3);
+      if (!reducedEffects()) this.tweens.add({ targets: g, scale: { from: 0.9, to: 1.15 }, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+      this.pearlReplay = g;
+    }
+    this.pearlReplay.setVisible(true).setPosition(pp!.x * T + T / 2, pp!.y * T - 14);
+  }
+
   private updatePearlCue() {
+    this.updatePearlReplay();
     const want = this.player.form === 'mermaid' && this.pearlActive() && !this.ui?.modal && !this.leaving;
     if (!want) { this.pearlCue?.setVisible(false); this.pearlCueKey = ''; return; }
     const po = this.pearlObj()!, pp = this.objPos.get('pearl') ?? po;
