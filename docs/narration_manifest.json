@@ -1720,6 +1720,28 @@
     ]
   },
   {
+    "key": "gh_lesson",
+    "speaker": "pip",
+    "text": "Pick a seed! Take it to the garden, tap the grass to plant it, and the rain will make it grow!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/gh_lesson.m4a",
+      "assets/audio/narration/gh_lesson.ogg"
+    ]
+  },
+  {
+    "key": "gh_carry",
+    "speaker": "pip",
+    "text": "Now take it to the garden and tap the grass!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/gh_carry.m4a",
+      "assets/audio/narration/gh_carry.ogg"
+    ]
+  },
+  {
     "key": "kitchen_hi",
     "speaker": "queen",
     "text": "Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top!",

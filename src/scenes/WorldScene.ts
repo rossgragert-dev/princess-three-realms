@@ -29,6 +29,8 @@ import { KingdomLayer } from './kingdomLayer';
 import { envTargets } from '../world/envMagic';
 import type { KingdomApi } from '../world/kingdomStory';
 import { petKey } from '../content/kingdom';
+import { GITEM, LAWNS, tileOpen, type GPlaced } from '../content/gardenCatalog';
+import { GardenEditor, blockedByGarden, checkGarden } from '../world/gardenRules';
 
 const T = 16;
 
@@ -73,6 +75,7 @@ export class WorldScene extends Phaser.Scene {
     this.leaving = false;
     this.busy = false;
     this.idleMs = 0;
+    this.carrySprite = undefined; this.gardenSprites = []; this.gardenTimer = undefined; this.gardenEditor = undefined; this.petSprite = undefined; this.petTimers = [];
     this.trailSprites = []; this.trailPool = new SlotPool(TRAIL.max); this.trailPlan.reset();
     this.merWand = undefined; this.pearlCue = undefined; this.pearlReplay = undefined; this.pearlCueKey = ''; this.pearlBusy = false;
     this.objSprites.clear(); this.objPos.clear(); this.props = []; this.decorSprites = []; this.furnBlocked = new Set(); this.revealQueue = []; this.waterCells = [];
@@ -106,6 +109,7 @@ export class WorldScene extends Phaser.Scene {
     this.applyFlags(false);
     this.renderDecor();
     this.syncBedroomObjects();
+    this.renderGarden();
     this.cameras.main.fadeIn(dur(300));
 
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => this.onTap(p));
@@ -406,9 +410,75 @@ export class WorldScene extends Phaser.Scene {
     }
   }
 
+  // ------------------------------------------------------------------ v0.4d.4 garden design
+  gardenEditor?: GardenEditor;
+  private gardenSprites: Phaser.GameObjects.Sprite[] = [];
+  private gardenTimer?: Phaser.Time.TimerEvent;
+
+  private renderGarden(pop?: string) {
+    this.gardenSprites.forEach((s) => s.destroy()); this.gardenSprites = [];
+    this.gardenTimer?.remove(false); this.gardenTimer = undefined;
+    if (this.map.id !== 'garden') return;
+    const layout = this.gardenEditor?.layout ?? this.state.kingdom.gardenItems;
+    for (const p of layout) {
+      const it = GITEM[p.item]; if (!it) continue;
+      const s = this.add.sprite(p.x * T + (T * it.w) / 2, (p.y + 1) * T, it.key, it.key === 'px_gd_pinwheel' ? 0 : undefined).setOrigin(0.5, 1);
+      s.setDepth(it.key === 'px_gd_stones' ? (p.y + 1) * T - 400 : (p.y + 1) * T + 1);
+      if (it.key === 'px_gd_stones') s.setDepth(-5);
+      this.gardenSprites.push(s);
+      if (p.id === pop) { this.tweens.add({ targets: s, scale: { from: 0.4, to: 1 }, duration: dur(300), ease: 'Back.Out' }); this.sparkleAt(p.x, p.y, 8); }
+    }
+    const wheels = this.gardenSprites.filter((s) => s.texture.key === 'px_gd_pinwheel');
+    if (wheels.length && !reducedEffects()) { let f = 0; this.gardenTimer = this.time.addEvent({ delay: 320, loop: true, callback: () => { f = 1 - f; wheels.forEach((s) => s.setFrame(f)); } }); }
+  }
+
+  /** The garden design changed (placed, moved, put away, undone): redraw, rebuild walking, save. */
+  gardenChanged(layout: GPlaced[], pop?: string) {
+    this.state.kingdom.gardenItems = layout.map((p) => ({ ...p }));
+    this.refreshFurnBlocked();
+    this.grid = makeGrid(this.map, this.state.flags, this.player.form, this.furnBlocked);
+    this.renderGarden(pop);
+    services.save.save();
+  }
+
+  beginGardenEdit() {
+    if (this.map.id !== 'garden' || this.editing || this.busy || this.leaving || this.ui.modal) return;
+    this.editing = true;
+    this.player.endSteer(); this.player.stop();
+    this.gardenEditor = new GardenEditor(this.state.kingdom.gardenItems);
+    this.ui.setEditing(true);
+    // start on the lawn nearest to her
+    const me = this.player.tile; let best = 0, bd = 1e9;
+    LAWNS.forEach((l, i) => { const d = Math.hypot((l.x0 + l.x1) / 2 - me.x, (l.y0 + l.y1) / 2 - me.y); if (d < bd) { bd = d; best = i; } });
+    this.cameras.main.stopFollow(); this.cameras.main.setZoom(1);
+    this.showLawn(best);
+    this.scene.launch('GardenEdit', { world: this, lawn: best });
+  }
+
+  /** Centres a lawn above the bottom sheet. */
+  showLawn(i: number) {
+    const l = LAWNS[i], cam = this.cameras.main;
+    cam.setBounds(-100000, -100000, 200000, 200000);
+    cam.setScroll(((l.x0 + l.x1 + 1) / 2) * T - cam.width / 2, ((l.y0 + l.y1 + 1) / 2) * T - (cam.height - 86) / 2);
+  }
+
+  endGardenEdit() {
+    const layout = this.gardenEditor?.layout ?? this.state.kingdom.gardenItems;
+    this.gardenEditor = undefined;
+    this.scene.stop('GardenEdit');
+    this.gardenChanged(layout);
+    this.freeThePrincess();
+    this.editing = false;
+    this.cameras.main.startFollow(this.player.sprite, true, 0.12, 0.12);
+    this.setupCamera();
+    this.ui.setEditing(false);
+    this.buttonsLockedUntil = performance.now() + 600;
+  }
+
   // ------------------------------------------------------------------ bedroom decorating
   private refreshFurnBlocked() {
     this.furnBlocked = new Set();
+    if (this.map.id === 'garden') { for (const k of blockedByGarden(this.state.kingdom.gardenItems)) { const [x, y] = k.split(',').map(Number); this.furnBlocked.add(blockKey(x, y)); } return; }
     if (this.map.id !== 'bedroom') return;
     for (const t of furnitureBlockedTiles(this.state.bedroomLayout)) this.furnBlocked.add(blockKey(t.x, t.y));
   }
@@ -454,6 +524,7 @@ export class WorldScene extends Phaser.Scene {
 
   // ------------------------------------------------------------------ decorate mode
   beginDecorate() {
+    if (this.map.id === 'garden') { this.beginGardenEdit(); return; }
     if (this.map.id !== 'bedroom' || this.editing || this.busy || this.leaving || this.ui.modal) return;
     this.editing = true;
     this.player.endSteer(); this.player.stop();
@@ -476,7 +547,8 @@ export class WorldScene extends Phaser.Scene {
   /** Rotation / window resize: keep the view valid without restarting or moving the player. */
   private onResize = () => {
     if (!this.player || !this.map) return;
-    if (this.editing) this.decorScroll();
+    if (this.editing && this.map.id === 'garden') this.showLawn(0);
+    else if (this.editing) this.decorScroll();
     else { this.setupCamera(); }
   };
 
@@ -624,7 +696,32 @@ export class WorldScene extends Phaser.Scene {
     this.tapRing(wp.x, wp.y);
     const obj = this.pick(tile);
     if (obj) void this.goTo(obj);
+    else if (this.map.id === 'garden' && this.state.kingdom.carry && tileOpen(tile.x, tile.y) && checkGarden(this.state.kingdom.gardenItems, this.state.kingdom.carry, tile.x, tile.y).ok) this.walkToTile(tile, () => void this.plantCarried(tile));
     else this.walkToTile(tile);
+  }
+
+  /** v0.4d.4: she carried a seed / plant / ornament from the greenhouse: tapping open lawn plants it, a little rain waters it. */
+  private async plantCarried(tile: Tile) {
+    const kd = this.state.kingdom, item = kd.carry;
+    if (!item || this.busy || this.editing) return;
+    const c = checkGarden(kd.gardenItems, item, tile.x, tile.y);
+    if (!c.ok) return;
+    this.busy = true;
+    try {
+      const tmp = new GardenEditor(kd.gardenItems); const r = tmp.place(item, tile.x, tile.y);
+      if ('ok' in r) return;
+      this.gardenChanged(tmp.layout, r.id);
+      services.audio.sfx('splash');
+      for (let i = 0; i < sparkleCount(6); i++) {
+        const d = this.add.sprite(tile.x * T + 4 + i * 2, tile.y * T - 18 - (i % 3) * 5, 'px_drop').setDepth(9999);
+        this.tweens.add({ targets: d, y: d.y + 22, alpha: 0, duration: dur(520), delay: i * 70, onComplete: () => d.destroy() });
+      }
+      await new Promise<void>((res) => this.time.delayedCall(dur(700), () => res()));
+      services.audio.sfx('bloom');
+      this.sparkleAt(tile.x, tile.y, 10);
+      if (!kd.gardenTaught) { kd.gardenTaught = true; services.save.save(); }
+      this.freeThePrincess();
+    } finally { this.busy = false; this.afterAction(); }
   }
 
   private tapRing(x: number, y: number) {
@@ -1338,10 +1435,20 @@ export class WorldScene extends Phaser.Scene {
   }
 
   // ------------------------------------------------------------------ per-frame
+  private carrySprite?: Phaser.GameObjects.Image;
+  private updateCarry() {
+    const want = this.map.id === 'garden' && !this.editing ? this.state.kingdom.carry : null;
+    if (!want) { this.carrySprite?.destroy(); this.carrySprite = undefined; return; }
+    const key = GITEM[want]?.key; if (!key) return;
+    if (!this.carrySprite || this.carrySprite.texture.key !== key) { this.carrySprite?.destroy(); this.carrySprite = this.add.image(0, 0, key, key === 'px_gd_pinwheel' ? 0 : undefined).setScale(0.7).setDepth(9990); }
+    this.carrySprite.setPosition(this.player.sprite.x + 9, this.player.sprite.y - 22);
+  }
+
   update(_t: number, dt: number) {
     if (!this.player) return;
     this.driveStick(dt);
     this.player.update(dt);
+    this.updateCarry();
     if (!reducedEffects() && this.waterCells.length) {
       this.waterTick += dt;
       if (this.waterTick > 520) {

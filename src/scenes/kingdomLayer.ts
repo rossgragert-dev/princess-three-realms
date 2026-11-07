@@ -148,10 +148,10 @@ export class KingdomLayer implements KingdomApi {
     const reduced = reducedEffects();
     if (this.map.id === 'enchanted') {
       const w = this.map.w * T, h = this.map.h * T;
-      this.scene.add.rectangle(0, 0, w, h, 0x8f99d4, 1).setOrigin(0).setDepth(8000).setBlendMode(Phaser.BlendModes.MULTIPLY);
+      this.scene.add.rectangle(0, 0, w, h, 0xd2d8f6, 1).setOrigin(0).setDepth(8000).setBlendMode(Phaser.BlendModes.MULTIPLY);
       for (const p of this.h.props) {
         if (p.def.key !== 'px_mush' && p.def.key !== 'px_lamp') continue;
-        const g = this.scene.add.image(p.sprite.x, p.sprite.y - 6, 'fx_glow').setDepth(8100).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.5).setScale(0.9);
+        const g = this.scene.add.image(p.sprite.x, p.sprite.y - 6, 'fx_glow').setDepth(8100).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.5).setScale(1.0);
         if (!reduced) this.scene.tweens.add({ targets: g, alpha: 0.25, duration: 1400 + (p.def.x * 90) % 900, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
       }
     }

@@ -227,7 +227,7 @@ export class UIScene extends Phaser.Scene {
     // something new to place? the Home button glows until the child has put it in the room (not while already there)
     const waiting = unplacedEarned(st.unlockedDecor, st.bedroomLayout).length > 0;
     this.homeBtn.pulse(waiting && st.scene !== 'bedroom');
-    this.decorBtn.setVisible(st.scene === 'bedroom' && !this.editing);
+    this.decorBtn.setVisible((st.scene === 'bedroom' || st.scene === 'garden') && !this.editing);
     this.decorBtn.pulse(waiting && st.scene === 'bedroom');
     this.objBubble.removeAll(true);
     const step = chapterComplete(st) ? null : nextObjective(st);
@@ -406,7 +406,7 @@ export class UIScene extends Phaser.Scene {
   pickOne(options: readonly { id: string; picture: string }[]): Promise<string | null> {
     this.modalDepth++;
     return new Promise((resolve) => {
-      const cx = 256 + this.L.ox, cy = 192 + this.L.oy, n = options.length, gap = 112;
+      const cx = 256 + this.L.ox, cy = 192 + this.L.oy, n = options.length, gap = Math.min(112, Math.floor(440 / n)), sc = Math.min(1, gap / 112);
       const root = this.add.container(0, 0).setDepth(60);
       const dim = this.add.rectangle(cx, cy, 2000, 2000, 0x40255a, 0.45).setInteractive();
       root.add(dim);
@@ -415,11 +415,11 @@ export class UIScene extends Phaser.Scene {
       back.container.setDepth(61);
       options.forEach((o, i) => {
         const x = cx + (i - (n - 1) / 2) * gap;
-        const card = this.add.container(x, cy);
+        const card = this.add.container(x, cy).setScale(sc);
         card.add(roundedPanel(this, -48, -48, 96, 96, 0xfff6e4, 0x3ea6ff, 18));
         card.add(pic(this, o.picture, 0, 0, 2.2));
         card.setSize(96, 96).setInteractive({ useHandCursor: true });
-        card.on('pointerdown', () => { services.audio.sfx('pop'); this.tweens.add({ targets: card, scale: 1.12, duration: 90, yoyo: true, onComplete: () => close(o.id) }); });
+        card.on('pointerdown', () => { services.audio.sfx('pop'); this.tweens.add({ targets: card, scale: sc * 1.12, duration: 90, yoyo: true, onComplete: () => close(o.id) }); });
         root.add(card);
       });
     });

@@ -2,6 +2,7 @@
 // Nothing here touches Phaser: every rule is unit tested and every saved value is sanitized on load.
 import type { GameState } from '../types/game';
 import { sanitizeArt, type ArtStroke } from '../ui/paintStrokes';
+import { GITEM, sanitizeGarden, type GPlaced } from './gardenCatalog';
 
 /** The four seed colours: the flower that grows always matches the seed that was planted. */
 export const SEEDS = ['red', 'blue', 'yellow', 'pink'] as const;
@@ -35,13 +36,19 @@ export interface Kingdom {
   art: ArtStroke[];
   /** v0.4d.3: the pet friend living in her bedroom (null until she picks one; changeable any time, free). */
   pet: PetChoice | null;
+  /** v0.4d.4: pieces she has placed on the garden lawns (stable ids, bounds-checked on load). */
+  gardenItems: GPlaced[];
+  /** v0.4d.4: the greenhouse piece she is carrying out to the garden (a catalog id), or null. */
+  carry: string | null;
+  /** v0.4d.4: the short planting lesson was shown once. */
+  gardenTaught: boolean;
 }
 
 export const PET_TYPES = ['cat', 'dog', 'pony', 'bird'] as const;
 export interface PetChoice { type: number; look: number }
 export const petKey = (p: PetChoice) => `px_pet_${PET_TYPES[p.type]}${p.look}`;
 
-export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [], pet: null });
+export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [], pet: null, gardenItems: [], carry: null, gardenTaught: false });
 
 const int = (v: unknown, max: number) => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(max, Math.floor(v))) : 0);
 
@@ -60,6 +67,9 @@ export function sanitizeKingdom(raw: unknown): Kingdom {
   const rc = (r.race && typeof r.race === 'object' ? r.race : {}) as Partial<RaceRecords>;
   d.race = { friendly: int(rc.friendly, 100000), starBest: int(rc.starBest, 3), bestMs: int(rc.bestMs, 3_600_000) };
   d.art = sanitizeArt(r.art);
+  d.gardenItems = sanitizeGarden(r.gardenItems);
+  d.carry = typeof r.carry === 'string' && GITEM[r.carry] ? r.carry : null;
+  d.gardenTaught = r.gardenTaught === true;
   if (r.pet && typeof r.pet === 'object') { const pp = r.pet as Partial<PetChoice>; if (typeof pp.type === 'number' && typeof pp.look === 'number') d.pet = { type: int(pp.type, PET_TYPES.length - 1), look: int(pp.look, 3) }; }
   return d;
 }

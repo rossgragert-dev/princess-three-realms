@@ -207,6 +207,8 @@ export const NARRATION: NarrationClip[] = [
   clip('river_intro', 'coralie', 'Welcome to the river! Swim through the shining rings and listen to its song.', undefined, false),
   clip('pet_keeper_hi', 'pip', 'Would you like a pet friend? Tap the animal you love!', undefined, false),
   clip('pet_chosen', 'pip', 'Your new friend is waiting for you in your bedroom!', undefined, false),
+  clip('gh_lesson', 'pip', 'Pick a seed! Take it to the garden, tap the grass to plant it, and the rain will make it grow!', undefined, false),
+  clip('gh_carry', 'pip', 'Now take it to the garden and tap the grass!', undefined, false),
   clip('kitchen_hi', 'queen', 'Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top!', undefined, false),
   clip('gallery_hi', 'king', 'This is your very own art gallery! Tap the easel to paint a picture for the wall.', undefined, false),
   clip('maze_king_hi', 'king', 'You found me in the middle of the garden maze! Well done, Princess!', undefined, false),

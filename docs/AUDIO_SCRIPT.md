@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 190 (80 required)
+- Total lines: 192 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -126,6 +126,8 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | courtyard | `success_carrots` | Three carrots! Thank you, Princess! Now let us find the rainbow in the woods. |  | yes |
 | anywhere | `pet_keeper_hi` | Would you like a pet friend? Tap the animal you love! |  | no |
 | anywhere | `pet_chosen` | Your new friend is waiting for you in your bedroom! |  | no |
+| anywhere | `gh_lesson` | Pick a seed! Take it to the garden, tap the grass to plant it, and the rain will make it grow! |  | no |
+| anywhere | `gh_carry` | Now take it to the garden and tap the grass! |  | no |
 
 ## The Talking Tree (`tree`)
 
@@ -375,7 +377,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (124)
+## anywhere (126)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -470,6 +472,8 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | coralie | `river_intro` | Welcome to the river! Swim through the shining rings and listen to its song. |
 | pip | `pet_keeper_hi` | Would you like a pet friend? Tap the animal you love! |
 | pip | `pet_chosen` | Your new friend is waiting for you in your bedroom! |
+| pip | `gh_lesson` | Pick a seed! Take it to the garden, tap the grass to plant it, and the rain will make it grow! |
+| pip | `gh_carry` | Now take it to the garden and tap the grass! |
 | queen | `kitchen_hi` | Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top! |
 | king | `gallery_hi` | This is your very own art gallery! Tap the easel to paint a picture for the wall. |
 | king | `maze_king_hi` | You found me in the middle of the garden maze! Well done, Princess! |

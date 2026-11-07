@@ -7,6 +7,7 @@ import { SCRIPT, type Line } from '../content/dialogue';
 import { puzzleById } from '../content/puzzleBank';
 import { newProgress, countTap } from '../systems/puzzleEngine';
 import { services } from '../systems/services';
+import { GITEM } from '../content/gardenCatalog';
 import { PET_TYPES, petKey, allDone, fountainReady, markDone, plantedCount, type PlotId, type PlotStage, type Seed } from '../content/kingdom';
 import type { RaceMode } from './race';
 
@@ -84,6 +85,19 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     return true;
   }
 
+  // ------------------------------------------------------------ the Greenhouse of Seeds: choose a seed, plant or ornament to carry to the garden
+  if (id === 'gh_seeds' || id === 'gh_pots' || id === 'gh_ornaments') {
+    const list = id === 'gh_seeds' ? ['g_rose', 'g_tulip', 'g_bluebell', 'g_daisy', 'g_sunflower', 'g_lavender']
+      : id === 'gh_pots' ? ['g_tree', 'g_blossom', 'g_bush', 'g_rosebush', 'g_hedge', 'g_topiary']
+      : ['g_birdbath', 'g_gnome', 'g_pinwheel', 'g_crystal', 'g_mushrooms', 'g_pot'];
+    if (!kd.gardenTaught && once('gh_lesson')) await ctx.say(SCRIPT.ghLesson);
+    const pick = await ctx.pickOne(list.map((g) => ({ id: g, picture: GITEM[g].key })));
+    if (pick === null) return true;
+    kd.carry = pick; ctx.save();
+    ctx.celebrate(GITEM[pick].key, 3);
+    await ctx.say(SCRIPT.ghCarry);
+    return true;
+  }
   // ------------------------------------------------------------ the Pet Keeper: pick an animal, then how it looks, then confirm
   if (id === 'pet_keeper') {
     ctx.react(id);

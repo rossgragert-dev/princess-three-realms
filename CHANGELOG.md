@@ -1,4 +1,10 @@
 # Changelog
+## 0.4.0d.4 "Gardens and Enchantment" (preview)
+- **Free garden design:** a decorate button now appears in the Royal Magic Garden. Pick from 24 picture pieces in four tabs (flowers, trees and bushes, structures, ornaments), tap or drag to aim (green = fits, red = try elsewhere), press the check; tap a placed piece to move it or put it away; undo. Three open lawns (a lawn button hops between them). Solid pieces can never wall anything off: every garden object and both entrances stay reachable. Designs are saved by stable id with strict bounds, overlap and quantity checks; old saves load unchanged.
+- **Greenhouse of Seeds:** three picture shelves (seed packets, potted trees and bushes, ornaments). Choose one to carry out to the garden (it floats beside her), then tap open grass to plant it; a little rain falls and it blooms. A one-time spoken/picture lesson (choose, plant, water) shows the first time.
+- **Enchanted Woods** are brighter: the night tint is much lighter and the glow lights are softer.
+- Tests: `garden.test.ts` (350 unit tests total), real-Chrome driver `v04d-garden.mjs`.
+
 ## 0.4.0d.3 "Bedroom and Companions" (preview)
 - **Princess beds redrawn:** Cozy, Sunny and Canopy beds now have a tall starred headboard, two pillows, a patterned folded blanket and footboard/posts; the Canopy bed adds drapes and a canopy top. Furniture rearranging is unchanged.
 - **Sleep:** tap the bed (wherever it is placed) and the princess tucks in, the room darkens under a moon and twinkling stars with floating Zs, fades to black, then warm morning sunbeams bring her back beside the bed. Repeatable, no clock, no penalties; reduced-effects mode uses calmer visuals.

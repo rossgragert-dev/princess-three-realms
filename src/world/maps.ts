@@ -397,7 +397,11 @@ function greenhouse(): MapDef {
     { key: 'door_small', x: 9, y: H - 1, ox: 8, depthBias: -2 }
   ];
   const objects: ObjDef[] = [
-    { id: 'door_exit', kind: 'warp', x: 9, y: H - 1, tiles: [tile(9, H - 1), tile(10, H - 1)], to: { scene: 'garden', spawn: 'from_greenhouse' }, radius: 1.5 }
+    { id: 'door_exit', kind: 'warp', x: 9, y: H - 1, tiles: [tile(9, H - 1), tile(10, H - 1)], to: { scene: 'garden', spawn: 'from_greenhouse' }, radius: 1.5 },
+    // v0.4d.4: three picture stations: pick a seed packet, a potted tree or bush, or an ornament to carry out to the garden
+    { id: 'gh_seeds', kind: 'station', x: 4, y: 7, sprite: { key: 'px_pkt_red', scale: 2 }, blocks: true, radius: 2.0 },
+    { id: 'gh_pots', kind: 'station', x: 15, y: 7, sprite: { key: 'px_gd_pot', scale: 1.5 }, blocks: true, radius: 2.0 },
+    { id: 'gh_ornaments', kind: 'station', x: 9, y: 9, sprite: { key: 'px_gd_gnome', scale: 1.2 }, blocks: true, radius: 2.0 }
   ];
   return { id: 'greenhouse', w: W, h: H, medium: 'air', mermaidAllowed: false, bg: '#3b8f4f', ground: g.cells, props, objects, gates: [], spawns: { from_garden: tile(9, H - 3) }, music: 'sunlit' };
 }

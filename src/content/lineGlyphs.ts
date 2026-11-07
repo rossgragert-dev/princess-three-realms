@@ -104,6 +104,7 @@ export const LINE_GLYPHS: Record<string, string[]> = {
   word_red: ['px_flower_red'], word_blue: ['px_flower_blue'], word_yellow: ['px_flower_yellow'], word_pink: ['px_flower_pink'],
   river_intro: ['icon_mermaid', 'px_ring', 'water'],
   pet_keeper_hi: ['px_pet_cat0', 'px_pet_dog0', 'px_pet_bird0'], pet_chosen: ['heart', 'icon_home', 'sparkle0'],
+  gh_lesson: ['px_pkt_red', 'px_gd_tulip', 'px_drop'], gh_carry: ['px_gd_rose', 'icon_home', 'sparkle0'],
   kitchen_hi: ['px_cake', 'icon_star', 'sparkle0'], gallery_hi: ['icon_brush', 'icon_palette', 'icon_star'], maze_king_hi: ['icon_star', 'heart', 'sparkle0'],
   blossom_hi: ['px_sflower', 'icon_music', 'sparkle0'],
   throne_king_hi: ['icon_star', 'sparkle0', 'heart'], throne_queen_hi: ['heart', 'icon_star', 'sparkle0'],

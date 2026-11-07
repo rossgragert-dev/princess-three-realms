@@ -63,6 +63,8 @@ export const SCRIPT = {
   ladybugAsk: [L('nana', 'ladybug_count')],
   petKeeperHi: [L('pip', 'pet_keeper_hi')],
   petChosen: [L('pip', 'pet_chosen')],
+  ghLesson: [L('pip', 'gh_lesson')],
+  ghCarry: [L('pip', 'gh_carry')],
   kitchenHi: [L('queen', 'kitchen_hi')],
   galleryHi: [L('king', 'gallery_hi')],
   mazeKing: [L('king', 'maze_king_hi')],
