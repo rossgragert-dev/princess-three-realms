@@ -92,7 +92,7 @@ describe('v0.4d.6 pajamas', () => {
 });
 
 import { SPECIES_CARE, FOOD_PICS, CARE_PICS, sanitizePetCare, record, afterPetChange, isCheerful, defaultPetCare } from '../world/petCare';
-import { PET_TYPES, defaultKingdom, sanitizeKingdom } from '../content/kingdom';
+import { PET_TYPES } from '../content/kingdom';
 
 describe('v0.4d.6 stage 4: pet care', () => {
   it('every species has two foods, a toy and distinct play, using known pictures', () => {
