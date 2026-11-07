@@ -42,6 +42,10 @@ export interface StoryCtx {
   /** v0.4c: Kingdom Beyond interactive systems (garden, lanterns, race) and a big picture chooser. */
   readonly k: import('./kingdomStory').KingdomApi;
   pickOne(options: readonly import('./kingdomStory').PickOption[]): Promise<string | null>;
+  /** Resolves when any in-world animation started by the last completion (the tree sliding aside) has finished. */
+  settle(): Promise<void>;
+  /** Fades out and arrives at a safe spawn using the normal travel path (saves first). */
+  travelTo(scene: import('../types/game').SceneId, spawn: string): void;
   playRace(mode: import('./race').RaceMode): Promise<import('../scenes/RaceScene').RaceResult>;
   bake(spec: import('../ui/creativePanels').BakeSpec): Promise<import('../ui/creativePanels').BakeResult | null>;
   paint(strokes: readonly import('../ui/paintStrokes').ArtStroke[]): Promise<import('../ui/paintStrokes').ArtStroke[] | null>;
@@ -134,6 +138,7 @@ export async function interact(ctx: StoryCtx, obj: ObjDef): Promise<void> {
       const r = await ctx.choicePuzzle(puzzleById('tree_sound')!, false);
       if (!r.solved) return;
       ctx.complete('TREE_GATE_OPEN');
+      await ctx.settle();
       await ctx.say(SCRIPT.treeDone);
       // Willa arrives through the opened gate and introduces the unicorn form.
       ctx.complete('WILLA_MET');

@@ -116,13 +116,12 @@ describe('pathfinding', () => {
 
 describe('forms never strand the player (T05)', () => {
   const shore = maps.shore;
-  it('forms unlock with the story', () => {
-    assert.deepEqual(availableForms({}), ['princess']);
-    assert.deepEqual(availableForms({ WILLA_MET: true }), ['princess', 'unicorn']);
+  it('all three forms are free from the very first launch (v0.4d.6)', () => {
+    assert.deepEqual(availableForms({}), ['princess', 'unicorn', 'mermaid']);
     assert.deepEqual(availableForms(ALL), ['princess', 'unicorn', 'mermaid']);
   });
-  it('locked forms are refused politely', () => {
-    assert.deepEqual(planFormChange(maps.woods, {}, { x: 5, y: 15 }, 'princess', 'unicorn'), { mode: 'unavailable', reason: 'locked' });
+  it('a fresh game can become a unicorn immediately', () => {
+    assert.deepEqual(planFormChange(maps.woods, {}, { x: 5, y: 15 }, 'princess', 'unicorn'), { mode: 'now' });
   });
   it('princess <-> unicorn swap in place on land', () => {
     assert.deepEqual(planFormChange(maps.woods, ALL, { x: 5, y: 15 }, 'princess', 'unicorn'), { mode: 'now' });

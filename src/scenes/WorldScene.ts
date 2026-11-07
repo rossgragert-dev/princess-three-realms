@@ -56,6 +56,8 @@ export class WorldScene extends Phaser.Scene {
   private waterCells: { x: number; y: number; phase: number }[] = [];
   private waterTick = 0;
   private treeSprite?: Phaser.GameObjects.Sprite;
+  private treeSlide: Promise<void> = Promise.resolve();
+  private treeSlideBusy = false;
   private init0: InitData = {};
   private kingdom?: KingdomLayer;
 
@@ -255,11 +257,25 @@ export class WorldScene extends Phaser.Scene {
     if (this.treeSprite && flags.TREE_GATE_OPEN) {
       const home = this.objPos.get('tree')!;
       const tx = home.x * T + T / 2 - 4 * T;
-      if (animated) this.tweens.add({ targets: this.treeSprite, x: tx, duration: dur(900), ease: 'Sine.InOut' });
-      else this.treeSprite.x = tx;
+      if (animated && this.treeSprite.x !== tx) this.treeSlide = this.slideTree(tx);
+      else if (!this.treeSlideBusy) this.treeSprite.x = tx;
     }
     this.grid = makeGrid(this.map, flags, st.form, this.furnBlocked);
     this.kingdom?.applyFlags(animated);
+  }
+
+  /** The talking tree rumbles and slides four tiles aside so everyone can see the gate open (reduced effects: snaps, with a sparkle). */
+  private slideTree(tx: number): Promise<void> {
+    const tree = this.treeSprite;
+    if (!tree) return Promise.resolve();
+    this.treeSlideBusy = true;
+    const done = () => { this.treeSlideBusy = false; tree.x = tx; };
+    if (reducedEffects()) { done(); this.sparkleAt(tx / T, tree.y / T - 1, 8); return Promise.resolve(); }
+    return new Promise((resolve) => {
+      this.cameras.main.shake(1700, 0.0018);
+      const tick = this.time.addEvent({ delay: 180, repeat: 9, callback: () => this.sparkleAt(tree.x / T, tree.y / T - 0.5, 3) });
+      this.tweens.add({ targets: tree, x: tx, duration: 1800, ease: 'Sine.InOut', onComplete: () => { tick.remove(); done(); this.sparkleAt(tx / T, tree.y / T - 1, 8); resolve(); } });
+    });
   }
 
   /** v0.4c: the Enchanted Woods, Royal Magic Garden and Shimmering River carry a living layer; other maps skip it. */
@@ -632,6 +648,8 @@ export class WorldScene extends Phaser.Scene {
       get k() { return self.kingdom as unknown as KingdomApi; },
       pickOne: (o: readonly { id: string; picture: string }[]) => self.ui.pickOne(o),
       playRace: (mode) => self.playRace(mode),
+      settle: () => self.treeSlide,
+      travelTo: (scene, spawn) => self.travel(scene, spawn),
       bake: (spec) => self.ui.bake(spec),
       paint: (strokes) => self.ui.paint(strokes),
       save: () => services.save.save(),
@@ -1509,6 +1527,7 @@ export class WorldScene extends Phaser.Scene {
       layout: () => (this.editor?.layout ?? this.state.bedroomLayout).map((p) => ({ ...p })),
       editing: () => this.editing,
       puzzleCards: () => this.ui.puzzleCards.map((c) => ({ ...c })),
+      objSprite: (id: string) => { const o = this.objSprites.get(id); return o ? { x: o.x, y: o.y, visible: o.visible, tweens: this.tweens.getTweensOf(o).length } : null; },
       moving: () => this.player.moving,
       steering: () => this.player.steering,
       foot: () => this.player.foot,

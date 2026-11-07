@@ -14,11 +14,9 @@ export type FormPlan =
   | { mode: 'unavailable'; reason: Unavailable };
 
 /** Which forms the picker offers right now. Locked forms are hidden, never greyed text. */
-export function availableForms(flags: Flags): Form[] {
-  const f: Form[] = ['princess'];
-  if (flags.WILLA_MET) f.push('unicorn');
-  if (flags.RAINBOW_BRIDGE_OPEN) f.push('mermaid');
-  return f;
+export function availableForms(_flags: Flags): Form[] {
+  // v0.4d.6: every form is free from the first launch. Story flags track story events, not abilities.
+  return ['princess', 'unicorn', 'mermaid'];
 }
 
 const N4: [number, number][] = [[1, 0], [-1, 0], [0, 1], [0, -1]];

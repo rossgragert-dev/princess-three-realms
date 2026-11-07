@@ -1,5 +1,6 @@
 // v0.4c: story beats and activity flow for the Kingdom Beyond. Gentle by design: replay is always welcome, a wrong
 // answer only ever brings a hint, and every reward is granted once through completeFlag.
+import { MISSIONS } from './missions';
 import type { PuzzleDef, QuestFlag } from '../types/game';
 import type { ObjDef } from './types';
 import type { StoryCtx } from './story';
@@ -78,10 +79,9 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     ctx.react(id);
     await ctx.say(id === 'throne_king' ? SCRIPT.throneKing : SCRIPT.throneQueen);
     const pick = await ctx.pickOne([{ id: 'woods', picture: 'icon_tree' }, { id: 'meadow', picture: 'icon_unicorn' }, { id: 'shore', picture: 'icon_mermaid' }, { id: 'garden', picture: 'px_flower_red' }]);
-    if (pick === 'woods') await ctx.say(SCRIPT.throneWoods);
-    else if (pick === 'meadow') await ctx.say(SCRIPT.throneMeadow);
-    else if (pick === 'shore') await ctx.say(SCRIPT.throneShore);
-    else if (pick === 'garden') await ctx.say(SCRIPT.throneGarden);
+    if (!pick || !MISSIONS[pick]) return true; // cancel / back: she stays in the throne room
+    await ctx.say(pick === 'woods' ? SCRIPT.throneWoods : pick === 'meadow' ? SCRIPT.throneMeadow : pick === 'shore' ? SCRIPT.throneShore : SCRIPT.throneGarden);
+    ctx.travelTo(MISSIONS[pick].scene, MISSIONS[pick].spawn);
     return true;
   }
 
