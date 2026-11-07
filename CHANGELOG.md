@@ -1,4 +1,12 @@
 # Changelog
+## 0.4.0d.2 "The Royal Castle" (preview)
+- **Throne Room** now has a west door to the Royal Kitchen and an east door to the Royal Gallery.
+- **Royal Kitchen:** four replayable decorate-it tables (cake, cookies, pizza, ice cream). Pick from large picture toppings by tapping or dragging them onto the treat; scoops stack on the cone; undo, back and a green check. No reading, money, prerequisites or failing.
+- **Royal Gallery:** a real painting canvas (8 colours, 3 brush sizes, eraser, star/heart/flower stamps, undo, clear). Her painting is saved (bounded, sanitized stroke list inside the save, works offline) and hangs in the big gold frame on the gallery wall.
+- **King's Garden Labyrinth:** the small dark castle in the King's festival garden is replaced by a hedge archway to a winding, always-solvable hedge maze (seeded spanning tree) with benches, statues, fountains, flower nooks, an open garden room where the King waits, and an entrance plaza. The fireworks station stays in the festival.
+- New scene ids `kitchen`, `gallery`, `labyrinth`; picture glyphs and optional narration clips for the new lines; old saves load unchanged (empty gallery).
+- Tests: 335 unit tests (`castle.test.ts`: maze connectivity, every nook reachable, door reciprocity, station reachability, painting save sanitation); real-Chrome driver `v04d-castle.mjs`.
+
 ## 0.4.0d.1 "Foundations and Navigation" (preview, development branch)
 - **Doorways:** the courtyard's east border now leads only to the Whispering Woods. The Royal Magic Garden has its own flower archway on the castle front. The great castle gate is a real door to a new **Throne Room** (carpet, pillars, banners, stained glass, King and Queen on their thrones; tap either for optional picture-card suggestions, never required). The garden's greenhouse door now enters a new **Greenhouse** room instead of the Queen's workshop (which keeps its courtyard door). Every new door has a way back.
 - **Enchanted Woods:** the map is mirrored so the trail from the Whispering Woods arrives at its NORTH edge, walking south, with the exit also on the north edge. The lantern clearing now holds a singing Glow Blossom (repeatable, no rewards) and a sparkle trail marks the newly opened path.

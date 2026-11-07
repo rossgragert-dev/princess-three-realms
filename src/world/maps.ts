@@ -3,6 +3,7 @@ import { ITEM, TILE, type TileName } from '../content/frameIndex';
 import type { Gate, MapDef, ObjDef, PropDef } from './types';
 import { Grid, col, isGrass, isSand, item, npc, tile, trees } from './mapKit';
 import { enchanted, garden, river } from './kingdomMaps';
+import { gallery, kitchen, labyrinth } from './castleMaps';
 
 // ---------------------------------------------------------------- 1. Starfall Courtyard (40x30)
 function courtyard(): MapDef {
@@ -282,7 +283,7 @@ function festival(): MapDef {
   g.mix(5, 6, 20, 10, ['cobble0', 'cobble1'], 67);       // the festival plaza
   g.mix(24, 9, 6, 3, ['path0', 'path1'], 68);            // the path back to the courtyard
   const props: PropDef[] = [
-    { key: 'fw_castle', x: 15, y: 4, ox: 0, depthBias: -3 },
+    { key: 'px_arch', x: 15, y: 4, ox: 0, depthBias: -3 },
     { key: 'fw_dais', x: 14, y: 12, blocks: [[-1, 0], [0, 0], [1, 0]] },
     ...trees([[3, 7, 'a'], [3, 14, 'b'], [26, 6, 'b'], [26, 15, 'a'], [8, 5, 'b'], [21, 5, 'a']]),
     { key: 'bush', x: 6, y: 16 }, { key: 'bush', x: 23, y: 16 }, { key: 'bush', x: 4, y: 10 }
@@ -291,8 +292,9 @@ function festival(): MapDef {
     { id: 'king', kind: 'npc', x: 14, y: 9, sprite: npc('king'), blocks: true, radius: 1.9 },
     { id: 'dais', kind: 'station', x: 14, y: 13, radius: 1.9 },
     { id: 'warp_courtyard', kind: 'warp', x: 29, y: 10, tiles: col(29, 9, 11), to: { scene: 'courtyard', spawn: 'from_festival' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'warp_labyrinth', kind: 'warp', x: 15, y: 4, tiles: [tile(14, 4), tile(15, 4), tile(16, 4)], to: { scene: 'labyrinth', spawn: 'from_festival' }, radius: 1.5 },
   ];
-  return { id: 'festival', w: 30, h: 20, medium: 'air', mermaidAllowed: false, bg: '#1b1550', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(26, 10) }, music: 'sunlit' };
+  return { id: 'festival', w: 30, h: 20, medium: 'air', mermaidAllowed: false, bg: '#1b1550', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(26, 10), from_labyrinth: tile(15, 6) }, music: 'sunlit' };
 }
 
 // ---------------------------------------------------------------- 7. The Queen's Conservatory (18x13): wand workshop
@@ -355,6 +357,7 @@ function throne(): MapDef {
   g.rect(0, 0, W, 1, 'wall_top_int'); g.rect(0, 1, W, 2, 'wall_lavender'); g.rect(0, 3, W, 1, 'base_lavender');
   g.rect(0, 4, 1, H - 4, 'wall_lavender'); g.rect(W - 1, 4, 1, H - 4, 'wall_lavender'); g.rect(0, H - 1, W, 1, 'wall_lavender');
   g.rect(12, H - 1, 2, 1, 'floor_cream_tile1'); // the great doors
+  g.rect(0, 9, 1, 2, 'floor_cream_tile1'); g.rect(W - 1, 9, 1, 2, 'floor_cream_tile1'); // side doors: Royal Kitchen (west), Royal Gallery (east)
   const carpet = (y: number, bias: number): PropDef[] => [
     { key: 'px_carpet', frame: 0, x: 12, y, depthBias: bias - (y + 1) * 16 }, { key: 'px_carpet', frame: 1, x: 13, y, depthBias: bias - (y + 1) * 16 }
   ];
@@ -370,9 +373,11 @@ function throne(): MapDef {
   const objects: ObjDef[] = [
     { id: 'throne_king', kind: 'npc', x: 10, y: 6, sprite: npc('king'), blocks: true, radius: 2.0 },
     { id: 'throne_queen', kind: 'npc', x: 15, y: 6, sprite: npc('queen'), blocks: true, radius: 2.0 },
-    { id: 'door_exit', kind: 'warp', x: 12, y: H - 1, tiles: [tile(12, H - 1), tile(13, H - 1)], to: { scene: 'courtyard', spawn: 'from_throne' }, radius: 1.5 }
+    { id: 'door_exit', kind: 'warp', x: 12, y: H - 1, tiles: [tile(12, H - 1), tile(13, H - 1)], to: { scene: 'courtyard', spawn: 'from_throne' }, radius: 1.5 },
+    { id: 'door_kitchen', kind: 'warp', x: 0, y: 9, tiles: [tile(0, 9), tile(0, 10)], to: { scene: 'kitchen', spawn: 'from_throne' }, sprite: { key: 'items', anim: 'sparkle' } },
+    { id: 'door_gallery', kind: 'warp', x: W - 1, y: 9, tiles: [tile(W - 1, 9), tile(W - 1, 10)], to: { scene: 'gallery', spawn: 'from_throne' }, sprite: { key: 'items', anim: 'sparkle' } }
   ];
-  return { id: 'throne', w: W, h: H, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(12, H - 3) }, music: 'sunlit' };
+  return { id: 'throne', w: W, h: H, medium: 'air', mermaidAllowed: false, bg: '#5a3d8a', ground: g.cells, props, objects, gates: [], spawns: { from_courtyard: tile(12, H - 3), from_kitchen: tile(2, 10), from_gallery: tile(W - 3, 10) }, music: 'sunlit' };
 }
 
 // ---------------------------------------------------------------- 13. Royal Greenhouse (20x14) — v0.4d (its own room; no longer the Queen's workshop)
@@ -397,7 +402,7 @@ function greenhouse(): MapDef {
 
 let cache: Record<SceneId, MapDef> | null = null;
 export function getMaps(): Record<SceneId, MapDef> {
-  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river(), throne: throne(), greenhouse: greenhouse() };
+  if (!cache) cache = { courtyard: courtyard(), woods: woods(), shore: shore(), grotto: grotto(), bedroom: bedroom(), festival: festival(), conservatory: conservatory(), meadow: meadow(), enchanted: enchanted(), garden: garden(), river: river(), throne: throne(), greenhouse: greenhouse(), kitchen: kitchen(), gallery: gallery(), labyrinth: labyrinth() };
   return cache;
 }
 export const getMap = (id: SceneId) => getMaps()[id];

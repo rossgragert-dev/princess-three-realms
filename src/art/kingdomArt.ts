@@ -152,6 +152,40 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
   }, 2);
   m('px_sconce', 16, 24, (c) => { P(c, 6, 10, 4, 10, '#8f5c1a'); P(c, 3, 18, 10, 4, '#8f5c1a'); disc(c, 8, 7, 4, '#ff9a3d'); disc(c, 8, 6, 2.2, '#ffe14d'); });
 
+
+  // ------------------------------------------------------------ v0.4d.2: the Royal Kitchen (bases and toppings)
+  m('px_cake', 40, 32, (c) => {
+    P(c, 2, 18, 36, 12, '#f2b98a'); P(c, 2, 18, 36, 3, '#d99a68'); P(c, 6, 8, 28, 11, '#f7d2ae'); P(c, 6, 8, 28, 3, '#e0b080'); P(c, 0, 29, 40, 3, '#e8e0f5');
+  });
+  m('px_cookie', 32, 32, (c) => { disc(c, 16, 16, 14, '#c98a4a'); disc(c, 16, 16, 12, '#e0a860'); });
+  m('px_pizza', 40, 40, (c) => { disc(c, 20, 20, 19, '#d9a05a'); disc(c, 20, 20, 16, '#d2442f'); disc(c, 20, 20, 14, '#e8624a'); });
+  m('px_cone', 24, 40, (c) => {
+    c.fillStyle = '#d9a05a'; c.beginPath(); c.moveTo(2, 20); c.lineTo(22, 20); c.lineTo(12, 39); c.closePath(); c.fill();
+    P(c, 6, 24, 2, 2, '#b8803a'); P(c, 14, 24, 2, 2, '#b8803a'); P(c, 10, 30, 2, 2, '#b8803a');
+  });
+  const top = (key: string, fn: (c: CanvasRenderingContext2D) => void, w = 14, h = 14) => m(key, w, h, fn);
+  top('px_t_cherry', (c) => { disc(c, 7, 9, 4.5, '#d1103a'); P(c, 7, 1, 1, 5, '#2e8b3a'); P(c, 5, 6, 2, 2, '#ff8da1'); });
+  top('px_t_sprinkle', (c) => { P(c, 1, 3, 4, 2, '#ff5a6e'); P(c, 7, 2, 2, 4, '#3ea6ff'); P(c, 10, 7, 4, 2, '#ffd93d'); P(c, 3, 9, 2, 4, '#7bd86a'); P(c, 8, 11, 4, 2, '#a06bff'); });
+  top('px_t_star', (c) => { disc(c, 7, 7, 5.5, '#ffd93d'); disc(c, 7, 7, 3, '#fff29a'); });
+  top('px_t_choc', (c) => { P(c, 2, 2, 10, 10, '#5a3322'); P(c, 3, 3, 3, 3, '#7a4a30'); P(c, 8, 8, 3, 3, '#7a4a30'); });
+  top('px_t_cheese', (c) => { P(c, 1, 1, 12, 12, '#ffd34d'); P(c, 3, 3, 2, 2, '#e0a82a'); P(c, 9, 8, 2, 2, '#e0a82a'); });
+  top('px_t_pep', (c) => { disc(c, 7, 7, 6, '#a82a2a'); P(c, 4, 4, 2, 2, '#d04a4a'); P(c, 8, 8, 2, 2, '#d04a4a'); });
+  top('px_t_olive', (c) => { disc(c, 7, 7, 5, '#2a2a2a'); disc(c, 7, 7, 2, '#e8624a'); });
+  top('px_t_mush', (c) => { P(c, 5, 7, 4, 6, '#f4ecd8'); disc(c, 7, 6, 6, '#c9a27a'); P(c, 1, 6, 12, 2, '#c9a27a'); });
+  top('px_t_candy', (c) => { P(c, 4, 3, 6, 8, '#ff7ec3'); P(c, 1, 5, 3, 4, '#ffd0e8'); P(c, 10, 5, 3, 4, '#ffd0e8'); });
+  top('px_t_strawb', (c) => { disc(c, 7, 8, 5.5, '#e02a4a'); P(c, 4, 1, 6, 3, '#2e8b3a'); P(c, 5, 7, 1, 1, '#ffd93d'); P(c, 8, 9, 1, 1, '#ffd93d'); });
+  top('px_t_pink', (c) => { disc(c, 10, 9, 8.5, '#ff9ccd'); disc(c, 7, 6, 3, '#ffd0e8'); }, 20, 18);
+  top('px_t_blue', (c) => { disc(c, 10, 9, 8.5, '#7bc4ff'); disc(c, 7, 6, 3, '#cdeaff'); }, 20, 18);
+  top('px_t_yellow', (c) => { disc(c, 10, 9, 8.5, '#ffe36a'); disc(c, 7, 6, 3, '#fff6b8'); }, 20, 18);
+  m('px_statue', 16, 32, (c) => {
+    P(c, 2, 24, 12, 8, '#b9b4c8'); P(c, 1, 29, 14, 3, '#9a95ad'); P(c, 5, 10, 6, 14, '#e8e4f2'); disc(c, 8, 7, 4, '#f2eefa'); P(c, 3, 12, 3, 8, '#e8e4f2'); P(c, 10, 12, 3, 8, '#e8e4f2'); P(c, 6, 2, 4, 2, '#ffd93d');
+  });
+  // kitchen furniture
+  m('px_stove', 32, 32, (c) => { P(c, 0, 8, 32, 24, '#b8b0c8'); P(c, 0, 8, 32, 3, '#e8e0f5'); P(c, 3, 14, 12, 14, '#5a5470'); P(c, 5, 16, 8, 10, '#8f88a8'); P(c, 18, 14, 11, 3, '#5a5470'); disc(c, 8, 4, 4, '#3a3450'); disc(c, 24, 4, 4, '#3a3450'); });
+  m('px_counter', 32, 24, (c) => { P(c, 0, 0, 32, 6, '#e8d4a8'); P(c, 0, 6, 32, 18, '#c98a4a'); P(c, 2, 8, 13, 14, '#a9703a'); P(c, 17, 8, 13, 14, '#a9703a'); P(c, 12, 12, 3, 3, '#ffd93d'); P(c, 17, 12, 3, 3, '#ffd93d'); });
+  m('px_easel', 24, 40, (c) => { P(c, 2, 12, 20, 18, '#fffaf0'); P(c, 0, 10, 24, 3, '#8f5c1a'); P(c, 3, 14, 5, 4, '#ff5a6e'); P(c, 10, 18, 5, 4, '#3ea6ff'); P(c, 16, 14, 4, 4, '#ffd93d'); P(c, 4, 30, 3, 10, '#8f5c1a'); P(c, 17, 30, 3, 10, '#8f5c1a'); P(c, 11, 30, 2, 8, '#8f5c1a'); });
+  m('px_frame', 48, 32, (c) => { P(c, 0, 0, 48, 32, '#d9a91f'); P(c, 3, 3, 42, 26, '#b8860b'); P(c, 4, 4, 40, 24, '#fffaf0'); });
+
   // ------------------------------------------------------------ River
   m('px_lily', 16, 16, (c) => { disc(c, 8, 9, 6, '#3fb27c'); P(c, 8, 4, 1, 5, '#2f9a6a'); disc(c, 10, 7, 2.4, '#ff9ad2'); disc(c, 10, 7, 1, '#ffe14d'); });
   m('px_reed', 16, 32, (c) => { for (const [x, h] of [[4, 28], [8, 32], [12, 24]]) { P(c, x, 32 - h, 2, h, '#4a9a5a'); P(c, x - 1, 32 - h, 4, 6, '#8a5a2e'); } });
@@ -201,4 +235,4 @@ export function ensureKingdomTextures(scene: Phaser.Scene) {
 }
 
 /** Names of every runtime texture (for tests). */
-export const KINGDOM_KEYS = ['px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;
+export const KINGDOM_KEYS = ['px_cake', 'px_cookie', 'px_pizza', 'px_cone', 'px_t_cherry', 'px_t_sprinkle', 'px_t_star', 'px_t_choc', 'px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush', 'px_t_candy', 'px_t_strawb', 'px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_stove', 'px_counter', 'px_statue', 'px_easel', 'px_frame', 'px_throne', 'px_pillar', 'px_banner', 'px_stained', 'px_carpet', 'px_sconce', 'px_ancient', 'px_stump', 'px_storybook', 'px_rune', 'px_fox', 'px_owl', 'px_squirrel', 'px_deer', 'px_mush', 'px_sflower', 'px_lamp', 'px_vine', 'px_kelp', 'px_plot', 'px_seedmound', 'px_sprout', 'px_ladybug', 'px_arch', 'px_bench', 'px_greenhouse', 'px_fountain', 'px_lily', 'px_reed', 'px_falls', 'px_bridge_over', 'px_wheel', 'px_fish_orange', 'px_shell', 'px_startpost', 'px_ring', 'px_dolphin', 'px_bee', 'px_frog', 'px_treepic', 'px_log', 'px_egg', 'px_chick', 'px_hen', 'px_note', 'px_drop'] as const;

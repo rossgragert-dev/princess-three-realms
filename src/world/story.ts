@@ -41,6 +41,8 @@ export interface StoryCtx {
   /** v0.4c: Kingdom Beyond interactive systems (garden, lanterns, race) and a big picture chooser. */
   readonly k: import('./kingdomStory').KingdomApi;
   pickOne(options: readonly import('./kingdomStory').PickOption[]): Promise<string | null>;
+  bake(spec: import('../ui/creativePanels').BakeSpec): Promise<import('../ui/creativePanels').BakeResult | null>;
+  paint(strokes: readonly import('../ui/paintStrokes').ArtStroke[]): Promise<import('../ui/paintStrokes').ArtStroke[] | null>;
   save(): void;
   openStation(which: 'Wardrobe' | 'Vanity' | 'RoomDesigner' | 'Fireworks' | 'WandWorkshop'): Promise<void>;
 }

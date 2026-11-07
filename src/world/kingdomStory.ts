@@ -11,6 +11,13 @@ import { allDone, fountainReady, markDone, plantedCount, type PlotId, type PlotS
 import type { RaceMode } from './race';
 
 /** What the running world offers the story for the Kingdom's interactive systems (implemented by KingdomLayer). */
+export const COOKING: Record<string, import('../ui/creativePanels').BakeSpec> = {
+  cook_cake: { base: 'px_cake', baseScale: 3.4, toppings: ['px_t_cherry', 'px_t_sprinkle', 'px_t_strawb', 'px_t_choc', 'px_t_star', 'px_t_candy'] },
+  cook_cookies: { base: 'px_cookie', baseScale: 4, toppings: ['px_t_choc', 'px_t_sprinkle', 'px_t_candy', 'px_t_star', 'px_t_strawb'] },
+  cook_pizza: { base: 'px_pizza', baseScale: 3.4, toppings: ['px_t_cheese', 'px_t_pep', 'px_t_olive', 'px_t_mush'] },
+  cook_icecream: { base: 'px_cone', baseScale: 2.2, toppings: ['px_t_pink', 'px_t_blue', 'px_t_yellow', 'px_t_cherry'], stack: true }
+};
+
 export interface KingdomApi {
   held(): Seed | null;
   hold(s: Seed): void;
@@ -24,6 +31,7 @@ export interface KingdomApi {
   startLanterns(onDone: () => void): void;
   lanternTap(i: number): void;
   followButterfly(c: Seed): boolean;
+  refreshArt(): void;
   releaseButterfly(c: Seed): boolean;
   fountainFx(): void;
   cycleFountain(): void;
@@ -73,6 +81,29 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
     else if (pick === 'meadow') await ctx.say(SCRIPT.throneMeadow);
     else if (pick === 'shore') await ctx.say(SCRIPT.throneShore);
     else if (pick === 'garden') await ctx.say(SCRIPT.throneGarden);
+    return true;
+  }
+
+  // ------------------------------------------------------------ the Royal Kitchen: four decorate-it games, always replayable
+  const cook = COOKING[id];
+  if (cook) {
+    ctx.react(id);
+    if (once('kitchen_hi')) await ctx.say(SCRIPT.kitchenHi);
+    const res = await ctx.bake(cook);
+    if (res && res.placed > 0) { ctx.celebrate(cook.base, 3); for (const dx of [-2, 0, 2]) ctx.sparkle({ x: obj.x + dx, y: obj.y + 1 }); }
+    return true;
+  }
+  // ------------------------------------------------------------ the Royal Gallery: paint, and see it on the wall
+  if (id === 'easel_paint' || id === 'art_frame') {
+    if (once('gallery_hi')) await ctx.say(SCRIPT.galleryHi);
+    const res = await ctx.paint(kd.art);
+    if (res) { kd.art = res; ctx.save(); K.refreshArt(); if (res.length) ctx.celebrate('icon_brush', 3); }
+    return true;
+  }
+  // ------------------------------------------------------------ the King's Garden Labyrinth
+  if (id === 'king_maze') {
+    ctx.react(id);
+    if (once('maze_king')) await ctx.say(SCRIPT.mazeKing); else for (const dx of [-1, 1]) ctx.sparkle({ x: obj.x + dx, y: obj.y });
     return true;
   }
 

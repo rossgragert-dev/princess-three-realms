@@ -8,13 +8,16 @@ export const EXITS: Record<SceneId, Partial<Record<SceneId, string>>> = {
   shore: { woods: 'warp_woods', grotto: 'dive', river: 'river_mouth' },
   grotto: { shore: 'surface' },
   bedroom: { courtyard: 'door_exit' },
-  festival: { courtyard: 'warp_courtyard' },
+  festival: { courtyard: 'warp_courtyard', labyrinth: 'warp_labyrinth' },
   conservatory: { courtyard: 'door_exit' },
   meadow: { woods: 'warp_woods' },
   enchanted: { woods: 'warp_woods' },
   garden: { courtyard: 'warp_courtyard', greenhouse: 'door_greenhouse' },
   river: { shore: 'exit_shore' },
-  throne: { courtyard: 'door_exit' },
+  throne: { courtyard: 'door_exit', kitchen: 'door_kitchen', gallery: 'door_gallery' },
+  kitchen: { throne: 'door_exit' },
+  gallery: { throne: 'door_exit' },
+  labyrinth: { festival: 'door_exit' },
   greenhouse: { garden: 'door_exit' }
 };
 

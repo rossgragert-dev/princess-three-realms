@@ -21,7 +21,10 @@ export const SAFE_SPAWN: Record<SceneId, string> = {
   garden: 'from_courtyard',
   river: 'from_shore',
   throne: 'from_courtyard',
-  greenhouse: 'from_garden'
+  greenhouse: 'from_garden',
+  kitchen: 'from_throne',
+  gallery: 'from_throne',
+  labyrinth: 'from_festival'
 };
 
 export function defaultState(): GameState {
@@ -56,7 +59,7 @@ export function defaultState(): GameState {
   };
 }
 
-const SCENES: SceneId[] = ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'festival', 'conservatory', 'meadow', 'enchanted', 'garden', 'river', 'throne', 'greenhouse'];
+const SCENES: SceneId[] = ['courtyard', 'woods', 'shore', 'grotto', 'bedroom', 'festival', 'conservatory', 'meadow', 'enchanted', 'garden', 'river', 'throne', 'greenhouse', 'kitchen', 'gallery', 'labyrinth'];
 
 /** Merge arbitrary parsed JSON onto safe defaults; never throws, never strands the player. */
 export function sanitize(raw: unknown): GameState {

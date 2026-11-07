@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 185 (80 required)
+- Total lines: 188 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -190,6 +190,8 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `king_hello` | Hello, Princess! Shall we light up the night sky? Tap the launch pad! |  | no |
 | anywhere | `king_again` | Ooh, so pretty! Let us make more fireworks! |  | no |
 | anywhere | `king_fading` | Oh dear! The magic in our kingdom is getting sleepy. Will you help wake it up? |  | no |
+| anywhere | `gallery_hi` | This is your very own art gallery! Tap the easel to paint a picture for the wall. |  | no |
+| anywhere | `maze_king_hi` | You found me in the middle of the garden maze! Well done, Princess! |  | no |
 | anywhere | `throne_king_hi` | Welcome home, Princess! Tap a picture to pick an adventure, or go anywhere you like! |  | no |
 | anywhere | `throne_woods` | The Whispering Woods! Walk out the east path and say hello to the friendly tree. |  | no |
 | anywhere | `throne_garden` | The Royal Magic Garden! Go out the front doors and through the flower archway. |  | no |
@@ -201,6 +203,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `queen_hello` | Welcome to my wand workshop! Come and make your very own wand. |  | no |
 | anywhere | `queen_again` | What a lovely wand! Would you like to change it? |  | no |
 | anywhere | `queen_fading` | The Enchanted Woods, the Royal Garden and the Shimmering River are waiting for you! |  | no |
+| anywhere | `kitchen_hi` | Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top! |  | no |
 | anywhere | `throne_queen_hi` | Hello, my little star! Where would you like to play today? Tap a picture! |  | no |
 | anywhere | `throne_meadow` | The Unicorn Meadow! Follow the forest path to find Dapple. |  | no |
 | anywhere | `throne_shore` | The Moonpool Shore! Walk through the woods to the sparkling water. |  | no |
@@ -370,7 +373,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (119)
+## anywhere (122)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -463,6 +466,9 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `word_yellow` | Yellow. |
 | narrator | `word_pink` | Pink. |
 | coralie | `river_intro` | Welcome to the river! Swim through the shining rings and listen to its song. |
+| queen | `kitchen_hi` | Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top! |
+| king | `gallery_hi` | This is your very own art gallery! Tap the easel to paint a picture for the wall. |
+| king | `maze_king_hi` | You found me in the middle of the garden maze! Well done, Princess! |
 | willa | `blossom_hi` | The glow blossom sings for you! Tap it again any time you like. |
 | king | `throne_king_hi` | Welcome home, Princess! Tap a picture to pick an adventure, or go anywhere you like! |
 | queen | `throne_queen_hi` | Hello, my little star! Where would you like to play today? Tap a picture! |

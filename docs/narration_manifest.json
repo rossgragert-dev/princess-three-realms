@@ -1698,6 +1698,39 @@
     ]
   },
   {
+    "key": "kitchen_hi",
+    "speaker": "queen",
+    "text": "Welcome to the Royal Kitchen! Pick a treat, then tap or drag yummy things on top!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/kitchen_hi.m4a",
+      "assets/audio/narration/kitchen_hi.ogg"
+    ]
+  },
+  {
+    "key": "gallery_hi",
+    "speaker": "king",
+    "text": "This is your very own art gallery! Tap the easel to paint a picture for the wall.",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/gallery_hi.m4a",
+      "assets/audio/narration/gallery_hi.ogg"
+    ]
+  },
+  {
+    "key": "maze_king_hi",
+    "speaker": "king",
+    "text": "You found me in the middle of the garden maze! Well done, Princess!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/maze_king_hi.m4a",
+      "assets/audio/narration/maze_king_hi.ogg"
+    ]
+  },
+  {
     "key": "blossom_hi",
     "speaker": "willa",
     "text": "The glow blossom sings for you! Tap it again any time you like.",

@@ -1,6 +1,7 @@
 // v0.4c: The Kingdom Beyond — pure data and rules for the garden and the river race records.
 // Nothing here touches Phaser: every rule is unit tested and every saved value is sanitized on load.
 import type { GameState } from '../types/game';
+import { sanitizeArt, type ArtStroke } from '../ui/paintStrokes';
 
 /** The four seed colours: the flower that grows always matches the seed that was planted. */
 export const SEEDS = ['red', 'blue', 'yellow', 'pink'] as const;
@@ -30,9 +31,11 @@ export interface Kingdom {
   done: string[];
   fountain: number;
   race: RaceRecords;
+  /** v0.4d.2: her painting in the Royal Gallery (bounded stroke list). */
+  art: ArtStroke[];
 }
 
-export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 } });
+export const defaultKingdom = (): Kingdom => ({ garden: {}, done: [], fountain: 0, race: { friendly: 0, starBest: 0, bestMs: 0 }, art: [] });
 
 const int = (v: unknown, max: number) => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(max, Math.floor(v))) : 0);
 
@@ -50,6 +53,7 @@ export function sanitizeKingdom(raw: unknown): Kingdom {
   d.fountain = int(r.fountain, FOUNTAIN_COLORS.length - 1);
   const rc = (r.race && typeof r.race === 'object' ? r.race : {}) as Partial<RaceRecords>;
   d.race = { friendly: int(rc.friendly, 100000), starBest: int(rc.starBest, 3), bestMs: int(rc.bestMs, 3_600_000) };
+  d.art = sanitizeArt(r.art);
   return d;
 }
 

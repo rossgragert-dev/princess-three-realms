@@ -14,6 +14,8 @@ import { DecorReveal } from '../ui/decorUi';
 import { unplacedEarned } from '../content/furniture';
 import { UI, type UiName } from '../content/frameIndex';
 import { gameSize } from '../ui/stage';
+import { runBake, runPaint, type BakeSpec, type BakeResult } from '../ui/creativePanels';
+import type { ArtStroke } from '../ui/paintStrokes';
 
 export interface UIHandlers {
   form?: (f: Form) => void;
@@ -422,6 +424,10 @@ export class UIScene extends Phaser.Scene {
       });
     });
   }
+
+  /** v0.4d.2: the kitchen decorating table and the gallery canvas (both modal, both picture-only). */
+  bake(spec: BakeSpec): Promise<BakeResult | null> { this.modalDepth++; return runBake(this, this.L, spec).finally(() => { this.modalDepth = Math.max(0, this.modalDepth - 1); }); }
+  paint(strokes: readonly ArtStroke[]): Promise<ArtStroke[] | null> { this.modalDepth++; return runPaint(this, this.L, strokes).finally(() => { this.modalDepth = Math.max(0, this.modalDepth - 1); }); }
 
   // ------------------------------------------------------------------ reward moment
   celebrate(picture: string, scale = 4) {

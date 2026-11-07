@@ -18,6 +18,7 @@ import { RIVER_COURSE } from '../world/riverCourse';
 import { GOALS, PLOT_TILES } from '../world/kingdomMaps';
 import { onButterfliesDone, onRaceFinish, onSecretRevealed, onShellChime, type KingdomApi } from '../world/kingdomStory';
 import { services } from '../systems/services';
+import { drawStrokes, PAINT_BG, PAINT_H, PAINT_W } from '../ui/paintStrokes';
 import { dur, reducedEffects, sparkleCount } from '../systems/accessibility';
 import type { UIScene } from './UIScene';
 
@@ -77,6 +78,7 @@ export class KingdomLayer implements KingdomApi {
     this.buildVines();
     this.buildShells();
     this.buildGarden();
+    this.refreshArt();
     this.buildAmbient();
     this.buildLanternGlows();
     this.applyFlags(false);
@@ -112,6 +114,17 @@ export class KingdomLayer implements KingdomApi {
       this.shells.set(e.id, s);
       this.envs.find((p) => p.env.id === e.id)!.sprite = s;
     }
+  }
+
+  private artG?: Phaser.GameObjects.Graphics;
+  /** The Royal Gallery's big frame shows her saved painting (or a blank canvas waiting for one). */
+  refreshArt() {
+    if (this.map.id !== 'gallery') return;
+    const g = this.artG ?? (this.artG = this.scene.add.graphics().setDepth(3));
+    const fw = 92, fh = 60, cx = this.map.w * T / 2, top = 4, sc = (fw - 12) / PAINT_W;
+    g.clear().fillStyle(0xb8860b, 1).fillRect(cx - fw / 2 - 3, top - 3, fw + 6, fh + 6).fillStyle(0xd9a91f, 1).fillRect(cx - fw / 2, top, fw, fh)
+      .fillStyle(PAINT_BG, 1).fillRect(cx - fw / 2 + 6, top + 6, PAINT_W * sc, PAINT_H * sc);
+    drawStrokes(g, this.h.state().kingdom.art, cx - fw / 2 + 6, top + 6, sc);
   }
 
   private buildGarden() {

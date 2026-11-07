@@ -256,7 +256,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** v0.4c: the Enchanted Woods, Royal Magic Garden and Shimmering River carry a living layer; other maps skip it. */
   private buildKingdom() {
-    if (!this.map.env?.length) return;
+    if (!this.map.env?.length && this.map.id !== 'gallery') return;
     this.kingdom = new KingdomLayer({
       scene: this, map: this.map, state: () => this.state, props: this.props,
       objSprite: (id) => this.objSprites.get(id),
@@ -416,6 +416,8 @@ export class WorldScene extends Phaser.Scene {
       sparkle: (t: Tile) => self.sparkleAt(t.x, t.y, 8),
       get k() { return self.kingdom as unknown as KingdomApi; },
       pickOne: (o: readonly { id: string; picture: string }[]) => self.ui.pickOne(o),
+      bake: (spec) => self.ui.bake(spec),
+      paint: (strokes) => self.ui.paint(strokes),
       save: () => services.save.save()
     };
   }
