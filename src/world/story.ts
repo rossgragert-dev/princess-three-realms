@@ -9,7 +9,7 @@ import { nextObjective } from '../systems/questEngine';
 import { services } from '../systems/services';
 import { kingdomInteract, onKingdomArrive, resetKingdomSession } from './kingdomStory';
 import { OBJECTIVE_NARRATION } from './guide';
-import { PEARL_LANE_X, PEARL_Y, isSocketX, nextLaneX } from './pearl';
+import { PEARL_LANE_X, PEARL_START_X, PEARL_Y, isSocketX, nextLaneX } from './pearl';
 import type { PuzzleResult } from '../ui/puzzlePanel';
 
 /** What the story needs from the running world and HUD. WorldScene implements it; tests can fake it. */
@@ -321,7 +321,12 @@ async function chest(ctx: StoryCtx, obj: ObjDef) {
 /** A on the pearl only explains the puzzle: the push itself comes from a bubble (see pearlBubbleHit). */
 async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
   if (!ctx.state.flags.MARINA_HELPED) { await ctx.say(SCRIPT.marinaIntro); return; }
-  if (ctx.state.flags.PEARL_PLACED) return;
+  // Tapping the completed pearl rolls it back to the beginning for another game.
+  // The earned star and rewards remain saved; only the pearl's visible position resets.
+  if (ctx.state.flags.PEARL_PLACED && isSocketX(obj.x)) {
+    await ctx.moveObject(obj.id, { x: PEARL_START_X, y: PEARL_Y });
+    ctx.sparkle({ x: PEARL_START_X, y: PEARL_Y });
+  }
   ctx.hop(obj.id);
   await ctx.say(SCRIPT.pearlHint);
 }
@@ -332,7 +337,7 @@ async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
  * Returns true if the pearl moved.
  */
 export async function pearlBubbleHit(ctx: StoryCtx, obj: ObjDef, curX: number): Promise<boolean> {
-  if (!ctx.state.flags.MARINA_HELPED || ctx.state.flags.PEARL_PLACED) return false;
+  if (!ctx.state.flags.MARINA_HELPED) return false;
   const x = nextLaneX(curX);
   if (x === undefined) return false;
   session.pearlStep = PEARL_LANE_X.indexOf(x) + 1;
