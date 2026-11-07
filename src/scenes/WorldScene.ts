@@ -266,9 +266,10 @@ export class WorldScene extends Phaser.Scene {
     }
     if (this.treeSprite && flags.TREE_GATE_OPEN) {
       const home = this.objPos.get('tree')!;
-      const tx = home.x * T + T / 2 - 4 * T;
-      if (animated && this.treeSprite.x !== tx) this.treeSlide = this.slideTree(tx);
-      else if (!this.treeSlideBusy) this.treeSprite.x = tx;
+      // the tree walks off the trail and up into the forest wall, so the way east is clear of him both visually and for walking
+      const ty = (home.y + 1) * T - 4 * T;
+      if (animated && this.treeSprite.y !== ty) this.treeSlide = this.slideTree(ty);
+      else if (!this.treeSlideBusy) { this.treeSprite.y = ty; this.treeSprite.setDepth(ty); }
     }
     this.grid = makeGrid(this.map, flags, st.form, this.furnBlocked);
     this.kingdom?.applyFlags(animated);
@@ -315,17 +316,17 @@ export class WorldScene extends Phaser.Scene {
     services.save.save();
   }
 
-  /** The talking tree rumbles and slides four tiles aside so everyone can see the gate open (reduced effects: snaps, with a sparkle). */
-  private slideTree(tx: number): Promise<void> {
+  /** The talking tree rumbles and walks four tiles up into the forest wall so everyone can see the gate open (reduced effects: snaps, with a sparkle). */
+  private slideTree(ty: number): Promise<void> {
     const tree = this.treeSprite;
     if (!tree) return Promise.resolve();
     this.treeSlideBusy = true;
-    const done = () => { this.treeSlideBusy = false; tree.x = tx; };
-    if (reducedEffects()) { done(); this.sparkleAt(tx / T, tree.y / T - 1, 8); return Promise.resolve(); }
+    const done = () => { this.treeSlideBusy = false; tree.y = ty; tree.setDepth(ty); };
+    if (reducedEffects()) { done(); this.sparkleAt(tree.x / T, ty / T - 1, 8); return Promise.resolve(); }
     return new Promise((resolve) => {
       this.cameras.main.shake(1700, 0.0018);
       const tick = this.time.addEvent({ delay: 180, repeat: 9, callback: () => this.sparkleAt(tree.x / T, tree.y / T - 0.5, 3) });
-      this.tweens.add({ targets: tree, x: tx, duration: 1800, ease: 'Sine.InOut', onComplete: () => { tick.remove(); done(); this.sparkleAt(tx / T, tree.y / T - 1, 8); resolve(); } });
+      this.tweens.add({ targets: tree, y: ty, duration: 1800, ease: 'Sine.InOut', onUpdate: () => tree.setDepth(tree.y), onComplete: () => { tick.remove(); done(); this.sparkleAt(tree.x / T, ty / T - 1, 8); resolve(); } });
     });
   }
 
@@ -1155,7 +1156,7 @@ export class WorldScene extends Phaser.Scene {
   private pearlActive(): boolean {
     // PEARL_PLACED is a permanent achievement, not a lock on future play.
     const p = this.objPos.get('pearl') ?? this.pearlObj();
-    return !!p && !!this.state.flags.MARINA_HELPED && !isSocketX(p.x);
+    return !!p && !isSocketX(p.x);
   }
   private mermaidColor(): number { return WAND_TINT[this.state.equippedWand.colorId][0]; }
 
@@ -1226,7 +1227,7 @@ export class WorldScene extends Phaser.Scene {
   /** A big pulsing circular arrow over a finished pearl: tap it to roll it back and play again. */
   private updatePearlReplay() {
     const po = this.pearlObj(), pp = po ? (this.objPos.get('pearl') ?? po) : null;
-    const show = !!pp && !!this.state.flags.MARINA_HELPED && isSocketX(pp.x) && !this.ui?.modal && !this.leaving;
+    const show = !!pp && isSocketX(pp.x) && !this.ui?.modal && !this.leaving;
     if (!show) { this.pearlReplay?.setVisible(false); return; }
     if (!this.pearlReplay) {
       const g = this.add.graphics().setDepth(9000);
@@ -1601,6 +1602,8 @@ export class WorldScene extends Phaser.Scene {
       scene: () => this.map.id,
       tile: () => ({ ...this.player.tile }),
       form: () => this.player.form,
+      pearlTile: () => ({ ...(this.objPos.get('pearl') ?? { x: -1, y: -1 }) }),
+      castBubble: (d: string) => { (this.player as unknown as { dir: string }).dir = d; this.pearlBusy = false; this.shootBubble(); },
       tapTile: (x: number, y: number) => {
         const world = { x: x * T + T / 2, y: y * T + T / 2 };
         const cam = this.cameras.main;

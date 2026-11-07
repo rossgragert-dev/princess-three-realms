@@ -20,12 +20,11 @@ test('four straight hits complete the lane', () => {
   while (nextLaneX(x) !== undefined) { const r = bubbleShot(at(x - 3 + 0.5), 'right', { x, y: PEARL_Y }, open); assert.ok(r.push); x = nextLaneX(x)!; hits++; }
   assert.equal(hits, 4);
 });
-test('wrong direction never pushes', () => {
-  for (const d of ['up', 'down', 'left'] as const) assert.equal(bubbleShot(at(17.5), d, pearl, open).push, false, d);
-});
-test('from the right side the bubble touches but does not push (pearl only moves along its lane)', () => {
+test('a bubble from any side that touches the pearl pushes it along its lane (easier for small hands)', () => {
+  const top = bubbleShot({ x: PEARL_START_X + 0.5, y: PEARL_Y - 2.5 }, 'down', pearl, open);
+  assert.ok(top.hitPearl && top.push);
   const r = bubbleShot(at(23.5), 'left', pearl, open);
-  assert.ok(r.hitPearl); assert.equal(r.push, false);
+  assert.ok(r.hitPearl && r.push);
 });
 test('off-axis bubbles miss: no homing', () => {
   for (const dy of [-2, -1.2, 1.2, 2]) { const r = bubbleShot(at(17.5, PEARL_Y + 0.5 + dy), 'right', pearl, open); assert.equal(r.hitPearl, false, `dy ${dy}`); assert.equal(r.push, false); }

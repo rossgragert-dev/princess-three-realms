@@ -338,7 +338,7 @@ async function chest(ctx: StoryCtx, obj: ObjDef) {
 
 /** A on the pearl only explains the puzzle: the push itself comes from a bubble (see pearlBubbleHit). */
 async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
-  if (!ctx.state.flags.MARINA_HELPED) { await ctx.say(SCRIPT.marinaIntro); return; }
+  // v0.4d.6: the pearl game is open from the start (no starfish needed).
   // Tapping the completed pearl rolls it back to the beginning for another game.
   // The earned star and rewards remain saved; only the pearl's visible position resets.
   if (ctx.state.flags.PEARL_PLACED && isSocketX(obj.x)) {
@@ -355,7 +355,6 @@ async function pushPearl(ctx: StoryCtx, obj: ObjDef) {
  * Returns true if the pearl moved.
  */
 export async function pearlBubbleHit(ctx: StoryCtx, obj: ObjDef, curX: number): Promise<boolean> {
-  if (!ctx.state.flags.MARINA_HELPED) return false;
   const x = nextLaneX(curX);
   if (x === undefined) return false;
   session.pearlStep = PEARL_LANE_X.indexOf(x) + 1;

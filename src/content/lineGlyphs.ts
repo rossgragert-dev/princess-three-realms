@@ -108,7 +108,7 @@ export const LINE_GLYPHS: Record<string, string[]> = {
   kitchen_hi: ['px_cake', 'icon_star', 'sparkle0'], gallery_hi: ['icon_brush', 'icon_palette', 'icon_star'], maze_king_hi: ['icon_star', 'heart', 'sparkle0'],
   blossom_hi: ['px_sflower', 'icon_music', 'sparkle0'],
   throne_king_hi: ['icon_star', 'sparkle0', 'heart'], throne_queen_hi: ['heart', 'icon_star', 'sparkle0'],
-  throne_woods: ['icon_tree', 'icon_right'], throne_meadow: ['icon_unicorn', 'icon_right'], throne_shore: ['icon_mermaid', 'water'], throne_garden: ['px_flower_red', 'icon_up'],
+  throne_woods: ['icon_tree', 'icon_right'], throne_meadow: ['icon_unicorn', 'icon_right'], throne_shore: ['icon_mermaid', 'water'], throne_garden: ['px_flower_red', 'icon_up'], throne_race: ['px_startpost', 'water'],
   river_hint: ['px_startpost', 'px_shell'],
   river_pearls_hint: ['px_shell', 'bubble', 'icon_music'],
   river_pearls_done: ['px_shell', 'icon_music', 'heart'],

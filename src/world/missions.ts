@@ -5,5 +5,7 @@ export const MISSIONS: Record<string, { scene: SceneId; spawn: string }> = {
   woods: { scene: 'woods', spawn: 'from_courtyard' },
   meadow: { scene: 'meadow', spawn: 'from_woods' },
   shore: { scene: 'shore', spawn: 'from_woods' },
-  garden: { scene: 'garden', spawn: 'from_courtyard' }
+  garden: { scene: 'garden', spawn: 'from_courtyard' },
+  // straight to the Shimmering River start line: no tasks needed first
+  race: { scene: 'river', spawn: 'from_throne' }
 };

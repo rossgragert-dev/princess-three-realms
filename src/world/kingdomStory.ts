@@ -75,9 +75,9 @@ export async function kingdomInteract(ctx: StoryCtx, obj: ObjDef): Promise<boole
   if (id === 'throne_king' || id === 'throne_queen') {
     ctx.react(id);
     await ctx.say(id === 'throne_king' ? SCRIPT.throneKing : SCRIPT.throneQueen);
-    const pick = await ctx.pickOne([{ id: 'woods', picture: 'icon_tree' }, { id: 'meadow', picture: 'icon_unicorn' }, { id: 'shore', picture: 'icon_mermaid' }, { id: 'garden', picture: 'px_flower_red' }]);
+    const pick = await ctx.pickOne([{ id: 'woods', picture: 'icon_tree' }, { id: 'meadow', picture: 'icon_unicorn' }, { id: 'shore', picture: 'icon_mermaid' }, { id: 'garden', picture: 'px_flower_red' }, { id: 'race', picture: 'px_startpost' }]);
     if (!pick || !MISSIONS[pick]) return true; // cancel / back: she stays in the throne room
-    await ctx.say(pick === 'woods' ? SCRIPT.throneWoods : pick === 'meadow' ? SCRIPT.throneMeadow : pick === 'shore' ? SCRIPT.throneShore : SCRIPT.throneGarden);
+    await ctx.say(pick === 'woods' ? SCRIPT.throneWoods : pick === 'meadow' ? SCRIPT.throneMeadow : pick === 'shore' ? SCRIPT.throneShore : pick === 'race' ? SCRIPT.throneRace : SCRIPT.throneGarden);
     ctx.travelTo(MISSIONS[pick].scene, MISSIONS[pick].spawn);
     return true;
   }

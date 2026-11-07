@@ -1,4 +1,10 @@
 # Changelog
+## 0.4.0d.6.6 (preview) — Tree, pearl and race fixes from your videos
+- Talking tree (real cause found): a second, static copy of the tree was drawn on the trail, so the one that slid aside left another standing in the way. The duplicate is gone, and the tree now walks four tiles up into the forest wall so the whole trail is clear (he used to slide along the trail toward the princess). Tested in a phone-shaped portrait viewport.
+- Pearl game: it works from the very start, with no starfish needed. The main-path order was also enforcing hidden prerequisites (the pearl could not be marked finished before the starfish), so every quest step can now be earned in any order; rewards are still given once. A bubble from any side now rolls the pearl along its lane, which is easier for small hands.
+- Skip to the race: a new picture (the start post) in the King and Queen's mission choices takes her straight to the Shimmering River start line, as a mermaid, with no tasks needed first.
+- Tests: 384 unit tests; `v04d6-skip.mjs` (portrait: tree, pearl, throne race). Narration manifest regenerated (one new King line).
+
 ## 0.4.0d.6.5 (preview) — Pet homes and ice cream fix
 - Each pet now has its own home in the bedroom's front-right corner, matching the animal she chose: cat tree, dog house, bird cage, pony stable (new pixel art). The corner is reserved floor so furniture can't cover it, and pets sometimes wander over to rest beside their home. Changing animal at the Pet Keeper changes the home.
 - Ice cream fix: the first scoop used to float high above the cone. Scoops now sit in the cone rim and stack from there (editor and kitchen stand).

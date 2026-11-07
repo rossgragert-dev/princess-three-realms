@@ -14,16 +14,16 @@ await solveChoice(page, info.def.correctAnswer);
 await shot(page, 'v04d6_tree_start'); await sleep(450); const mid = await ptr(page, 'objSprite', 'tree'); await shot(page, 'v04d6_tree_mid');
 await sleep(1600);
 const after = await ptr(page, 'objSprite', 'tree');
-ok('tree moved left by about four tiles', before.x - after.x > 50, `${before.x} -> ${after.x} (mid ${mid && mid.x})`);
+ok('tree walked up out of the trail', before.y - after.y > 50, `${before.y} -> ${after.y}`);
 await talkOut(page, 10); await waitIdle(page);
 await shot(page, 'v04d6_tree_open');
 const fin = await ptr(page, 'objSprite', 'tree');
-ok('still moved after dialogue', before.x - fin.x > 50, String(fin.x));
+ok('still moved after dialogue', before.y - fin.y > 50, String(fin.y));
 // walk through the gate
 await page.evaluate(() => window.__ptr.teleportPlayer({ x: 20, y: 15 })); await sleep(300);
 await ptr(page, 'tapTile', 26, 15); await sleep(4500);
 const t = await ptr(page, 'tile'); ok('walked through the opened gate', t.x >= 24, JSON.stringify(t));
 // reload
 await page.evaluate(() => window.__game.scene.getScene('World').scene.restart({ scene: 'woods', spawn: 'from_courtyard' })); await sleep(2500); await talkOut(page, 8);
-const re = await ptr(page, 'objSprite', 'tree'); ok('open position kept on re-entry', before.x - re.x > 50, String(re.x));
+const re = await ptr(page, 'objSprite', 'tree'); ok('open position kept on re-entry', before.y - re.y > 50, String(re.y));
 await browser.close(); console.log(fail ? `FAILED ${fail}` : 'ALL OK'); process.exit(fail ? 1 : 0);

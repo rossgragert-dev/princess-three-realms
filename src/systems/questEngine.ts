@@ -15,10 +15,9 @@ export const MAIN_PATH: { flag: QuestFlag; requires: QuestFlag[]; hintIcon: stri
   { flag: 'LAMP_PLACED', requires: ['STAR_1_FOUND'], hintIcon: 'icon_lamp', where: 'bedroom' }
 ];
 
-export function canComplete(state: GameState, flag: QuestFlag): boolean {
-  const step = MAIN_PATH.find((s) => s.flag === flag);
-  if (!step) return true; // optional / side flags are never gated
-  return step.requires.every((f) => state.flags[f]);
+/** v0.4d.6: the path is a suggested order only. Every flag can be earned in any order (skipping ahead is welcome); rewards are still granted once. */
+export function canComplete(_state: GameState, _flag: QuestFlag): boolean {
+  return true;
 }
 
 /** Idempotent. Returns true only the first time the flag is set (so rewards are never farmed). */

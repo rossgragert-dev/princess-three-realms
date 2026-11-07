@@ -75,6 +75,7 @@ export const SCRIPT = {
   throneMeadow: [L('queen', 'throne_meadow')],
   throneShore: [L('queen', 'throne_shore')],
   throneGarden: [L('king', 'throne_garden')],
+  throneRace: [L('king', 'throne_race')],
   riverIntro: [L('coralie', 'river_intro')],
   riverHint: [L('coralie', 'river_hint')],
   riverPearlsHint: [L('coralie', 'river_pearls_hint')],

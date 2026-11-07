@@ -4,7 +4,7 @@
 Clips are looked up by key at `public/assets/audio/narration/<key>.m4a` (iOS Safari) with `<key>.ogg` as a fallback.
 Any file with the right name replaces a temporary one: see "Replacing clips" below.
 
-- Total lines: 345 (80 required)
+- Total lines: 346 (80 required)
 - Format: mono, 44.1 kHz, ~0.2 s of silence at each end, normalised to about -16 LUFS. Record each line separately.
 - Sound lines say the *sound* ("buh"), never the letter name.
 - Machine-readable copy of this table: `docs/narration_manifest.json` (used by `tools/make_tts_clips.py`).
@@ -352,6 +352,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | anywhere | `throne_king_hi` | Welcome home, Princess! Tap a picture to pick an adventure, or go anywhere you like! |  | no |
 | anywhere | `throne_woods` | The Whispering Woods! Walk out the east path and say hello to the friendly tree. |  | no |
 | anywhere | `throne_garden` | The Royal Magic Garden! Go out the front doors and through the flower archway. |  | no |
+| anywhere | `throne_race` | The Shimmering River race! Whoosh, off you go to the start line! |  | no |
 
 ## The Queen (`queen`)
 
@@ -530,7 +531,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | narrator | `obj_home` | Tap the little house to go home and decorate your room. |
 | narrator | `chapter_done` | More adventures are coming soon! |
 
-## anywhere (279)
+## anywhere (280)
 
 | Speaker | Key | Line |
 |---|---|---|
@@ -637,6 +638,7 @@ Any file with the right name replaces a temporary one: see "Replacing clips" bel
 | queen | `throne_meadow` | The Unicorn Meadow! Follow the forest path to find Dapple. |
 | queen | `throne_shore` | The Moonpool Shore! Walk through the woods to the sparkling water. |
 | king | `throne_garden` | The Royal Magic Garden! Go out the front doors and through the flower archway. |
+| king | `throne_race` | The Shimmering River race! Whoosh, off you go to the start line! |
 | coralie | `river_hint` | Tap the post to start a race. Or swim and play with the shells! |
 | coralie | `river_pearls_hint` | Tap the singing shells with your bubbles. Can you wake four? |
 | coralie | `river_pearls_done` | Listen! The river is singing! Thank you! |

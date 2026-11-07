@@ -245,6 +245,6 @@ export function river(): MapDef {
   const gates: Gate[] = [
     { id: 'river_secret', flag: 'RIVER_SECRET', tiles: [tile(22, 4), tile(23, 4)], closedTile: 'coral_pink', openTile: 'water0' }
   ];
-  return { id: 'river', w: 48, h: 26, medium: 'water', mermaidAllowed: true, bg: '#1d6fc0', ground: g.cells, props, objects, gates, env, spawns: { from_shore: tile(6, 13) }, music: 'seas' };
+  return { id: 'river', w: 48, h: 26, medium: 'water', mermaidAllowed: true, bg: '#1d6fc0', ground: g.cells, props, objects, gates, env, spawns: { from_shore: tile(6, 13), from_throne: tile(11, 15) }, music: 'seas' };
 }
 

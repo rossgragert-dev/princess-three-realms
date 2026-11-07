@@ -219,6 +219,7 @@ export const NARRATION: NarrationClip[] = [
   clip('throne_meadow', 'queen', 'The Unicorn Meadow! Follow the forest path to find Dapple.', undefined, false),
   clip('throne_shore', 'queen', 'The Moonpool Shore! Walk through the woods to the sparkling water.', undefined, false),
   clip('throne_garden', 'king', 'The Royal Magic Garden! Go out the front doors and through the flower archway.', undefined, false),
+  clip('throne_race', 'king', 'The Shimmering River race! Whoosh, off you go to the start line!', undefined, false),
   clip('river_hint', 'coralie', 'Tap the post to start a race. Or swim and play with the shells!', undefined, false),
   clip('river_pearls_hint', 'coralie', 'Tap the singing shells with your bubbles. Can you wake four?', undefined, false),
   clip('river_pearls_done', 'coralie', 'Listen! The river is singing! Thank you!', undefined, false),

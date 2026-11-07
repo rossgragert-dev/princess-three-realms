@@ -6,7 +6,7 @@ export const PEARL_LANE_X = [22, 24, 26, 28];
 export const PEARL_Y = 20;
 export const PEARL_START_X = 20;
 /** How close (tiles) the bubble's straight line must pass to the pearl's centre to touch it. */
-export const PEARL_HIT_R = 0.6;
+export const PEARL_HIT_R = 0.8;
 export const BUBBLE_RANGE = 7;
 
 /** The next resting column ahead of the pearl, or undefined once it is in the socket. */
@@ -17,12 +17,11 @@ export interface BubbleResult { end: Pt; dist: number; blocked: boolean; hitPear
 
 /**
  * One bubble fired straight along the way the mermaid faces (no aiming help, no homing).
- * It touches the pearl only if its line passes through it; the pearl only travels along its lane (to the right),
- * so a bubble from any other side just makes it wobble.
+ * It touches the pearl only if its line passes through it; the pearl only travels along its lane (to the right), but a bubble from any side nudges it along (v0.4d.6: easier for small hands).
  */
 export function bubbleShot(from: Pt, facing: keyof typeof DIRS, pearl: { x: number; y: number } | null, solid: (tx: number, ty: number) => boolean): BubbleResult {
   const targets: SpellTarget[] = pearl ? [{ id: 'pearl', kind: 'glow', x: pearl.x + 0.5, y: pearl.y + 0.5, r: PEARL_HIT_R }] : [];
   const f = fly(from, DIRS[facing], targets, solid, BUBBLE_RANGE);
   const hitPearl = f.hit?.id === 'pearl';
-  return { end: f.end, dist: f.dist, blocked: f.blocked, hitPearl, push: hitPearl && facing === 'right' };
+  return { end: f.end, dist: f.dist, blocked: f.blocked, hitPearl, push: hitPearl };
 }

@@ -107,12 +107,12 @@ describe('sequence puzzle', () => {
 });
 
 describe('quest engine', () => {
-  it('main path cannot be skipped and flags are idempotent (no reward farming)', () => {
+  it('main path can be done in any order and flags are idempotent (no reward farming)', () => {
     const s = defaultState();
-    assert.equal(canComplete(s, 'STAR_1_FOUND'), false);
-    assert.equal(completeFlag(s, 'STAR_1_FOUND'), false);
-    assert.equal(s.stars, 0);
-    for (const step of MAIN_PATH) assert.equal(completeFlag(s, step.flag), true, step.flag);
+    assert.equal(canComplete(s, 'STAR_1_FOUND'), true);
+    assert.equal(completeFlag(s, 'STAR_1_FOUND'), true);
+    assert.equal(s.stars, 1);
+    for (const step of MAIN_PATH) if (step.flag !== 'STAR_1_FOUND') assert.equal(completeFlag(s, step.flag), true, step.flag);
     assert.equal(completeFlag(s, 'STAR_1_FOUND'), false);
     assert.equal(s.stars, 1);
     assert.deepEqual(s.stickers.filter((x) => x === 'sticker_star').length, 1);

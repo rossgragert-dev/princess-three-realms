@@ -1852,6 +1852,17 @@
     ]
   },
   {
+    "key": "throne_race",
+    "speaker": "king",
+    "text": "The Shimmering River race! Whoosh, off you go to the start line!",
+    "required": false,
+    "scene": "anywhere",
+    "files": [
+      "assets/audio/narration/throne_race.m4a",
+      "assets/audio/narration/throne_race.ogg"
+    ]
+  },
+  {
     "key": "river_hint",
     "speaker": "coralie",
     "text": "Tap the post to start a race. Or swim and play with the shells!",
